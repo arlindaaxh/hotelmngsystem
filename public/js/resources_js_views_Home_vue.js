@@ -28,15 +28,72 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {};
+  },
   methods: {
     got: function got() {
       this.$router.push({
         name: 'About'
       });
+    },
+    goToAdministration: function goToAdministration() {
+      console.log('u');
+      this.$router.push({
+        name: 'Administration'
+      });
     }
   }
 });
+
+/***/ }),
+
+/***/ "./resources/css/images/administration-logo.jpg":
+/*!******************************************************!*\
+  !*** ./resources/css/images/administration-logo.jpg ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/administration-logo.jpg?5a0380341071cb6e2dfbfab57947e6ef");
+
+/***/ }),
+
+/***/ "./resources/css/images/frontdesk.png":
+/*!********************************************!*\
+  !*** ./resources/css/images/frontdesk.png ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/frontdesk.png?d55638e1ff660012f14b70c4a7d0b5c3");
 
 /***/ }),
 
@@ -56,7 +113,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".container[data-v-63cd6604] {\n  margin-top: auto;\n  margin-bottom: auto;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".cards[data-v-63cd6604] {\n  position: absolute;\n  top: 50%;\n  transform: translate(0, -50%);\n  padding: 10px;\n}\n.cards .card[data-v-63cd6604] {\n  width: 300px;\n  height: 400px;\n}\n.cards .card .image[data-v-63cd6604] {\n  width: 100%;\n  height: 200px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -190,52 +247,109 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container align-items-center" },
-    [
-      _c(
-        "div",
-        { staticClass: "flexed-column align-center vertical-middle" },
-        [
-          _c("el-card", [_vm._v("Test1")]),
+  return _c("div", { staticClass: "container align-center" }, [
+    _c(
+      "div",
+      { staticClass: "cards container flexed justify-around" },
+      [
+        _c("el-card", { staticClass: "card flexed-column" }, [
+          _c("img", {
+            staticClass: "image",
+            attrs: { src: __webpack_require__(/*! ../../css/images/administration-logo.jpg */ "./resources/css/images/administration-logo.jpg") }
+          }),
           _vm._v(" "),
-          _c("el-card", [_vm._v("Test1")])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _c("div", { staticClass: "btn btn-primary" }, [_vm._v("test")]),
-      _vm._v(" "),
-      _c(
-        "el-button",
-        {
-          on: {
-            click: function($event) {
-              return _vm.got()
-            }
-          }
-        },
-        [_vm._v("Test")]
-      )
-    ],
-    1
-  )
+          _c(
+            "div",
+            {
+              staticClass:
+                "flexed justify-center vertical-middle align-center mt-30",
+              staticStyle: { height: "100px" }
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "text" },
+                  on: {
+                    click: function($event) {
+                      return _vm.goToAdministration()
+                    }
+                  }
+                },
+                [_c("h3", { staticClass: "pt-20" }, [_vm._v("Administration")])]
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("el-card", { staticClass: "card flexed-column" }, [
+          _c("img", {
+            staticClass: "image",
+            attrs: { src: __webpack_require__(/*! ../../css/images/frontdesk.png */ "./resources/css/images/frontdesk.png") }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "flexed justify-center vertical-middle align-center mt-30",
+              staticStyle: { height: "100px" }
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "text" },
+                  on: {
+                    click: function($event) {
+                      return _vm.goToAdministration()
+                    }
+                  }
+                },
+                [_c("h3", { staticClass: "pt-20" }, [_vm._v("Frontdesk")])]
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("el-card", { staticClass: "card flexed-column" }, [
+          _c("img", {
+            staticClass: "image",
+            attrs: { src: __webpack_require__(/*! ../../css/images/frontdesk.png */ "./resources/css/images/frontdesk.png") }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "flexed justify-center vertical-middle align-center mt-30",
+              staticStyle: { height: "100px" }
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "text" },
+                  on: {
+                    click: function($event) {
+                      return _vm.goToAdministration()
+                    }
+                  }
+                },
+                [_c("h3", { staticClass: "pt-20" }, [_vm._v("Housekeeping")])]
+              )
+            ],
+            1
+          )
+        ])
+      ],
+      1
+    )
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row h-100" }, [
-      _c("div", { staticClass: "col-sm-12 my-auto" }, [
-        _c("div", { staticClass: "card card-block w-25" }, [_vm._v("Card")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

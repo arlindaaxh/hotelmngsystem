@@ -11,6 +11,11 @@ export default {
             component: () => import('./views/About'),
             name: 'About'
         },
+        {
+            path: '/Administration',
+            component: () => import('./views/administration/Administration'),
+            name: 'Administration'
+        }
 
     ]
 }
