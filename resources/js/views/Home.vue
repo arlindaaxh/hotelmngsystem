@@ -1,5 +1,6 @@
 <template>
     <div class="container align-center">
+    
         <div class="cards container flexed justify-around">
             <el-card class="card flexed-column">
                 <!-- <img :src="'../../public/images/administration-logo.jpg'" class="image"> -->
@@ -52,7 +53,7 @@
             goToAdministration(){
                 console.log('u')
                 this.$router.push({
-                    name: 'Administration'
+                    name: 'administration'
                 })
             }
             

@@ -12,10 +12,18 @@ export default {
             name: 'About'
         },
         {
-            path: '/Administration',
+            path: '/administration',
             component: () => import('./views/administration/Administration'),
-            name: 'Administration'
-        }
+            name: 'administration',
+            children: [
+                {
+                    path: '/dashboard',
+                    component: () => import('./components/administration/Dashboard'),
+                    name: 'dashboard'
+                }
+            ]
+        },
+       
 
     ]
 }

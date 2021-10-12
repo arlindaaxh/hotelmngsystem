@@ -1,15 +1,11 @@
 <template>
-    <div>
-
-        <header></header>
-        <header/>
-     
+    <div class="body">
+        
+        <!-- <pHeader></pHeader> -->
         <div class="sidebar">
-              
             <sidebar/> 
         </div>
-        <!-- <header><header/> -->
-        Administration
+
         <div class="content">
             <router-view></router-view>
         </div>
@@ -19,10 +15,10 @@
 </template>
 
 <script>
-import Header from '../../components/Header.vue'
+import pHeader from '../../components/pHeader.vue'
 import Sidebar from '../../components/Sidebar.vue'
     export default {
-    components: { Sidebar, Header },
+    components: { Sidebar, pHeader },
         name: 'Administration',
         data(){
             return {
@@ -35,11 +31,23 @@ import Sidebar from '../../components/Sidebar.vue'
 </script>
 
 <style lang="scss" scoped>
-.header {
-  background: white;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e6e6e6;
-  height: 70px;
+.body {
+    height: 100vh;
+    background-color: #f5f5f5 ;
+    // position: absolute;
+    width: 100%;
+    flex: 1;
+    padding: 0;
+    display: flex;
+
+
+    .content {
+        background-color: white;
+        flex: 4.5;
+        margin: 20px;
+        // margin-left: 0;
+        border-radius: 10px;
+
+    }
 }
 </style>
