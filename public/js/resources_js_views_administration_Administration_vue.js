@@ -68,6 +68,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
   data: function data() {
@@ -180,7 +181,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".el-menu-vertical-demo[data-v-81fbb27e]:not(.el-menu--collapse) {\n  width: 250px;\n  min-height: 400px;\n  border-right: none;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e] {\n  border-top-right-radius: 15px;\n  border-bottom-right-radius: 15px;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item.is-active[data-v-81fbb27e] {\n  background-color: #FFE5B4 !important;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-submenu__title[data-v-81fbb27e] {\n  border-top-right-radius: 15px;\n  border-bottom-right-radius: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".el-menu-vertical-demo[data-v-81fbb27e]:not(.el-menu--collapse) {\n  width: 250px;\n  min-height: 400px;\n  border-right: none;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e] {\n  border-top-right-radius: 15px;\n  border-bottom-right-radius: 15px;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item.is-active[data-v-81fbb27e] {\n  background-color: #ff9677 !important;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e]:hover {\n  background-color: #ff666688 !important;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -598,7 +599,7 @@ var render = function() {
             collapse: !_vm.isCollapse,
             router: true,
             "background-color": "#f5f5f5",
-            "active-text-color": "white"
+            "active-text-color": "#fff"
           },
           on: { open: _vm.handleOpen, close: _vm.handleClose }
         },
@@ -622,65 +623,6 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c(
-            "el-submenu",
-            { attrs: { index: "1" } },
-            [
-              _c("template", { slot: "title" }, [
-                _c("i", { staticClass: "el-icon-location" }),
-                _vm._v(" "),
-                _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-                  _vm._v("Dashboard")
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "el-menu-item-group",
-                [
-                  _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-                    _vm._v("Group One")
-                  ]),
-                  _vm._v(" "),
-                  _c("el-menu-item", { attrs: { index: "1-1" } }, [
-                    _vm._v("item one")
-                  ]),
-                  _vm._v(" "),
-                  _c("el-menu-item", { attrs: { index: "1-2" } }, [
-                    _vm._v("item two")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "el-menu-item-group",
-                { attrs: { title: "Group Two" } },
-                [
-                  _c("el-menu-item", { attrs: { index: "1-3" } }, [
-                    _vm._v("item three")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "el-submenu",
-                { attrs: { index: "1-4" } },
-                [
-                  _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-                    _vm._v("item four")
-                  ]),
-                  _vm._v(" "),
-                  _c("el-menu-item", { attrs: { index: "1-4-1" } }, [
-                    _vm._v("item one")
-                  ])
-                ],
-                1
-              )
-            ],
-            2
-          ),
-          _vm._v(" "),
           _c("el-menu-item", { attrs: { index: "2" } }, [
             _c("i", { staticClass: "el-icon-menu" }),
             _vm._v(" "),
@@ -701,9 +643,44 @@ var render = function() {
             _c("i", { staticClass: "el-icon-setting" }),
             _vm._v(" "),
             _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("Navigator Four")
+              _vm._v("Configuration")
             ])
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "el-submenu",
+            { staticClass: "sub-extra-none", attrs: { index: "products" } },
+            [
+              _c("template", { slot: "title" }, [
+                _c("span", { attrs: { slot: "title" }, slot: "title" }, [
+                  _vm._v("Configuration")
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-menu-item-group",
+                [
+                  _c(
+                    "el-menu-item",
+                    {
+                      class: [
+                        _vm.currentRouteName === "employees"
+                          ? "el-menu-item is-active"
+                          : "el-menu-item"
+                      ],
+                      attrs: {
+                        index: "employees",
+                        route: { name: "employees" }
+                      }
+                    },
+                    [_vm._v("Employees\n                ")]
+                  )
+                ],
+                1
+              )
+            ],
+            2
+          )
         ],
         1
       )

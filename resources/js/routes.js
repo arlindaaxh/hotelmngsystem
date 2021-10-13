@@ -20,6 +20,11 @@ export default {
                     path: '/dashboard',
                     component: () => import('./components/administration/Dashboard'),
                     name: 'dashboard'
+                },
+                {
+                    path: '/employees',
+                    component: () => import('./components/administration/Employees'),
+                    name: 'employees'
                 }
             ]
         },

@@ -14,31 +14,14 @@
             :router="true"
             background-color="#f5f5f5"
            
-            active-text-color="white"
+            :active-text-color="'#fff'"
 
         >
             <el-menu-item index="dashboard" :route="{name: 'dashboard'}" v-bind:class="[$route.name === 'dashboard' ? 'el-menu-item is-active' : 'el-menu-item']">
                 <i class="el-icon-menu"></i>
                 <span slot="title">Dashboard</span>
             </el-menu-item>
-            <el-submenu index="1">
-                <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span slot="title">Dashboard</span>
-                </template>
-                <el-menu-item-group>
-                    <span slot="title">Group One</span>
-                    <el-menu-item index="1-1">item one</el-menu-item>
-                    <el-menu-item index="1-2">item two</el-menu-item>
-                </el-menu-item-group>
-                <el-menu-item-group title="Group Two">
-                    <el-menu-item index="1-3">item three</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                    <span slot="title">item four</span>
-                    <el-menu-item index="1-4-1">item one</el-menu-item>
-                </el-submenu>
-            </el-submenu>
+        
             <el-menu-item index="2">
                 <i class="el-icon-menu"></i>
                 <span slot="title">Navigator Two</span>
@@ -49,8 +32,26 @@
             </el-menu-item>
             <el-menu-item index="4">
                 <i class="el-icon-setting"></i>
-                <span slot="title">Navigator Four</span>
+                <span slot="title">Configuration</span>
             </el-menu-item>
+
+            <el-submenu  index="products" class="sub-extra-none">
+
+                <template slot="title">
+                    <!-- <span class="p-5"> <img src="@/assets/new-product-icon.svg" style="
+                    width: 22px; margin:3px"/></span>
+                     -->
+                    <span slot="title">Configuration</span>
+                </template>
+                <el-menu-item-group>
+                    <el-menu-item
+                        index="employees"
+                        v-bind:class="[ currentRouteName === 'employees' ? 'el-menu-item is-active' : 'el-menu-item']"
+                        :route="{ name: 'employees' }"
+                        >Employees
+                    </el-menu-item>
+                </el-menu-item-group>
+            </el-submenu>
         </el-menu>
     </div>
 </template>
@@ -105,13 +106,21 @@
     }
 
     .el-menu-item.is-active {
-        background-color: #FFE5B4 !important;;
+        background-color: #ff9677 !important;
+    }
+
+    .el-menu-item:hover{
+        background-color: #ff666688 !important;
     }
     
-    .el-submenu__title {
-        border-top-right-radius: 15px;
-        border-bottom-right-radius: 15px;
-    }
+    // .el-submenu__title {
+    //     border-top-right-radius: 15px;
+    //     border-bottom-right-radius: 15px;
+    // }
+
+    // .el-submenu__title:hover {
+    //     background-color: #ff666691 !important;
+    // }
 
   }
   
