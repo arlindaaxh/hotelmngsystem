@@ -5,7 +5,7 @@
         <el-radio-button :label="false">expand</el-radio-button>
         <el-radio-button :label="true">collapse</el-radio-button>
         </el-radio-group> -->
-        <el-menu 
+        <!-- <el-menu 
             :default-active="$route.path" 
             class="el-menu-vertical-demo" 
             @open="handleOpen"
@@ -13,7 +13,6 @@
             :collapse="!isCollapse" 
             :router="true"
             background-color="#f5f5f5"
-           
             :active-text-color="'#fff'"
 
         >
@@ -38,9 +37,9 @@
             <el-submenu  index="products" class="sub-extra-none">
 
                 <template slot="title">
-                    <!-- <span class="p-5"> <img src="@/assets/new-product-icon.svg" style="
+                   <span class="p-5"> <img src="@/assets/new-product-icon.svg" style="
                     width: 22px; margin:3px"/></span>
-                     -->
+        
                     <span slot="title">Configuration</span>
                 </template>
                 <el-menu-item-group>
@@ -52,7 +51,38 @@
                     </el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
+        </el-menu> -->
+
+        <el-menu
+            :default-active="$route.path"
+            class="el-menu-vertical-demo"
+            :router="true"
+            background-color="#f5f5f5"
+       
+             active-text-color="#ffd04b"
+        >
+             <el-menu-item 
+                index="dashboard" 
+                :route="{name: 'dashboard'}" 
+                v-bind:class="[$route.name === 'dashboard' ? 'el-menu-item is-active' : 'el-menu-item']"
+                
+            >
+               <!-- <i class="el-icon-menu"></i> -->
+                <img src="../../css/assets/dashboard_icn.svg" style="width:22px; margin:3px"/>
+                <span :style="[$route.name === 'dashboard' ? {'color': 'white'} : {'color':'black'}]" >  Dashboard</span>
+            </el-menu-item>
+            <el-menu-item
+                index="employees"
+                :route="{ name: 'employees' }"
+                v-bind:class="[$route.name === 'employees' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i class="el-icon-s-custom"></i>
+                <span :style="[$route.name === 'employees' ? {'color': 'white'} : {'color':'black'}]">Employees</span>
+            </el-menu-item>
+          
+        
         </el-menu>
+
     </div>
 </template>
 
@@ -87,7 +117,7 @@
             
         }
         ,beforeMount() {
-            console.log('rou',this.$route.path)
+            console.log('route',this.$route.path)
         }
     }
 </script>
@@ -97,16 +127,23 @@
     width: 250px;
     min-height: 400px;
     border-right: none;
-
+        font-weight: 600;
+       
+        font-style: 'Mr Eaves XL Modern Bold';
     .el-menu-item {
         border-top-right-radius: 15px;
         border-bottom-right-radius: 15px;
         // background-color: orange !important;
+       font-size: 15px;
   
     }
 
     .el-menu-item.is-active {
         background-color: #ff9677 !important;
+        font-weight: 600;
+        color:white;
+  
+
     }
 
     .el-menu-item:hover{

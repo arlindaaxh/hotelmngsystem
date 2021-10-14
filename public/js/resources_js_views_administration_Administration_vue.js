@@ -69,6 +69,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
   data: function data() {
@@ -94,7 +124,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   beforeMount: function beforeMount() {
-    console.log('rou', this.$route.path);
+    console.log('route', this.$route.path);
   }
 });
 
@@ -165,6 +195,20 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/css/assets/dashboard_icn.svg":
+/*!************************************************!*\
+  !*** ./resources/css/assets/dashboard_icn.svg ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/dashboard_icn.svg?14f51408e7dff332955c85d8a41ecebf");
+
+/***/ }),
+
 /***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Sidebar.vue?vue&type=style&index=0&id=81fbb27e&lang=scss&scoped=true&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Sidebar.vue?vue&type=style&index=0&id=81fbb27e&lang=scss&scoped=true& ***!
@@ -181,7 +225,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".el-menu-vertical-demo[data-v-81fbb27e]:not(.el-menu--collapse) {\n  width: 250px;\n  min-height: 400px;\n  border-right: none;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e] {\n  border-top-right-radius: 15px;\n  border-bottom-right-radius: 15px;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item.is-active[data-v-81fbb27e] {\n  background-color: #ff9677 !important;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e]:hover {\n  background-color: #ff666688 !important;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".el-menu-vertical-demo[data-v-81fbb27e]:not(.el-menu--collapse) {\n  width: 250px;\n  min-height: 400px;\n  border-right: none;\n  font-weight: 600;\n  font-style: \"Mr Eaves XL Modern Bold\";\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e] {\n  border-top-right-radius: 15px;\n  border-bottom-right-radius: 15px;\n  font-size: 15px;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item.is-active[data-v-81fbb27e] {\n  background-color: #ff9677 !important;\n  font-weight: 600;\n  color: white;\n}\n.el-menu-vertical-demo:not(.el-menu--collapse) .el-menu-item[data-v-81fbb27e]:hover {\n  background-color: #ff666688 !important;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -596,12 +640,10 @@ var render = function() {
           staticClass: "el-menu-vertical-demo",
           attrs: {
             "default-active": _vm.$route.path,
-            collapse: !_vm.isCollapse,
             router: true,
             "background-color": "#f5f5f5",
-            "active-text-color": "#fff"
-          },
-          on: { open: _vm.handleOpen, close: _vm.handleClose }
+            "active-text-color": "#ffd04b"
+          }
         },
         [
           _c(
@@ -615,71 +657,50 @@ var render = function() {
               attrs: { index: "dashboard", route: { name: "dashboard" } }
             },
             [
-              _c("i", { staticClass: "el-icon-menu" }),
+              _c("img", {
+                staticStyle: { width: "22px", margin: "3px" },
+                attrs: { src: __webpack_require__(/*! ../../css/assets/dashboard_icn.svg */ "./resources/css/assets/dashboard_icn.svg") }
+              }),
               _vm._v(" "),
-              _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-                _vm._v("Dashboard")
-              ])
+              _c(
+                "span",
+                {
+                  style: [
+                    _vm.$route.name === "dashboard"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("  Dashboard")]
+              )
             ]
           ),
           _vm._v(" "),
-          _c("el-menu-item", { attrs: { index: "2" } }, [
-            _c("i", { staticClass: "el-icon-menu" }),
-            _vm._v(" "),
-            _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("Navigator Two")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("el-menu-item", { attrs: { index: "3", disabled: "" } }, [
-            _c("i", { staticClass: "el-icon-document" }),
-            _vm._v(" "),
-            _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("Navigator Three")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("el-menu-item", { attrs: { index: "4" } }, [
-            _c("i", { staticClass: "el-icon-setting" }),
-            _vm._v(" "),
-            _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("Configuration")
-            ])
-          ]),
-          _vm._v(" "),
           _c(
-            "el-submenu",
-            { staticClass: "sub-extra-none", attrs: { index: "products" } },
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "employees"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "employees", route: { name: "employees" } }
+            },
             [
-              _c("template", { slot: "title" }, [
-                _c("span", { attrs: { slot: "title" }, slot: "title" }, [
-                  _vm._v("Configuration")
-                ])
-              ]),
+              _c("i", { staticClass: "el-icon-s-custom" }),
               _vm._v(" "),
               _c(
-                "el-menu-item-group",
-                [
-                  _c(
-                    "el-menu-item",
-                    {
-                      class: [
-                        _vm.currentRouteName === "employees"
-                          ? "el-menu-item is-active"
-                          : "el-menu-item"
-                      ],
-                      attrs: {
-                        index: "employees",
-                        route: { name: "employees" }
-                      }
-                    },
-                    [_vm._v("Employees\n                ")]
-                  )
-                ],
-                1
+                "span",
+                {
+                  style: [
+                    _vm.$route.name === "employees"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Employees")]
               )
-            ],
-            2
+            ]
           )
         ],
         1
