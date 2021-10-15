@@ -1,12 +1,13 @@
 <template>
     <div class="body">
         
-        <!-- <pHeader></pHeader> -->
+
         <div class="sidebar">
             <sidebar/> 
         </div>
 
         <div class="content">
+            <pHeader></pHeader>
             <router-view></router-view>
         </div>
 
@@ -47,6 +48,7 @@ import Sidebar from '../../components/Sidebar.vue'
         margin: 20px;
         // margin-left: 0;
         border-radius: 10px;
+        overflow-y: scroll;
 
     }
 }

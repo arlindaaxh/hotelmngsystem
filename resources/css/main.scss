@@ -103,3 +103,58 @@
 .pt-40 {
     padding-top: 40px;
 }
+
+.form-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    align-content: center;
+    gap: 10px 40px;
+}
+
+.one-column-list {
+    margin-top: 10px;
+  
+    .item {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      border: 1px solid #eaeaea;
+      border-radius: 5px;
+      box-shadow: 0 5px 10px #f1f1f1;
+      padding-left: 10px;
+      padding-right: 10px ;
+  
+  
+      .info {
+        display: flex;
+        align-items: flex-start;
+        padding: 13px;
+        flex-direction: column;
+  
+        .info-name {
+          padding-bottom: 10px;
+          font-size: 14px;
+        }
+  
+        .info-item {
+          font-size: 80%;
+         
+        }
+      }
+    }
+}
+  
+    .form-max-width{
+        max-width: 1300px;
+        margin: 30px 30px 30px 30px;
+        .el-button{
+            align-self: center;
+        }
+    }
+
+.pointer{
+    cursor: pointer;
+}

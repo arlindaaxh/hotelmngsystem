@@ -180,6 +180,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -271,7 +272,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".body[data-v-22abf260] {\n  height: 100vh;\n  background-color: #f5f5f5;\n  width: 100%;\n  flex: 1;\n  padding: 0;\n  display: flex;\n}\n.body .content[data-v-22abf260] {\n  background-color: white;\n  flex: 4.5;\n  margin: 20px;\n  border-radius: 10px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".body[data-v-22abf260] {\n  height: 100vh;\n  background-color: #f5f5f5;\n  width: 100%;\n  flex: 1;\n  padding: 0;\n  display: flex;\n}\n.body .content[data-v-22abf260] {\n  background-color: white;\n  flex: 4.5;\n  margin: 20px;\n  border-radius: 10px;\n  overflow-y: scroll;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -775,7 +776,12 @@ var render = function() {
   return _c("div", { staticClass: "body" }, [
     _c("div", { staticClass: "sidebar" }, [_c("sidebar")], 1),
     _vm._v(" "),
-    _c("div", { staticClass: "content" }, [_c("router-view")], 1)
+    _c(
+      "div",
+      { staticClass: "content" },
+      [_c("pHeader"), _vm._v(" "), _c("router-view")],
+      1
+    )
   ])
 }
 var staticRenderFns = []
