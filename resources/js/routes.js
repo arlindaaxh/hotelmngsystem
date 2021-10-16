@@ -23,8 +23,31 @@ export default {
                 },
                 {
                     path: '/employees',
-                    component: () => import('./components/administration/Employees'),
-                    name: 'employees'
+                    component: () => import('./views/administration/Employees'),
+                    name: 'employees',
+                    children: [
+                        {
+                            path:'/add-employee',
+                            component: () => import('./components/administration/employees/AddEditEmployees'),
+                            name: 'add-employee',
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                        {
+                            path:'/edit-employee',
+                            component: () => import('./components/administration/employees/AddEditEmployees'),
+                            name: 'edit-employee',
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                    ]
+                },
+                {
+                    path: '/departments',
+                    component: () => import('./views/administration/Departments'),
+                    name: 'departments'
                 }
             ]
         },

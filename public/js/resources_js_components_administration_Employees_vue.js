@@ -88,6 +88,16 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       query: ""
     };
+  },
+  methods: {
+    addNewEmployee: function addNewEmployee() {
+      this.$router.push({
+        name: 'add-employee',
+        params: {
+          insertEdit: 'add'
+        }
+      });
+    }
   }
 });
 
@@ -14978,7 +14988,7 @@ var render = function() {
                           attrs: { size: "big", type: "primary" },
                           on: {
                             click: function($event) {
-                              return _vm.addNewShortcut()
+                              return _vm.addNewEmployee()
                             }
                           }
                         },

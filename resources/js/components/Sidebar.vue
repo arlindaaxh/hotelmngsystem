@@ -68,7 +68,9 @@
                 
             >
                <!-- <i class="el-icon-menu"></i> -->
-                <img src="../../css/assets/dashboard_icn.svg" style="width:22px; margin:3px"/>
+                <!-- <img src="../../css/assets/dashboard_icn.svg" style="width:22px; margin:3px"/> -->
+               
+                <i class="el-icon-s-data"></i>
                 <span :style="[$route.name === 'dashboard' ? {'color': 'white'} : {'color':'black'}]" >  Dashboard</span>
             </el-menu-item>
             <el-menu-item
@@ -79,6 +81,15 @@
                 <i class="el-icon-s-custom"></i>
                 <span :style="[$route.name === 'employees' ? {'color': 'white'} : {'color':'black'}]">Employees</span>
             </el-menu-item>
+            <el-menu-item
+                index="departments"
+                :route="{ name: 'departments' }"
+                v-bind:class="[$route.name === 'departments' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i class="el-icon-s-custom"></i>
+                <span :style="[$route.name === 'departments' ? {'color': 'white'} : {'color':'black'}]">Departments</span>
+            </el-menu-item>
+          
           
         
         </el-menu>
@@ -139,7 +150,7 @@
     }
 
     .el-menu-item.is-active {
-        background-color: #ff9677 !important;
+        background-color: #ff7b50 !important;
         font-weight: 600;
         color:white;
   
