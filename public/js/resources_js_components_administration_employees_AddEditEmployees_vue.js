@@ -2064,8 +2064,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
-/* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/employee.services */ "./resources/js/services/employee.services.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../services/employee.services */ "./resources/js/services/employee.services.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2130,18 +2138,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddEditEmployees',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_2__.ArrowLeftIcon
   },
-  props: ['insertEdit', 'departments'],
+  props: ['insertEdit', 'departments', 'employeeProp', 'id'],
   data: function data() {
     return {
       loading: false,
-      departments: [],
       employee: {
         name: null,
         surname: null,
@@ -2149,7 +2162,8 @@ __webpack_require__.r(__webpack_exports__);
         job_title: null,
         phone: null,
         active: true,
-        department_id: null
+        department_id: null,
+        id: null
       },
       rules: {
         name: [{
@@ -2193,7 +2207,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      _services_employee_services__WEBPACK_IMPORTED_MODULE_0__["default"].postEmployee(this.employee).then(function (res) {
+      _services_employee_services__WEBPACK_IMPORTED_MODULE_1__["default"].postEmployee(this.employee).then(function (res) {
         _this.$notify.success({
           title: 'Success',
           type: 'Success',
@@ -2206,6 +2220,63 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this.loading = false;
       });
+    },
+    editEmployee: function editEmployee() {
+      var _this2 = this;
+
+      this.loading = true;
+      var employee = {
+        'name': this.employee.name,
+        'surname': this.employee.surname,
+        'email': this.employee.email,
+        'job_title': this.employee.job_title,
+        'phone': this.employee.phone,
+        'active': this.employee.active,
+        'department_id': this.employee.department_id
+      }; // let url = `https://127.0.0.1:8000/api/edit-employee/${this.employee.id}`;
+
+      _services_employee_services__WEBPACK_IMPORTED_MODULE_1__["default"].putEmployee(employee, this.id).then(function (res) {
+        _this2.$notify.success({
+          title: 'Success',
+          type: 'Success',
+          message: 'Employee was updated successfully'
+        });
+
+        console.log('employee', res.data);
+
+        _this2.goBack();
+      })["catch"](function (error) {
+        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
+    }
+  },
+  beforeMount: function beforeMount() {
+    if (!this.insertEdit) {
+      this.goBack();
+    } else {
+      if (this.insertEdit === 'edit') {
+        this.employee = _objectSpread({}, this.employeeProp);
+
+        if (this.employee.active === 1) {
+          this.employee.active = true;
+        }
+      }
     }
   }
 });
@@ -2234,6 +2305,10 @@ __webpack_require__.r(__webpack_exports__);
   postEmployee: function postEmployee(payload) {
     var url = "http://127.0.0.1:8000/api/add-employee";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putEmployee: function putEmployee(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-employee/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -17104,24 +17179,38 @@ var render = function() {
               }),
               _vm._v(" "),
               _vm.insertEdit === "edit"
-                ? _c("h4", [_vm._v("Edit Employee - ")])
+                ? _c("h4", [
+                    _vm._v(
+                      "Edit Employee - " +
+                        _vm._s(_vm.employee.name) +
+                        " " +
+                        _vm._s(_vm.employee.surname)
+                    )
+                  ])
                 : _c("h4", [_vm._v("Add Employee")])
             ],
             1
           ),
           _vm._v(" "),
-          _c(
-            "el-button",
-            {
-              attrs: { type: "primary", size: "medium" },
-              on: {
-                click: function($event) {
-                  return _vm.save()
-                }
-              }
-            },
-            [_vm._v("Save")]
-          )
+          _vm.insertEdit === "edit"
+            ? _c(
+                "el-button",
+                {
+                  staticStyle: {
+                    "background-color": "#ff7b50",
+                    "border-radius": "15px",
+                    color: "white"
+                  },
+                  attrs: { size: "big" },
+                  on: {
+                    click: function($event) {
+                      return _vm.editEmployee()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            : _vm._e()
         ],
         1
       ),

@@ -75,6 +75,11 @@
     margin-left: 20px;
 }
 
+.m-l-5{
+    margin-left: 5px;
+}
+
+
 .pt-5 {
     padding-top: 5px;
 }
@@ -107,6 +112,9 @@
     padding-top: 40px;
 }
 
+.pl-15 {
+    padding-left:15px;
+}
 .form-data {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -255,7 +263,8 @@ color: #f66;
 
 .card-items-container{
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+    // grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 220px 220px 220px 120px 120px 140px 50px;
     align-items: center;
     font-size: 16px;
     justify-content: space-between;
@@ -275,5 +284,6 @@ color: #f66;
 .card-items-container:hover{
     background-color: white ;
     border-color: #ff7b50;
+    transition: 0.9s;
 }
 

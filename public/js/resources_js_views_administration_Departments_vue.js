@@ -2185,6 +2185,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 /* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../services/department.services */ "./resources/js/services/department.services.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
 //
 //
 //
@@ -2233,13 +2241,15 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['departmentProp'],
   data: function data() {
     return {
       loading: false,
       department: {
         name: null,
         code: null,
-        active: true
+        active: true,
+        id: null
       },
       rules: {
         name: [{
@@ -2277,10 +2287,65 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$emit('close');
       })["catch"](function (error) {
-        _this.catchMethod(error);
+        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+        _this.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+          message: errorMessage
+        });
       })["finally"](function () {
         _this.loading = false;
       });
+    },
+    edit: function edit() {
+      var _this2 = this;
+
+      this.loading = true;
+      _services_department_services__WEBPACK_IMPORTED_MODULE_1__["default"].putDepartment(this.department, this.department.id).then(function (res) {
+        _this2.$notify.success({
+          title: 'Success',
+          type: 'success',
+          message: 'Department was updated successfully'
+        });
+
+        _this2.$emit('close');
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
+    }
+  },
+  beforeMount: function beforeMount() {
+    if (this.departmentProp.id) {
+      this.department = _objectSpread({}, this.departmentProp);
+
+      if (this.department.active === 1) {
+        this.department.active = true;
+      }
     }
   }
 });
@@ -2346,6 +2411,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2358,7 +2470,10 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       query: "",
       showDepartmentModal: false,
-      departments: []
+      departments: [],
+      sortField: "",
+      sortOrder: 'asc',
+      depProp: null
     };
   },
   computed: {
@@ -2373,6 +2488,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addNewDepartment: function addNewDepartment() {
       this.showDepartmentModal = true;
+    },
+    editDepartment: function editDepartment(department) {
+      this.showDepartmentModal = true;
+      this.depProp = department;
     },
     getDepartments: function getDepartments() {
       var _this2 = this;
@@ -2403,6 +2522,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   beforeMount: function beforeMount() {
     this.getDepartments();
+  },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    if (to.name === 'departments') {
+      this.getDepartments();
+    }
+
+    next();
   }
 });
 
@@ -2430,6 +2556,10 @@ __webpack_require__.r(__webpack_exports__);
   postDepartment: function postDepartment(payload) {
     var url = "http://127.0.0.1:8000/api/departments";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putDepartment: function putDepartment(payload, id) {
+    var url = "http://127.0.0.1:8000/api/departments/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -2500,7 +2630,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "[data-v-1a14cb4f] .el-input__inner {\n  border-radius: 15px;\n}\n.card-items-container[data-v-1a14cb4f] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-1a14cb4f] .el-input__inner {\n  border-radius: 15px;\n}\n.card-items-container[data-v-1a14cb4f] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-1a14cb4f] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2989,27 +3119,49 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c("span", { staticClass: "label-no-height m-t-5 m-b-5" }, [
-            _vm._v("Add Department")
-          ]),
+          _vm.department.id
+            ? _c("span", { staticClass: "label-no-height m-t-5 m-b-5" }, [
+                _vm._v("Edit Department")
+              ])
+            : _c("span", { staticClass: "label-no-height m-t-5 m-b-5" }, [
+                _vm._v("Add Department")
+              ]),
           _vm._v(" "),
-          _c(
-            "el-button",
-            {
-              staticStyle: {
-                "background-color": "#ff7b50",
-                "border-radius": "15px",
-                color: "white"
-              },
-              attrs: { size: "medium" },
-              on: {
-                click: function($event) {
-                  return _vm.save()
-                }
-              }
-            },
-            [_vm._v("Save")]
-          )
+          _vm.department.id
+            ? _c(
+                "el-button",
+                {
+                  staticStyle: {
+                    "background-color": "#ff7b50",
+                    "border-radius": "15px",
+                    color: "white"
+                  },
+                  attrs: { size: "medium" },
+                  on: {
+                    click: function($event) {
+                      return _vm.edit()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            : _c(
+                "el-button",
+                {
+                  staticStyle: {
+                    "background-color": "#ff7b50",
+                    "border-radius": "15px",
+                    color: "white"
+                  },
+                  attrs: { size: "medium" },
+                  on: {
+                    click: function($event) {
+                      return _vm.save()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
         ],
         1
       ),
@@ -3209,28 +3361,170 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
+              _c("div", { staticClass: "pl-15 mt-50 table-sort" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Name")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "sort-icon-asc-desc pointer flexed-column"
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Code")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Status")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "upc_code" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc_code", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
               _vm._l(_vm.filteredDepartments, function(department, index) {
-                return _c("div", { key: index, staticClass: " mt-30" }, [
+                return _c("div", { key: index, staticClass: "mt-10" }, [
                   _c(
                     "div",
                     {
                       staticClass: "card-items-container pointer flexed",
                       on: {
                         click: function($event) {
-                          return _vm.editShortcut(_vm.shortcut)
+                          return _vm.editDepartment(department)
                         }
                       }
                     },
                     [
-                      _c("strong", { staticClass: "info-name" }, [
+                      _c("span", { staticClass: "info-name text" }, [
                         _vm._v(_vm._s(department.name))
                       ]),
                       _vm._v(" "),
-                      _c("strong", { staticClass: "info-name" }, [
+                      _c("span", { staticClass: "info-name" }, [
                         _vm._v(_vm._s(department.code))
                       ]),
                       _vm._v(" "),
-                      _c("strong", { staticClass: "info-item" }, [
+                      _c("span", { staticClass: "info-item" }, [
                         _vm._v(
                           _vm._s(
                             department.active === 1 ? "active" : "inactive"
@@ -3263,6 +3557,7 @@ var render = function() {
           _vm._v(" "),
           _vm.showDepartmentModal
             ? _c("add-edit-departments", {
+                attrs: { departmentProp: _vm.depProp },
                 on: {
                   close: function($event) {
                     _vm.showDepartmentModal = false

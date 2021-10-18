@@ -2118,6 +2118,100 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2132,7 +2226,9 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       query: "",
       employees: [],
-      departments: []
+      departments: [],
+      sortField: "",
+      sortOrder: "asc"
     };
   },
   computed: {
@@ -2154,13 +2250,23 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    editEmployee: function editEmployee(employee) {
+      this.$router.push({
+        name: 'edit-employee',
+        params: {
+          insertEdit: 'edit',
+          departments: this.departments,
+          employeeProp: employee,
+          id: employee.id
+        }
+      });
+    },
     getEmployees: function getEmployees() {
       var _this2 = this;
 
       this.loading = true;
       _services_employee_services__WEBPACK_IMPORTED_MODULE_0__["default"].getEmployees().then(function (res) {
         _this2.employees = res.data;
-        console.log('empl', _this2.employees);
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
@@ -2187,7 +2293,6 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       _services_department_services__WEBPACK_IMPORTED_MODULE_1__["default"].getDepartments().then(function (res) {
         _this3.departments = res.data;
-        console.log('d', _this3.departments);
       })["catch"](function (error) {
         var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
 
@@ -2212,11 +2317,72 @@ __webpack_require__.r(__webpack_exports__);
       return this.departments.find(function (element) {
         return element.id === departmentId;
       }).name;
+    },
+    sortBy: function sortBy(field, order) {
+      console.log('fs', field);
+      this.sortField = field;
+      this.sortOrder = order;
+
+      if (this.sortOrder === 'asc') {
+        this.sortedObject(this.employees, this.sortField);
+      } else {
+        this.sortedObjectDescending(this.employees, this.sortField);
+      }
+    },
+    sortedObject: function sortedObject(array, key) {
+      return array.sort(function (a, b) {
+        var nameA = a[key].toUpperCase();
+        var nameB = b[key].toUpperCase();
+
+        if (nameA < nameB) {
+          return -1;
+        }
+
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
+    sortedObjectDescending: function sortedObjectDescending(array, key) {
+      return array.sort(function (a, b) {
+        var nameA = a[key].toUpperCase();
+        var nameB = b[key].toUpperCase();
+
+        if (nameA > nameB) {
+          return -1;
+        }
+
+        if (nameA < nameB) {
+          return 1;
+        }
+
+        return 0;
+      });
     }
   },
   beforeMount: function beforeMount() {
+    var _this4 = this;
+
     this.getDepartments();
-    this.getEmployees();
+    this.getEmployees(); // let found = this.employees.find(employee => this.departments.some(dep => employee.departmentId === dep.id))
+    // if(found){
+    //     this.getName(found.department_id)
+    // }
+
+    this.employees.forEach(function (element) {
+      element.dep_name = _this4.getName(element.department_id);
+    });
+    console.log('empl', this.employees);
+  },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    if (to.name === 'employees') {
+      this.getEmployees();
+      this.getDepartments();
+    }
+
+    next();
   }
 });
 
@@ -2244,6 +2410,10 @@ __webpack_require__.r(__webpack_exports__);
   postDepartment: function postDepartment(payload) {
     var url = "http://127.0.0.1:8000/api/departments";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putDepartment: function putDepartment(payload, id) {
+    var url = "http://127.0.0.1:8000/api/departments/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -2271,6 +2441,10 @@ __webpack_require__.r(__webpack_exports__);
   postEmployee: function postEmployee(payload) {
     var url = "http://127.0.0.1:8000/api/add-employee";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putEmployee: function putEmployee(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-employee/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -2293,7 +2467,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "[data-v-dfdf421a] .el-input__inner {\n  border-radius: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-dfdf421a] .el-input__inner {\n  border-radius: 15px;\n}\n.table-sort[data-v-dfdf421a] {\n  display: grid;\n  grid-template-columns: 220px 220px 220px 120px 120px 140px 50px;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 220px 220px 220px 120px 120px 140px 50px;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -17253,24 +17427,300 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
+              _c("div", { staticClass: "pl-15 mt-30 table-sort" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("First Name")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "sort-icon-asc-desc pointer flexed-column"
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "name" && _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("name", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "name" && _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("name", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Last Name")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "surname" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("surname", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "surname" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("surname", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Email")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "email" && _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("email", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "email" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("email", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Phone")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "phone" && _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("phone", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "phone" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("phone", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Job title")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "job_title" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("job_title", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "job_title" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("job_title", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Department")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "department" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("department", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "department" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("department", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
               _vm._l(_vm.filteredEmployees, function(employee, index) {
-                return _c("div", { key: index, staticClass: " mt-30" }, [
+                return _c("div", { key: index, staticClass: "mt-10" }, [
                   _c(
                     "div",
                     {
                       staticClass: "card-items-container pointer flexed",
                       on: {
                         click: function($event) {
-                          return _vm.editShortcut(_vm.shortcut)
+                          return _vm.editEmployee(employee)
                         }
                       }
                     },
                     [
-                      _c("strong", { staticClass: "info-name" }, [
+                      _c("span", { staticClass: "info-name" }, [
                         _vm._v(_vm._s(employee.name))
                       ]),
                       _vm._v(" "),
-                      _c("strong", { staticClass: "info-name" }, [
+                      _c("span", { staticClass: "info-name" }, [
                         _vm._v(_vm._s(employee.surname))
                       ]),
                       _vm._v(" "),

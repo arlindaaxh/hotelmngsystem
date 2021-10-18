@@ -3,10 +3,11 @@
     <div class="flexed justify-between  m-b-20">
       <span @click="goBack()" class="flexed align-center pointer">
         <arrow-left-icon size="1.2x" class="m-r-5" />
-        <h4 v-if="insertEdit ==='edit'">Edit Employee - </h4>
+        <h4 v-if="insertEdit ==='edit'">Edit Employee - {{employee.name}} {{employee.surname}}</h4>
         <h4 v-else>Add Employee</h4>
       </span>
-      <el-button type="primary" size="medium" @click="save()">Save</el-button>
+        <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-if="insertEdit === 'edit'" @click="editEmployee()">Save</el-button>
+        <!-- <el-button type="primary" size="medium" v-else @click="save()">Save</el-button> -->
     </div>
 
     <div class="content mt-30">
@@ -57,12 +58,17 @@
             <el-switch v-model="employee.active" ></el-switch>
           </div>
         </el-form-item>
+
+        <!-- <el-form-item>
+            <el-input type="hidden" name="_method" value="PUT">
+        </el-form-item> -->
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import {ArrowLeftIcon} from 'vue-feather-icons';
 import EmployeeServices from '../../../services/employee.services'
 
@@ -71,11 +77,11 @@ import EmployeeServices from '../../../services/employee.services'
         components: {
             ArrowLeftIcon
         },
-        props: ['insertEdit', 'departments'],
+        props: ['insertEdit', 'departments', 'employeeProp','id'],
         data(){
             return{
                 loading: false,
-                departments: [],
+
                 employee: {
                     name:null,
                     surname: null,
@@ -83,7 +89,8 @@ import EmployeeServices from '../../../services/employee.services'
                     job_title:null,
                     phone:null,
                     active: true,
-                    department_id:null
+                    department_id:null,
+                    id: null,
                 },
                 rules: {
                     name: [
@@ -149,8 +156,64 @@ import EmployeeServices from '../../../services/employee.services'
                 })
 
             },
+            editEmployee(){
+                this.loading = true
+                let employee = {
+                    'name': this.employee.name,
+                    'surname': this.employee.surname,
+                    'email': this.employee.email,
+                    'job_title': this.employee.job_title,
+                    'phone': this.employee.phone,
+                    'active': this.employee.active,
+                    'department_id': this.employee.department_id
+                }
+
+                // let url = `https://127.0.0.1:8000/api/edit-employee/${this.employee.id}`;
+           
+                EmployeeServices.putEmployee(employee, this.id).then((res) => {
+                      this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Employee was updated successfully'
+                    })
+                    console.log('employee', res.data)
+                    this.goBack()
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            }
            
         },
+        beforeMount(){
+            if(!this.insertEdit){
+                this.goBack()
+            }
+            else {
+                if(this.insertEdit === 'edit'){
+                    this.employee = {...this.employeeProp}
+                    if(this.employee.active === 1){
+                        this.employee.active = true
+                    }
+
+                }
+            }
+        }
        
     
     }

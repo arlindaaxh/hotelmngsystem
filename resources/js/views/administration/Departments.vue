@@ -12,15 +12,62 @@
           <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewDepartment()">New</el-button>
         </div>
       </div>
+       <div class="pl-15 mt-50 table-sort">
+            <div class="flexed align-center " style="gap:10px">
+                <strong>Name</strong>
+                <span class="sort-icon-asc-desc pointer flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('upc_code', 'asc')"
+                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('upc_code', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Code</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('upc_code', 'asc')"
+                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('upc_code', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Status</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('upc_code', 'asc')"
+                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('upc_code', 'desc')"
+                    ></i>
+                </span>
+            </div>
+       </div>
     
-        <div class=" mt-30" v-for="(department,index) in filteredDepartments" :key="index">
+        <div class="mt-10" v-for="(department,index) in filteredDepartments" :key="index">
            
-            <div class="card-items-container pointer flexed" @click="editShortcut(shortcut)"> 
+            <div class="card-items-container pointer flexed" @click="editDepartment(department)"> 
                 <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
-                <strong class="info-name">{{department.name}}</strong>
-                <strong class="info-name">{{department.code}}</strong>
+                <span class="info-name text">{{department.name}}</span>
+                <span class="info-name">{{department.code}}</span>
                
-                <strong class="info-item">{{department.active === 1 ? 'active' : 'inactive'}}</strong>
+                <span class="info-item">{{department.active === 1 ? 'active' : 'inactive'}}</span>
             
                 <div class="flexed justify-end" style="font-size:26px; gap:5px;">
                     <!-- <i class="el-icon-edit-outline" style="color:#66b1ff"></i> -->
@@ -39,7 +86,7 @@
             
         />
     </div>
-    <add-edit-departments v-if="showDepartmentModal" @close="showDepartmentModal = false"/>
+    <add-edit-departments v-if="showDepartmentModal" @close="showDepartmentModal = false" :departmentProp="depProp"/>
   </div>
 
 </template>
@@ -55,7 +102,10 @@ import departmentServices from '../../services/department.services'
                 loading: false,
                 query: "", 
                 showDepartmentModal: false,
-                departments: []
+                departments: [],
+                sortField: "",
+                sortOrder: 'asc',
+                depProp: null,
             }
         },
         computed: {
@@ -75,6 +125,10 @@ import departmentServices from '../../services/department.services'
             addNewDepartment(){
                 this.showDepartmentModal = true
             },
+            editDepartment(department){
+                this.showDepartmentModal = true  
+                this.depProp = department
+            },
             getDepartments(){
                 this.loading = true
                 departmentServices.getDepartments().then((res) => {
@@ -82,7 +136,7 @@ import departmentServices from '../../services/department.services'
                     
                 })
                 .catch((error) => {
-                     this.loading=false
+                    this.loading=false
                     let errorMessage = error?.data?.message ||
                     error?.message ||
                     error?.response?.message ||
@@ -103,6 +157,12 @@ import departmentServices from '../../services/department.services'
         },
         beforeMount(){
             this.getDepartments()
+        },
+        beforeRouteUpdate(to, from, next){
+            if(to.name === 'departments'){
+                this.getDepartments()
+            }
+            next()
         }
       
     }
@@ -118,6 +178,20 @@ import departmentServices from '../../services/department.services'
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 
+}
+
+.table-sort {
+    display: grid;
+    padding-right:10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    font-size: 16px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px ;
+    font-family: 'Mulish', sans-serif;
 }
 
 </style>

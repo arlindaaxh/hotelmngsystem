@@ -1,57 +1,7 @@
 <template>
     <div>
         <div class="flexed  ml-20 p-20 pt-40" style="font-weight:bold; font-size:17px"><span class="el-icon-office-building"></span>My Hotel Logo</div>
-        <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-        <el-radio-button :label="false">expand</el-radio-button>
-        <el-radio-button :label="true">collapse</el-radio-button>
-        </el-radio-group> -->
-        <!-- <el-menu 
-            :default-active="$route.path" 
-            class="el-menu-vertical-demo" 
-            @open="handleOpen"
-            @close="handleClose" 
-            :collapse="!isCollapse" 
-            :router="true"
-            background-color="#f5f5f5"
-            :active-text-color="'#fff'"
-
-        >
-            <el-menu-item index="dashboard" :route="{name: 'dashboard'}" v-bind:class="[$route.name === 'dashboard' ? 'el-menu-item is-active' : 'el-menu-item']">
-                <i class="el-icon-menu"></i>
-                <span slot="title">Dashboard</span>
-            </el-menu-item>
-        
-            <el-menu-item index="2">
-                <i class="el-icon-menu"></i>
-                <span slot="title">Navigator Two</span>
-            </el-menu-item>
-            <el-menu-item index="3" disabled>
-                <i class="el-icon-document"></i>
-                <span slot="title">Navigator Three</span>
-            </el-menu-item>
-            <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">Configuration</span>
-            </el-menu-item>
-
-            <el-submenu  index="products" class="sub-extra-none">
-
-                <template slot="title">
-                   <span class="p-5"> <img src="@/assets/new-product-icon.svg" style="
-                    width: 22px; margin:3px"/></span>
-        
-                    <span slot="title">Configuration</span>
-                </template>
-                <el-menu-item-group>
-                    <el-menu-item
-                        index="employees"
-                        v-bind:class="[ currentRouteName === 'employees' ? 'el-menu-item is-active' : 'el-menu-item']"
-                        :route="{ name: 'employees' }"
-                        >Employees
-                    </el-menu-item>
-                </el-menu-item-group>
-            </el-submenu>
-        </el-menu> -->
+    
 
         <el-menu
             :default-active="$route.path"
@@ -89,6 +39,15 @@
                 <i class="el-icon-s-custom"></i>
                 <span :style="[$route.name === 'departments' ? {'color': 'white'} : {'color':'black'}]">Departments</span>
             </el-menu-item>
+            <el-menu-item
+                index="rooms"
+                :route="{ name: 'rooms' }"
+                v-bind:class="[$route.name === 'rooms' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+         
+                <b-icon icon="door-closed-fill" class="m-l-5" :style="[$route.name === 'rooms' ? {'color': 'white'} : {'color':'grey'}]"></b-icon>
+                <span :style="[$route.name === 'rooms' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Rooms</span>
+            </el-menu-item>
           
           
         
@@ -98,8 +57,12 @@
 </template>
 
 <script>
+import {BIcon} from 'bootstrap-vue'
     export default {
         name: 'Sidebar',
+        components: {
+            BIcon
+        },
         data(){
             return {
                 isCollapse: true,

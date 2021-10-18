@@ -35,7 +35,7 @@ export default {
                             })
                         },
                         {
-                            path:'/edit-employee',
+                            path:'/edit-employee/:id',
                             component: () => import('./components/administration/employees/AddEditEmployees'),
                             name: 'edit-employee',
                             props: (route) => ({
@@ -48,6 +48,11 @@ export default {
                     path: '/departments',
                     component: () => import('./views/administration/Departments'),
                     name: 'departments'
+                },
+                {
+                    path: '/rooms',
+                    name: 'rooms',
+                    component: () => import('./views/administration/Rooms')
                 }
             ]
         },

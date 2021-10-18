@@ -9,16 +9,110 @@
           <i class="el-icon-search el-input__icon" slot="suffix"></i>
         </el-input>
         <div>
-          <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewEmployee()">New</el-button>
+      
+            <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewEmployee()">New</el-button>
         </div>
       </div>
+
+        <div class="pl-15 mt-30 table-sort">
+            <div class="flexed align-center " style="gap:10px">
+                <strong>First Name</strong>
+                <span class="sort-icon-asc-desc pointer flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('name', 'asc')"
+                    :class="sortField === 'name' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'name' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('name', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Last Name</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('surname', 'asc')"
+                    :class="sortField === 'surname' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'surname' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('surname', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Email</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('email', 'asc')"
+                    :class="sortField === 'email' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'email' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('email', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Phone</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('phone', 'asc')"
+                    :class="sortField === 'phone' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'phone' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('phone', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Job title</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('job_title', 'asc')"
+                    :class="sortField === 'job_title' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'job_title' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('job_title', 'desc')"
+                    ></i>
+                </span>
+            </div>
+             <div class="flexed align-center " style="gap:10px">
+                <strong>Department</strong>
+                <span class="sort-icon-asc-desc flexed-column">
+                    <i
+                    class="el-icon-caret-top" style="height:10px"
+                    @click="sortBy('department', 'asc')"
+                    :class="sortField === 'department' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    ></i>
+                    <i
+                    class="el-icon-caret-bottom" 
+                    :class="sortField === 'department' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('department', 'desc')"
+                    ></i>
+                </span>
+            </div>
+      </div>
     
-        <div class=" mt-30" v-for="(employee,index) in filteredEmployees" :key="index">
+        <div class="mt-10" v-for="(employee,index) in filteredEmployees" :key="index">
           
-            <div class="card-items-container pointer flexed" @click="editShortcut(shortcut)"> 
+            <div class="card-items-container pointer flexed" @click="editEmployee(employee)"> 
                 <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
-                <strong class="info-name">{{employee.name}}</strong>
-                <strong class="info-name">{{employee.surname}}</strong>
+                <span class="info-name">{{employee.name}}</span>
+                <span class="info-name">{{employee.surname}}</span>
                 
                 <span style="info-item">{{employee.email}}</span>
               
@@ -65,6 +159,8 @@ export default {
             query: "",
             employees: [],
             departments: [],
+            sortField: "",
+            sortOrder: "asc"
         }
     },
     computed:{
@@ -91,11 +187,22 @@ export default {
             
             })
         },
+        editEmployee(employee){
+            this.$router.push({
+                name: 'edit-employee',
+                params: {
+                    insertEdit: 'edit',
+                    departments: this.departments,
+                    employeeProp: employee,
+                    id: employee.id
+                }
+            
+            })
+        },
         getEmployees(){
             this.loading = true
             EmployeeServices.getEmployees().then((res) => {
                 this.employees = res.data
-                console.log('empl', this.employees)
             })
             .catch((error) => {
                 this.loading=false
@@ -120,7 +227,6 @@ export default {
             this.loading = true
             DepartmentServices.getDepartments().then((res) => {
                 this.departments = res.data
-                console.log('d', this.departments)
             })
             .catch((error) => {
                     this.loading=false
@@ -143,11 +249,66 @@ export default {
         },
         getName(departmentId){
             return this.departments.find(element => element.id === departmentId).name
-        }
+        },
+        sortBy(field, order) {
+            console.log('fs', field)
+            this.sortField = field;
+            this.sortOrder = order;
+            if(this.sortOrder === 'asc'){
+                this.sortedObject(this.employees, this.sortField)
+            }else {
+                this.sortedObjectDescending(this.employees, this.sortField)
+            }
+        },
+        sortedObject(array, key) {
+            return array.sort((a, b) => {
+                let nameA = a[key].toUpperCase();
+                let nameB = b[key].toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+        },
+
+        sortedObjectDescending(array, key) {
+            return array.sort((a, b) => {
+                let nameA = a[key].toUpperCase();
+                let nameB = b[key].toUpperCase();
+                if (nameA > nameB) {
+                    return -1;
+                }
+                if (nameA < nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+        },
     },
     beforeMount() {
         this.getDepartments()
         this.getEmployees()
+        // let found = this.employees.find(employee => this.departments.some(dep => employee.departmentId === dep.id))
+        // if(found){
+        //     this.getName(found.department_id)
+        // }
+        this.employees.forEach(element => {
+            element.dep_name = this.getName(element.department_id)
+        });
+        console.log('empl', this.employees)
+
+
+
+    },
+     beforeRouteUpdate(to, from, next){
+        if(to.name === 'employees'){
+            this.getEmployees()
+            this.getDepartments()
+        }
+        next()
 
     }
     
@@ -159,5 +320,21 @@ export default {
 
 ::v-deep .el-input__inner {
     border-radius: 15px;
+}
+
+.table-sort {
+    display: grid;
+    // gap:15px;
+    grid-template-columns: 220px 220px 220px 120px 120px 140px 50px;
+    padding-right:10px;
+    display: grid;
+    grid-template-columns: 220px 220px 220px 120px 120px 140px 50px;
+    align-items: center;
+    font-size: 16px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px ;
+    font-family: 'Mulish', sans-serif;
 }
 </style>

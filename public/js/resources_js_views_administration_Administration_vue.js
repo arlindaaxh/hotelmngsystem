@@ -11,6 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/icons/icon.js");
 //
 //
 //
@@ -69,49 +70,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
+  components: {
+    BIcon: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__.BIcon
+  },
   data: function data() {
     return {
       isCollapse: true
@@ -723,6 +687,43 @@ var render = function() {
                 [_vm._v("Departments")]
               )
             ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "rooms"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "rooms", route: { name: "rooms" } }
+            },
+            [
+              _c("b-icon", {
+                staticClass: "m-l-5",
+                style: [
+                  _vm.$route.name === "rooms"
+                    ? { color: "white" }
+                    : { color: "grey" }
+                ],
+                attrs: { icon: "door-closed-fill" }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "rooms"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Rooms")]
+              )
+            ],
+            1
           )
         ],
         1

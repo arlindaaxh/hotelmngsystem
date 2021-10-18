@@ -4,8 +4,10 @@
         <span class="pointer m-t-5 m-b-5">
             <i class="el-icon-close" @click="$emit('close')"></i>
         </span>
-        <span class="label-no-height m-t-5 m-b-5">Add Department</span>
-          <el-button size="medium" style="background-color:#ff7b50; border-radius:15px;color:white" @click="save()">Save</el-button>
+        <span class="label-no-height m-t-5 m-b-5" v-if="department.id">Edit Department</span>
+        <span class="label-no-height m-t-5 m-b-5" v-else>Add Department</span>
+        <el-button v-if="department.id" size="medium" style="background-color:#ff7b50; border-radius:15px;color:white" @click="edit()">Save</el-button>
+        <el-button v-else size="medium" style="background-color:#ff7b50; border-radius:15px;color:white" @click="save()">Save</el-button>
     </div>
     <div v-loading="loading" class="body">
 
@@ -47,6 +49,7 @@ import DepartmentServices from '../../../services/department.services'
         components: {
             NormalPopup
         },
+        props: ['departmentProp'],
         data() {
             return{
                 loading: false,
@@ -54,6 +57,7 @@ import DepartmentServices from '../../../services/department.services'
                     name: null,
                     code: null,
                     active: true,
+                    id:null,
                 },
                 rules: {
                     name: [
@@ -95,11 +99,60 @@ import DepartmentServices from '../../../services/department.services'
                     this.$emit('close')
                 })
                 .catch((error) => {
-                    this.catchMethod(error)
+                   this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
                 })
                 .finally(() => {
                     this.loading = false
                 })
+            },
+            edit(){
+                this.loading = true;
+                DepartmentServices.putDepartment(this.department, this.department.id).then((res) => {
+                    this.$notify.success({
+                        title:'Success',
+                        type: 'success',
+                        message: 'Department was updated successfully'
+                    })
+                    this.$emit('close')
+                })
+                .catch((error) => {
+                     this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            }
+        },
+        beforeMount(){
+            if(this.departmentProp.id){
+                this.department = {...this.departmentProp}
+                if(this.department.active === 1){
+                    this.department.active = true
+                }
             }
         }
     }
