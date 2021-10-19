@@ -97,4 +97,11 @@ class EmployeeController extends Controller
 
         return response()->json($employee, 200);
     }
+
+    public function delete($id)
+    {
+        $employee = Employee::findOrFail($id);
+        $employee->delete();         
+
+    }
 }

@@ -44,4 +44,11 @@ class DepartmentController extends Controller
 
         return response()->json($department, 200);
     }
+
+    public function delete($id)
+    {
+        $department = Department::findOrFail($id);
+        $department->delete();         
+
+    }
 }

@@ -2309,6 +2309,10 @@ __webpack_require__.r(__webpack_exports__);
   putEmployee: function putEmployee(payload, id) {
     var url = "http://127.0.0.1:8000/api/edit-employee/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteEmployee: function deleteEmployee(id) {
+    var url = "http://127.0.0.1:8000/api/employees/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
 
@@ -17210,7 +17214,23 @@ var render = function() {
                 },
                 [_vm._v("Save")]
               )
-            : _vm._e()
+            : _c(
+                "el-button",
+                {
+                  staticStyle: {
+                    "background-color": "#ff7b50",
+                    "border-radius": "15px",
+                    color: "white"
+                  },
+                  attrs: { size: "big" },
+                  on: {
+                    click: function($event) {
+                      return _vm.save()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
         ],
         1
       ),

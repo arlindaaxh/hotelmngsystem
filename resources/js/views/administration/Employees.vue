@@ -92,7 +92,7 @@
             </div>
              <div class="flexed align-center " style="gap:10px">
                 <strong>Department</strong>
-                <span class="sort-icon-asc-desc flexed-column">
+                <!-- <span class="sort-icon-asc-desc flexed-column">
                     <i
                     class="el-icon-caret-top" style="height:10px"
                     @click="sortBy('department', 'asc')"
@@ -103,7 +103,7 @@
                     :class="sortField === 'department' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
                     @click="sortBy('department', 'desc')"
                     ></i>
-                </span>
+                </span> -->
             </div>
       </div>
     
@@ -122,7 +122,7 @@
             
                 <div class="flexed justify-end" style="font-size:26px; gap:5px;">
                     <!-- <i class="el-icon-edit-outline" style="color:#66b1ff"></i> -->
-                    <i class="el-icon-delete" style="font-size:20px; color:#f56565"></i>
+                    <i class="el-icon-delete" style="font-size:20px; color:#f56565" @click="deleteEmployee(employee)"></i>
                 </div>
             </div>
             
@@ -135,6 +135,7 @@
             title="No results found" 
             show-icon
         />
+        <delete-employee v-if="showDeleteEmployeeModal" @close='showDeleteEmployeeModal = false' :employeeProp='employeeProp'/>
     </div>
   </div>
   <div v-else>
@@ -147,11 +148,13 @@
 import EmployeeServices from '../../services/employee.services'
 import DepartmentServices from '../../services/department.services'
 import { EditIcon, Trash2Icon } from "vue-feather-icons";
+import DeleteEmployee from '../../components/administration/employees/DeleteEmployee.vue';
 export default {
     name: 'Employees',
     components: {
         EditIcon,
-        Trash2Icon
+        Trash2Icon,
+        DeleteEmployee
     },
     data() {
         return {
@@ -160,7 +163,9 @@ export default {
             employees: [],
             departments: [],
             sortField: "",
-            sortOrder: "asc"
+            sortOrder: "asc",
+            employeeProp: null,
+            showDeleteEmployeeModal: false,
         }
     },
     computed:{
@@ -248,10 +253,12 @@ export default {
             })
         },
         getName(departmentId){
-            return this.departments.find(element => element.id === departmentId).name
+            let found = this.departments?.find(element => element.id === departmentId)
+            if(found){
+                return found.name
+            }
         },
         sortBy(field, order) {
-            console.log('fs', field)
             this.sortField = field;
             this.sortOrder = order;
             if(this.sortOrder === 'asc'){
@@ -287,21 +294,15 @@ export default {
                 return 0;
             });
         },
+        deleteEmployee(employee){
+            event.stopPropagation()
+            this.showDeleteEmployeeModal = true
+            this.employeeProp = employee
+        }
     },
     beforeMount() {
         this.getDepartments()
         this.getEmployees()
-        // let found = this.employees.find(employee => this.departments.some(dep => employee.departmentId === dep.id))
-        // if(found){
-        //     this.getName(found.department_id)
-        // }
-        this.employees.forEach(element => {
-            element.dep_name = this.getName(element.department_id)
-        });
-        console.log('empl', this.employees)
-
-
-
     },
      beforeRouteUpdate(to, from, next){
         if(to.name === 'employees'){

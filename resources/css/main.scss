@@ -287,3 +287,17 @@ color: #f66;
     transition: 0.9s;
 }
 
+.bottom {
+    padding:20px;
+    display: flex;
+    align-content: flex-end;
+    justify-content: end;
+}
+
+.el-icon-caret-top {
+    cursor: pointer;
+}
+
+.el-icon-caret-bottom {
+    cursor: pointer;
+}

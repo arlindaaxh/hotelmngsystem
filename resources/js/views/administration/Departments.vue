@@ -18,13 +18,13 @@
                 <span class="sort-icon-asc-desc pointer flexed-column">
                     <i
                     class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('upc_code', 'asc')"
-                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    @click="sortBy('name', 'asc')"
+                    :class="sortField === 'name' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
                     ></i>
                     <i
                     class="el-icon-caret-bottom" 
-                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('upc_code', 'desc')"
+                    :class="sortField === 'name' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('name', 'desc')"
                     ></i>
                 </span>
             </div>
@@ -33,30 +33,30 @@
                 <span class="sort-icon-asc-desc flexed-column">
                     <i
                     class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('upc_code', 'asc')"
-                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    @click="sortBy('code', 'asc')"
+                    :class="sortField === 'code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
                     ></i>
                     <i
                     class="el-icon-caret-bottom" 
-                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('upc_code', 'desc')"
+                    :class="sortField === 'code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('code', 'desc')"
                     ></i>
                 </span>
             </div>
              <div class="flexed align-center " style="gap:10px">
                 <strong>Status</strong>
-                <span class="sort-icon-asc-desc flexed-column">
+                <!-- <span class="sort-icon-asc-desc flexed-column">
                     <i
                     class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('upc_code', 'asc')"
-                    :class="sortField === 'upc_code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                    @click="sortBy('active', 'asc')"
+                    :class="sortField === 'active' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
                     ></i>
                     <i
                     class="el-icon-caret-bottom" 
-                    :class="sortField === 'upc_code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('upc_code', 'desc')"
+                    :class="sortField === 'active' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                    @click="sortBy('active', 'desc')"
                     ></i>
-                </span>
+                </span> -->
             </div>
        </div>
     
@@ -71,7 +71,7 @@
             
                 <div class="flexed justify-end" style="font-size:26px; gap:5px;">
                     <!-- <i class="el-icon-edit-outline" style="color:#66b1ff"></i> -->
-                    <i class="el-icon-delete" style="font-size:20px; color:#f56565"></i>
+                    <i class="el-icon-delete" style="font-size:20px; color:#f56565" @click="showDeleteModalMethod(department)"></i>
                 </div>
             </div>
             
@@ -87,15 +87,17 @@
         />
     </div>
     <add-edit-departments v-if="showDepartmentModal" @close="showDepartmentModal = false" :departmentProp="depProp"/>
+    <delete-modal v-if="showDeleteModal" @close="showDeleteModal = false" :departmentProp="depProp"/>
   </div>
 
 </template>
 
 <script>
+import DeleteModal from '../../components/administration/departments/DeleteModal.vue'
 import AddEditDepartments from '../../components/administration/departments/AddEditDepartments.vue'
 import departmentServices from '../../services/department.services'
     export default {
-    components: { AddEditDepartments },
+    components: { AddEditDepartments, DeleteModal },
         name: 'Departments',
         data() {
             return {
@@ -106,6 +108,7 @@ import departmentServices from '../../services/department.services'
                 sortField: "",
                 sortOrder: 'asc',
                 depProp: null,
+                showDeleteModal: false
             }
         },
         computed: {
@@ -153,7 +156,50 @@ import departmentServices from '../../services/department.services'
                 .finally(() => {
                     this.loading = false
                 })
-            }
+            },
+            showDeleteModalMethod(department){
+                event.stopPropagation()
+                this.showDeleteModal = true
+                this.depProp = department
+            },
+             sortBy(field, order) {
+                 console.log('field', field)
+            
+                this.sortField = field;
+                this.sortOrder = order;
+                if(this.sortOrder === 'asc'){
+                    this.sortedObject(this.departments, this.sortField)
+                }else {
+                    this.sortedObjectDescending(this.departments, this.sortField)
+                }
+            },
+            sortedObject(array, key) {
+                return array.sort((a, b) => {
+                    let nameA = a[key].toUpperCase();
+                    let nameB = b[key].toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            },
+
+            sortedObjectDescending(array, key) {
+                return array.sort((a, b) => {
+                    let nameA = a[key].toUpperCase();
+                    let nameB = b[key].toUpperCase();
+                    if (nameA > nameB) {
+                        return -1;
+                    }
+                    if (nameA < nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            },
         },
         beforeMount(){
             this.getDepartments()
@@ -161,6 +207,7 @@ import departmentServices from '../../services/department.services'
         beforeRouteUpdate(to, from, next){
             if(to.name === 'departments'){
                 this.getDepartments()
+            
             }
             next()
         }

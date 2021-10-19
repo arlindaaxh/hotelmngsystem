@@ -120,9 +120,9 @@ import {BIcon} from 'bootstrap-vue'
 
     }
 
-    .el-menu-item:hover{
-        background-color: #ff666688 !important;
-    }
+    // .el-menu-item:hover{
+    //     // background-color: #ff6666f8 !important;
+    // }
     
     // .el-submenu__title {
     //     border-top-right-radius: 15px;

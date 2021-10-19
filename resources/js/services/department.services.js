@@ -12,5 +12,9 @@ export default {
     putDepartment(payload,id){
         const url = `http://127.0.0.1:8000/api/departments/${id}`
         return axios.put(url, payload)
+    },
+    deleteDepartment(id){
+        const url = `http://127.0.0.1:8000/api/departments/${id}`
+        return axios.delete(url)
     }
 }

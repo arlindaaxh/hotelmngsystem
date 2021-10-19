@@ -7,8 +7,16 @@
         </div>
 
         <div class="content">
-            <pHeader></pHeader>
-            <router-view></router-view>
+
+            <div class="header-main">
+                <pHeader></pHeader>
+            </div>
+          
+
+            <div class="main-content">
+                <router-view></router-view>
+            </div>
+           
         </div>
 
    
@@ -48,7 +56,17 @@ import Sidebar from '../../components/Sidebar.vue'
         margin: 20px;
         // margin-left: 0;
         border-radius: 10px;
-        overflow-y: scroll;
+        // overflow-y: scroll;
+
+
+        .header-main {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .main-content {
+            height: 800px;
+            overflow-y: scroll;
+        }
 
     }
 }

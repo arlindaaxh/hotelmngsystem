@@ -7,7 +7,7 @@
         <h4 v-else>Add Employee</h4>
       </span>
         <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-if="insertEdit === 'edit'" @click="editEmployee()">Save</el-button>
-        <!-- <el-button type="primary" size="medium" v-else @click="save()">Save</el-button> -->
+        <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-else @click="save()">Save</el-button>
     </div>
 
     <div class="content mt-30">
