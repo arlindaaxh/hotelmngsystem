@@ -9,7 +9,7 @@
           <i class="el-icon-search el-input__icon" slot="suffix"></i>
         </el-input>
         <div>
-          <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewDepartment()">New</el-button>
+          <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewRoom()">New</el-button>
         </div>
       </div>
        <div class="pl-15 mt-50 table-sort">
@@ -62,7 +62,7 @@
     
         <div class="mt-10">
            
-            <div class="card-items-container pointer flexed" @click="editDepartment(department)"> 
+            <div class="card-items-container pointer flexed" @click="editRoom(room)"> 
                 <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
                 <span class="info-name text">Number</span>
                 <span class="info-name">Code</span>
@@ -88,11 +88,15 @@
     </div>
    
   </div>
+    <div v-else>
+        <router-view/>
+    </div>
 
 </template>
 
 <script>
     export default {
+        name: 'AddEditRoom',
         data(){
             
             return {
@@ -100,13 +104,74 @@
                 query: "", 
                 sortField: "",
                 sortOrder: 'asc',
-               
             }
         
+        },
+        methods: {
+            addNewRoom(){
+                this.$router.push({
+                    name: 'add-room',
+                    insertEdit: 'add'
+                })  
+            },
+            sortBy(field, order) {            
+                this.sortField = field;
+                this.sortOrder = order;
+                if(this.sortOrder === 'asc'){
+                    this.sortedObject(this.rooms, this.sortField)
+                }else {
+                    this.sortedObjectDescending(this.rooms, this.sortField)
+                }
+            },
+            sortedObject(array, key) {
+                return array.sort((a, b) => {
+                    let nameA = a[key].toUpperCase();
+                    let nameB = b[key].toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            },
+
+            sortedObjectDescending(array, key) {
+                return array.sort((a, b) => {
+                    let nameA = a[key].toUpperCase();
+                    let nameB = b[key].toUpperCase();
+                    if (nameA > nameB) {
+                        return -1;
+                    }
+                    if (nameA < nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            },
         }
     }
 </script>
 
 <style lang="scss" scoped>
+.card-items-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 
+}
+
+.table-sort {
+    display: grid;
+    padding-right:10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    font-size: 16px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px ;
+    font-family: 'Mulish', sans-serif;
+}
 </style>

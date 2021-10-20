@@ -52,7 +52,25 @@ export default {
                 {
                     path: '/rooms',
                     name: 'rooms',
-                    component: () => import('./views/administration/Rooms')
+                    component: () => import('./views/administration/Rooms'),
+                    children: [
+                        {
+                            path:'/add-room',
+                            component: () => import('./components/administration/rooms/AddEditRoom'),
+                            name: 'add-room',
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                        {
+                            path:'/edit-room/:id',
+                            component: () => import('./components/administration/rooms/AddEditRoom'),
+                            name: 'edit-room',
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                    ]
                 }
             ]
         },
