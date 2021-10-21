@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\RoomController;
 use App\Models\Employee;
 
 /*
@@ -35,4 +36,6 @@ Route::post('/departments', [DepartmentController::class, 'store']);
 Route::put('/departments/{id}', [DepartmentController::class, 'update']);
 Route::delete('/departments/{id}', [DepartmentController::class, 'delete']);
 
-
+//ROOMS
+Route::post('/add-room', [RoomController::class, 'store']);
+Route::get('/rooms', [RoomController::class, 'index']);
