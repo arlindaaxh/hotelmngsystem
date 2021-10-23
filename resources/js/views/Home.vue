@@ -15,7 +15,7 @@
                 <img src="../../css/images/frontdesk.png" class="image">
                  <!-- <img src="C:\xampp\htdocs\hotelmngsystem\resources\css\images\administration-logo.jpg" class="image"> -->
                 <div class="flexed justify-center vertical-middle align-center mt-30" style="height:100px;">
-                    <el-button  type="text" @click="goToAdministration()"><h3 class="pt-20">Frontdesk</h3></el-button>
+                    <el-button  type="text" @click="goToFrontDesk()"><h3 class="pt-20">Frontdesk</h3></el-button>
                 </div>
             </el-card>
             <el-card class="card flexed-column">
@@ -51,9 +51,13 @@
             },
 
             goToAdministration(){
-                console.log('u')
                 this.$router.push({
                     name: 'administration'
+                })
+            },
+            goToFrontDesk(){
+                this.$router.push({
+                    name: 'frontdesk'
                 })
             }
             

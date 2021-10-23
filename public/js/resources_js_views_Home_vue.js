@@ -60,9 +60,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     goToAdministration: function goToAdministration() {
-      console.log('u');
       this.$router.push({
         name: 'administration'
+      });
+    },
+    goToFrontDesk: function goToFrontDesk() {
+      this.$router.push({
+        name: 'frontdesk'
       });
     }
   }
@@ -304,7 +308,7 @@ var render = function() {
                   attrs: { type: "text" },
                   on: {
                     click: function($event) {
-                      return _vm.goToAdministration()
+                      return _vm.goToFrontDesk()
                     }
                   }
                 },

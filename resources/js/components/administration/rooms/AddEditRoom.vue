@@ -51,6 +51,17 @@
                     <span v-else>Booked</span>
                 </el-form-item>
 
+                 <el-form-item prop="cleaning_status" label="Cleaning Status">
+                    <el-select v-model="cleaning_status"  placeholder="Select room status" style="width:100%" size="big" @change="addFacility()">
+                        <el-option
+                            v-for="item in roomCleaningStatuses"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.label"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                
             </el-form>
         </div>
@@ -75,6 +86,7 @@ import RoomServices from '../../../services/room.services'
                     number: null,
                     status: true,
                     facilities: [],
+                    cleaning_status: roomCleaningStatuses[0]
                 },
                 facility_items: [],
                 rules: {
@@ -126,6 +138,20 @@ import RoomServices from '../../../services/room.services'
                         value: '11'
                     }, 
                     
+                ],
+                roomCleaningStatuses: [
+                    {
+                        label: 'Clean',
+                        value: '1'
+                    },
+                    {
+                        label: 'Dirty',
+                        value: '2'
+                    },
+                    {
+                        label: 'Ready',
+                        value: '3'
+                    },
                 ]
 
             }

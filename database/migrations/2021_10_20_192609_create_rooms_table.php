@@ -22,7 +22,15 @@ class CreateRoomsTable extends Migration
             $table->id();
             $table->timestamps();
         });
+
+
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->string('cleaning_status');
+            // $table->bigInteger('maintainer_id');
+        });
     }
+
+
 
     /**
      * Reverse the migrations.

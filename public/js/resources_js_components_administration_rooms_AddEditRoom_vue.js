@@ -2125,6 +2125,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2141,7 +2152,8 @@ __webpack_require__.r(__webpack_exports__);
         code: null,
         number: null,
         status: true,
-        facilities: []
+        facilities: [],
+        cleaning_status: roomCleaningStatuses[0]
       },
       facility_items: [],
       rules: {},
@@ -2178,6 +2190,16 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         label: 'Fireplace',
         value: '11'
+      }],
+      roomCleaningStatuses: [{
+        label: 'Clean',
+        value: '1'
+      }, {
+        label: 'Dirty',
+        value: '2'
+      }, {
+        label: 'Ready',
+        value: '3'
       }]
     };
   },
@@ -17369,6 +17391,42 @@ var render = function() {
                   _vm.room.status
                     ? _c("span", [_vm._v("Available")])
                     : _c("span", [_vm._v("Booked")])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                {
+                  attrs: { prop: "cleaning_status", label: "Cleaning Status" }
+                },
+                [
+                  _c(
+                    "el-select",
+                    {
+                      staticStyle: { width: "100%" },
+                      attrs: { placeholder: "Select room status", size: "big" },
+                      on: {
+                        change: function($event) {
+                          return _vm.addFacility()
+                        }
+                      },
+                      model: {
+                        value: _vm.cleaning_status,
+                        callback: function($$v) {
+                          _vm.cleaning_status = $$v
+                        },
+                        expression: "cleaning_status"
+                      }
+                    },
+                    _vm._l(_vm.roomCleaningStatuses, function(item) {
+                      return _c("el-option", {
+                        key: item.value,
+                        attrs: { label: item.label, value: item.label }
+                      })
+                    }),
+                    1
+                  )
                 ],
                 1
               )

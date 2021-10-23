@@ -8,10 +8,11 @@
             class="el-menu-vertical-demo"
             :router="true"
             background-color="#f5f5f5"
-       
-             active-text-color="#ffd04b"
+
+            active-text-color="#ffd04b"
         >
-             <el-menu-item 
+           
+            <el-menu-item 
                 index="dashboard" 
                 :route="{name: 'dashboard'}" 
                 v-bind:class="[$route.name === 'dashboard' ? 'el-menu-item is-active' : 'el-menu-item']"
@@ -19,10 +20,10 @@
             >
                <!-- <i class="el-icon-menu"></i> -->
                 <!-- <img src="../../css/assets/dashboard_icn.svg" style="width:22px; margin:3px"/> -->
-               
                 <i class="el-icon-s-data"></i>
                 <span :style="[$route.name === 'dashboard' ? {'color': 'white'} : {'color':'black'}]" >  Dashboard</span>
             </el-menu-item>
+            
             <el-menu-item
                 index="employees"
                 :route="{ name: 'employees' }"
@@ -89,10 +90,9 @@ import {BIcon} from 'bootstrap-vue'
                 })
             },
             
-        }
-        ,beforeMount() {
-            console.log('route',this.$route.path)
-        }
+        },
+
+       
     }
 </script>
 

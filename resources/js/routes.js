@@ -74,6 +74,24 @@ export default {
                 }
             ]
         },
+        {
+            path: '/frontdesk',
+            name: 'frontdesk',
+            component: () => import('./views/frontdesk/Frontdesk'),
+            children: [
+                {
+                    path: '/frontdesk-dashboard',
+                    component: () => import('./components/frontdesk/Dashboard'),
+                    name: 'frontdesk-dashboard'
+                },
+                {
+                    path: '/housekeeping',
+                    component: () => import('./components/frontdesk/Housekeeping'),
+                    name: 'housekeeping'
+                },
+            ]
+        }
+
        
 
     ]
