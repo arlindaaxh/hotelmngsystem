@@ -72,7 +72,7 @@
             
                 <div class="flexed justify-end" style="font-size:26px; gap:5px;">
                     <!-- <i class="el-icon-edit-outline" style="color:#66b1ff"></i> -->
-                    <i class="el-icon-delete" style="font-size:20px; color:#f56565"></i>
+                    <i class="el-icon-delete" style="font-size:20px; color:#f56565" @click="deleteRoom(room, $event)"></i>
                 </div>
             </div>
             
@@ -86,6 +86,8 @@
             show-icon
             
         />
+
+        <delete-room-modal v-if="showDeleteRoomModal" :roomProp="roomProp" @close="showHideDeleteRoomModal()"/>
     </div>
    
   </div>
@@ -96,8 +98,10 @@
 </template>
 
 <script>
+import DeleteRoomModal from '../../components/administration/rooms/DeleteRoomModal.vue'
 import RoomServices from '../../services/room.services'
     export default {
+  components: { DeleteRoomModal },
         name: 'AddEditRoom',
         data(){
             
@@ -107,6 +111,8 @@ import RoomServices from '../../services/room.services'
                 sortField: "",
                 sortOrder: 'asc',
                 rooms: [],
+                showDeleteRoomModal: false,
+                roomProp: null,
             }
         
         },
@@ -127,7 +133,20 @@ import RoomServices from '../../services/room.services'
             addNewRoom(){
                 this.$router.push({
                     name: 'add-room',
-                    insertEdit: 'add'
+                    params: {
+                        insertEdit: 'add'
+                    }
+                    
+                })  
+            },
+            editRoom(room){
+               this.$router.push({
+                    name: 'edit-room',
+                    params: {
+                       insertEdit: 'edit',
+                        roomProp: room 
+                    }
+                    
                 })  
             },
             sortBy(field, order) {            
@@ -191,7 +210,17 @@ import RoomServices from '../../services/room.services'
                     this.loading = false
                 })
 
+            },
+            deleteRoom(room, event){
+                event.stopPropagation()
+                this.showDeleteRoomModal = true
+                this.roomProp = room
+            },
+            showHideDeleteRoomModal(){
+                this.showDeleteRoomModal = false
+                this.getRooms()
             }
+            
         },
         beforeMount(){
             this.getRooms()

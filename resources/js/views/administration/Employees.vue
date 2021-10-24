@@ -122,7 +122,7 @@
             
                 <div class="flexed justify-end" style="font-size:26px; gap:5px;">
                     <!-- <i class="el-icon-edit-outline" style="color:#66b1ff"></i> -->
-                    <i class="el-icon-delete" style="font-size:20px; color:#f56565" @click="deleteEmployee(employee)"></i>
+                    <i class="el-icon-delete" style="font-size:20px; color:#f56565" @click="deleteEmployee(employee,$event)"></i>
                 </div>
             </div>
             
@@ -135,7 +135,7 @@
             title="No results found" 
             show-icon
         />
-        <delete-employee v-if="showDeleteEmployeeModal" @close='showDeleteEmployeeModal = false' :employeeProp='employeeProp'/>
+        <delete-employee v-if="showDeleteEmployeeModal" @close='showHideDeleteEmployeeModal()' :employeeProp='employeeProp'/>
     </div>
   </div>
   <div v-else>
@@ -294,10 +294,16 @@ export default {
                 return 0;
             });
         },
-        deleteEmployee(employee){
+        deleteEmployee(employee,event){
             event.stopPropagation()
             this.showDeleteEmployeeModal = true
             this.employeeProp = employee
+        },
+        showHideDeleteEmployeeModal(){
+            this.showDeleteEmployeeModal = false
+            this.getDepartments()
+            this.getEmployees()
+          
         }
     },
     beforeMount() {

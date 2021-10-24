@@ -2095,6 +2095,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2162,6 +2163,14 @@ __webpack_require__.r(__webpack_exports__);
   postRoom: function postRoom(payload) {
     var url = "http://127.0.0.1:8000/api/add-room";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putRoom: function putRoom(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-room/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteRoom: function deleteRoom(id) {
+    var url = "http://127.0.0.1:8000/api/rooms/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
 
@@ -2333,11 +2342,15 @@ var render = function() {
                         staticStyle: { height: "200px" }
                       },
                       [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("span", [_vm._v(_vm._s(room.number))]),
-                          _vm._v(" "),
-                          _c("strong", [_vm._v(_vm._s(room.code))])
-                        ]),
+                        _c(
+                          "div",
+                          { staticClass: "flexed-column align-center" },
+                          [
+                            _c("strong", [_vm._v(_vm._s(room.code))]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(room.number))])
+                          ]
+                        ),
                         _vm._v(" "),
                         _c("span", [
                           _vm._v(

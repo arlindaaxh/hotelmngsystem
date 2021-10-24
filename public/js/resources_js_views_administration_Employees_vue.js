@@ -2572,10 +2572,15 @@ __webpack_require__.r(__webpack_exports__);
         return 0;
       });
     },
-    deleteEmployee: function deleteEmployee(employee) {
+    deleteEmployee: function deleteEmployee(employee, event) {
       event.stopPropagation();
       this.showDeleteEmployeeModal = true;
       this.employeeProp = employee;
+    },
+    showHideDeleteEmployeeModal: function showHideDeleteEmployeeModal() {
+      this.showDeleteEmployeeModal = false;
+      this.getDepartments();
+      this.getEmployees();
     }
   },
   beforeMount: function beforeMount() {
@@ -18331,7 +18336,7 @@ var render = function() {
                             },
                             on: {
                               click: function($event) {
-                                return _vm.deleteEmployee(employee)
+                                return _vm.deleteEmployee(employee, $event)
                               }
                             }
                           })
@@ -18361,7 +18366,7 @@ var render = function() {
                     attrs: { employeeProp: _vm.employeeProp },
                     on: {
                       close: function($event) {
-                        _vm.showDeleteEmployeeModal = false
+                        return _vm.showHideDeleteEmployeeModal()
                       }
                     }
                   })

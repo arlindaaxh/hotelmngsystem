@@ -2652,6 +2652,10 @@ __webpack_require__.r(__webpack_exports__);
 
         return 0;
       });
+    },
+    showHideDeleteModal: function showHideDeleteModal() {
+      this.showDeleteModal = false;
+      this.getDepartments();
     }
   },
   beforeMount: function beforeMount() {
@@ -3852,7 +3856,7 @@ var render = function() {
                 attrs: { departmentProp: _vm.depProp },
                 on: {
                   close: function($event) {
-                    _vm.showDeleteModal = false
+                    return _vm.showHideDeleteModal()
                   }
                 }
               })

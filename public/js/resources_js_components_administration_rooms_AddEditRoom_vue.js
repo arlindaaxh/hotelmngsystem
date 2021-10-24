@@ -2066,6 +2066,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/room.services */ "./resources/js/services/room.services.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2140,7 +2146,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddEditRoom',
-  props: ['insertEdit'],
+  props: ['insertEdit', 'roomProp'],
   components: {
     ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__.ArrowLeftIcon
   },
@@ -2153,7 +2159,8 @@ __webpack_require__.r(__webpack_exports__);
         number: null,
         status: true,
         facilities: [],
-        cleaning_status: this.roomCleaningStatuses[0].label
+        cleaning_status: null,
+        id: null
       },
       facility_items: [],
       rules: {},
@@ -2211,13 +2218,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     addFacility: function addFacility() {
       this.room.facilities.push(this.facility_item);
-      console.log('facilities');
+      console.log('facilities', this.room.facilities);
     },
     save: function save() {
       var _this = this;
 
       this.loading = true;
+      console.log('facility', this.facility_items);
       this.room.facilities = this.facility_items;
+
+      if (this.room.status === true) {
+        this.room.status = 1;
+      } else if (this.room.status === false) {
+        this.room.status = 0;
+      }
+
       _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].postRoom(this.room).then(function (res) {
         _this.$notify.success({
           title: 'Success',
@@ -2245,6 +2260,63 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this.loading = false;
       });
+    },
+    editRoom: function editRoom() {
+      var _this2 = this;
+
+      this.loading = true;
+
+      if (this.room.status === true) {
+        this.room.status = 1;
+      } else if (this.room.status === false) {
+        this.room.status = 0;
+      }
+
+      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].putRoom(this.room, this.room.id).then(function (res) {
+        _this2.$notify.success({
+          title: 'Success',
+          type: 'Success',
+          message: 'Room was updated successfully'
+        });
+
+        _this2.goBack();
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
+    }
+  },
+  beforeMount: function beforeMount() {
+    console.log('insertEdit', this.insertEdit);
+
+    if (!this.insertEdit) {
+      this.goBack();
+    } else {
+      if (this.insertEdit === 'edit') {
+        this.room = _objectSpread({}, this.roomProp);
+        console.log('rooom', this.room);
+
+        if (this.room.status === 1) {
+          this.room.status = true;
+        }
+
+        this.facility_items = this.room.facilities;
+      }
     }
   }
 });
@@ -2273,6 +2345,14 @@ __webpack_require__.r(__webpack_exports__);
   postRoom: function postRoom(payload) {
     var url = "http://127.0.0.1:8000/api/add-room";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putRoom: function putRoom(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-room/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteRoom: function deleteRoom(id) {
+    var url = "http://127.0.0.1:8000/api/rooms/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
 
@@ -2295,7 +2375,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "[data-v-f141322e] .el-tag.el-tag--info {\n  background-color: #ff7b50;\n  border-color: #e9e9eb;\n  color: white;\n  font-weight: 500;\n}\n[data-v-f141322e] .el-tag.el-tag--info .el-tag__close {\n  color: black;\n  background-color: white;\n}\n[data-v-f141322e] .el-switch.is-checked .el-switch__core {\n  border-color: #32ce6e;\n  background-color: #40ff70;\n}\n[data-v-f141322e] .el-switch__core {\n  border-color: #ce3232;\n  background-color: #ff4040;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-f141322e] .el-tag.el-tag--info {\n  background-color: #ff7b50;\n  border-color: #e9e9eb;\n  color: white;\n  font-weight: 500;\n}\n[data-v-f141322e] .el-tag.el-tag--info .el-tag__close {\n  color: black;\n  background-color: white;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -17212,7 +17292,9 @@ var render = function() {
               }),
               _vm._v(" "),
               _vm.insertEdit === "edit"
-                ? _c("h4", [_vm._v("Edit Room - ")])
+                ? _c("h4", [
+                    _vm._v("Edit Room - " + _vm._s(_vm.room.code) + " ")
+                  ])
                 : _c("h4", [_vm._v("Add Room")])
             ],
             1
@@ -17230,7 +17312,7 @@ var render = function() {
                   attrs: { size: "big" },
                   on: {
                     click: function($event) {
-                      return _vm.editEmployee()
+                      return _vm.editRoom()
                     }
                   }
                 },
@@ -17342,11 +17424,6 @@ var render = function() {
                         placeholder: "Select facility items",
                         size: "big"
                       },
-                      on: {
-                        change: function($event) {
-                          return _vm.addFacility()
-                        }
-                      },
                       model: {
                         value: _vm.facility_items,
                         callback: function($$v) {
@@ -17405,11 +17482,11 @@ var render = function() {
                       staticStyle: { width: "100%" },
                       attrs: { placeholder: "Select room status", size: "big" },
                       model: {
-                        value: _vm.cleaning_status,
+                        value: _vm.room.cleaning_status,
                         callback: function($$v) {
-                          _vm.cleaning_status = $$v
+                          _vm.$set(_vm.room, "cleaning_status", $$v)
                         },
-                        expression: "cleaning_status"
+                        expression: "room.cleaning_status"
                       }
                     },
                     _vm._l(_vm.roomCleaningStatuses, function(item) {

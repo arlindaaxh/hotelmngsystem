@@ -87,7 +87,7 @@
         />
     </div>
     <add-edit-departments v-if="showDepartmentModal" @close="showDepartmentModal = false" :departmentProp="depProp"/>
-    <delete-modal v-if="showDeleteModal" @close="showDeleteModal = false" :departmentProp="depProp"/>
+    <delete-modal v-if="showDeleteModal" @close="showHideDeleteModal()" :departmentProp="depProp"/>
   </div>
 
 </template>
@@ -200,6 +200,10 @@ import departmentServices from '../../services/department.services'
                     return 0;
                 });
             },
+            showHideDeleteModal(){
+                this.showDeleteModal = false
+                this.getDepartments()
+            }
         },
         beforeMount(){
             this.getDepartments()

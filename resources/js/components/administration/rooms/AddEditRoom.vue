@@ -3,10 +3,10 @@
         <div class="flexed justify-between  m-b-20">
             <span @click="goBack()" class="flexed align-center pointer">
                 <arrow-left-icon size="1.2x" class="m-r-5" />
-                <h4 v-if="insertEdit ==='edit'">Edit Room - </h4>
+                <h4 v-if="insertEdit ==='edit'">Edit Room - {{room.code}} </h4>
                 <h4 v-else>Add Room</h4>
             </span>
-            <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-if="insertEdit === 'edit'" @click="editEmployee()">Save</el-button>
+            <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-if="insertEdit === 'edit'" @click="editRoom()">Save</el-button>
             <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-else @click="save()">Save</el-button>
         </div>
 
@@ -34,7 +34,7 @@
                 </el-form-item>
 
                 <el-form-item prop="status" label="Facilities">
-                    <el-select v-model="facility_items" multiple placeholder="Select facility items" style="width:100%" size="big" @change="addFacility()">
+                    <el-select v-model="facility_items" multiple placeholder="Select facility items" style="width:100%" size="big">
                         <el-option
                             v-for="item in localfacilities"
                             :key="item.value"
@@ -51,8 +51,8 @@
                     <span v-else>Booked</span>
                 </el-form-item>
 
-                 <el-form-item prop="cleaning_status" label="Cleaning Status">
-                    <el-select v-model="cleaning_status"  placeholder="Select room status" style="width:100%" size="big" >
+                <el-form-item prop="cleaning_status" label="Cleaning Status">
+                    <el-select v-model="room.cleaning_status"  placeholder="Select room status" style="width:100%" size="big" >
                         <el-option
                             v-for="item in roomCleaningStatuses"
                             :key="item.value"
@@ -73,20 +73,22 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
 import RoomServices from '../../../services/room.services'
     export default {
         name: 'AddEditRoom',
-        props: ['insertEdit'],
+        props: ['insertEdit','roomProp'],
         components: {
             ArrowLeftIcon
         },
         data() {
             return {
                 loading: false,
+                
                 room: {
                     type: null,
                     code: null,
                     number: null,
                     status: true,
                     facilities: [],
-                    cleaning_status: this.roomCleaningStatuses[0].label
+                    cleaning_status: null,
+                    id: null,
                 },
                 facility_items: [],
                 rules: {
@@ -152,7 +154,8 @@ import RoomServices from '../../../services/room.services'
                         label: 'Ready',
                         value: '3'
                     },
-                ]
+                ],
+               
 
             }
         },
@@ -164,11 +167,18 @@ import RoomServices from '../../../services/room.services'
             },
             addFacility(){
                 this.room.facilities.push(this.facility_item)
-                console.log('facilities' )
+                console.log('facilities', this.room.facilities )
             },
             save() {
                 this.loading = true
+                console.log('facility', this.facility_items)
                 this.room.facilities = this.facility_items
+                if(this.room.status === true){
+                    this.room.status = 1
+                }
+                else if(this.room.status === false){
+                    this.room.status = 0
+                }
                 RoomServices.postRoom(this.room).then((res) => {
                      this.$notify.success({
                         title: 'Success',
@@ -196,6 +206,57 @@ import RoomServices from '../../../services/room.services'
                     this.loading = false
                 })
 
+            },
+            editRoom(){
+                this.loading = true
+                if(this.room.status === true){
+                    this.room.status = 1
+                }
+                else if(this.room.status === false){
+                    this.room.status = 0
+                }
+                RoomServices.putRoom(this.room, this.room.id).then((res) => {
+                   this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Room was updated successfully'
+                    })
+                    this.goBack()
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            }
+        },
+        beforeMount(){
+            console.log('insertEdit', this.insertEdit)
+            if(!this.insertEdit){
+                this.goBack()
+            }
+            else {
+                if(this.insertEdit === 'edit'){
+                    this.room = {...this.roomProp}
+                    console.log('rooom', this.room)
+                    if(this.room.status === 1){
+                        this.room.status = true
+                    }
+                    this.facility_items = this.room.facilities
+                }
             }
         }
     }
@@ -214,19 +275,19 @@ import RoomServices from '../../../services/room.services'
     }
 }
 
-::v-deep .el-switch.is-checked {
+// ::v-deep .el-switch.is-checked {
     
-    .el-switch__core {
-        border-color: #32ce6e;
-        background-color: #40ff70;
-    }
+//     .el-switch__core {
+//         border-color: #32ce6e;
+//         background-color: #40ff70;
+//     }
 
-}
+// }
 
-::v-deep .el-switch__core {
-    border-color: #ce3232;
-    background-color: #ff4040;
-}
+// ::v-deep .el-switch__core {
+//     border-color: #ce3232;
+//     background-color: #ff4040;
+// }
 
 
 </style>

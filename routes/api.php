@@ -39,3 +39,5 @@ Route::delete('/departments/{id}', [DepartmentController::class, 'delete']);
 //ROOMS
 Route::post('/add-room', [RoomController::class, 'store']);
 Route::get('/rooms', [RoomController::class, 'index']);
+Route::put('/edit-room/{id}', [RoomController::class, 'update']);
+Route::delete('/rooms/{id}', [RoomController::class, 'delete']);
