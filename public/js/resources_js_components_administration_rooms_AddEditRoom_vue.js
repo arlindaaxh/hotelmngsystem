@@ -2153,7 +2153,7 @@ __webpack_require__.r(__webpack_exports__);
         number: null,
         status: true,
         facilities: [],
-        cleaning_status: roomCleaningStatuses[0]
+        cleaning_status: this.roomCleaningStatuses[0].label
       },
       facility_items: [],
       rules: {},
@@ -2210,7 +2210,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addFacility: function addFacility() {
-      console.log('fi', this.facility_item);
       this.room.facilities.push(this.facility_item);
       console.log('facilities');
     },
@@ -2218,7 +2217,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      console.log('idk');
       this.room.facilities = this.facility_items;
       _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].postRoom(this.room).then(function (res) {
         _this.$notify.success({
@@ -17406,11 +17404,6 @@ var render = function() {
                     {
                       staticStyle: { width: "100%" },
                       attrs: { placeholder: "Select room status", size: "big" },
-                      on: {
-                        change: function($event) {
-                          return _vm.addFacility()
-                        }
-                      },
                       model: {
                         value: _vm.cleaning_status,
                         callback: function($$v) {

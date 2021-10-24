@@ -2089,6 +2089,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2319,13 +2325,29 @@ var render = function() {
                     }
                   },
                   [
-                    _c("div", { staticClass: "text " }, [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s("List item " + index) +
-                          "\n                "
-                      )
-                    ])
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "text flexed-column align-center justify-center",
+                        staticStyle: { height: "200px" }
+                      },
+                      [
+                        _c("div", { staticClass: "flexed-column" }, [
+                          _c("span", [_vm._v(_vm._s(room.number))]),
+                          _vm._v(" "),
+                          _c("strong", [_vm._v(_vm._s(room.code))])
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(room.status === 1 ? "Available" : "Booked")
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(room.cleaning_status))])
+                      ]
+                    )
                   ]
                 )
               }),

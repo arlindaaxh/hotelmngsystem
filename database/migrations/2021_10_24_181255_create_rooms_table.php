@@ -19,15 +19,16 @@ class CreateRoomsTable extends Migration
             $table->string('number');
             $table->boolean('status');
             $table->json('facilities');
+            $table->string('cleaning_status');
             $table->id();
             $table->timestamps();
         });
 
 
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->string('cleaning_status');
-            // $table->bigInteger('maintainer_id');
-        });
+        // Schema::table('rooms', function (Blueprint $table) {
+        //     $table->string('cleaning_status');
+        //     // $table->bigInteger('maintainer_id');
+        // });
     }
 
 

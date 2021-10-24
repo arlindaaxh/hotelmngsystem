@@ -52,7 +52,7 @@
                 </el-form-item>
 
                  <el-form-item prop="cleaning_status" label="Cleaning Status">
-                    <el-select v-model="cleaning_status"  placeholder="Select room status" style="width:100%" size="big" @change="addFacility()">
+                    <el-select v-model="cleaning_status"  placeholder="Select room status" style="width:100%" size="big" >
                         <el-option
                             v-for="item in roomCleaningStatuses"
                             :key="item.value"
@@ -86,7 +86,7 @@ import RoomServices from '../../../services/room.services'
                     number: null,
                     status: true,
                     facilities: [],
-                    cleaning_status: roomCleaningStatuses[0]
+                    cleaning_status: this.roomCleaningStatuses[0].label
                 },
                 facility_items: [],
                 rules: {
@@ -163,13 +163,11 @@ import RoomServices from '../../../services/room.services'
                 })
             },
             addFacility(){
-                console.log('fi',this.facility_item)
                 this.room.facilities.push(this.facility_item)
                 console.log('facilities' )
             },
             save() {
                 this.loading = true
-                console.log('idk')
                 this.room.facilities = this.facility_items
                 RoomServices.postRoom(this.room).then((res) => {
                      this.$notify.success({

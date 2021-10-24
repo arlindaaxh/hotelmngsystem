@@ -13,6 +13,7 @@ class Room extends Model
         'number',
         'status',
         'facilities',
+        'cleaning_status'
 
     ];
         //Tell laravel to fetch text values and set them as arrays
