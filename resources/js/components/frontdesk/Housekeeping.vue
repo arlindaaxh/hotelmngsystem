@@ -13,7 +13,7 @@
 
             <div class="flex-wrap gap-10 mt-30" style="gap:20px">
                 <el-card v-for="(room,index) in rooms" :key="index" class="box-card" style="width:200px; height:250px; background-color: rgb(245,245,245)">
-                    <div  class="text flexed-column align-center justify-center" style="height:200px;">
+                    <div  class="text flexed-column align-center justify-center pointer" style="height:200px;" @click="openRoomModal(room)">
                         <div class="flexed-column align-center">
                             <strong>{{room.code}}</strong>
                             <span>{{room.number}}</span>
@@ -21,22 +21,29 @@
                             
                         </div>
                         <span>{{room.status === 1 ? 'Available' : 'Booked'}}</span>
-                        <span>{{room.cleaning_status}}</span>
+                        <span style="align-self:end; bottom:0">{{room.cleaning_status}}</span>
                     </div>
                 </el-card>
             </div>
         </div>
+        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" />
     </div>
 </template>
 
 <script>
 import RoomServices from '../../services/room.services'
+import RoomModal from './RoomModal.vue'
     export default {
+        components: {
+            RoomModal 
+        },
         data() {
             return {
                 loading: false,
                 query: "",
-                rooms: []
+                rooms: [],
+                showRoomModal: false,
+                roomProp: null,
             }
         },
         methods: {
@@ -65,6 +72,10 @@ import RoomServices from '../../services/room.services'
                     this.loading = false
                 })
 
+            },
+            openRoomModal(room){
+                this.roomProp = room
+                this.showRoomModal = true
             }
         },
         beforeMount(){
