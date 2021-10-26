@@ -148,7 +148,7 @@ import DepartmentServices from '../../../services/department.services'
             }
         },
         beforeMount(){
-            if(this.departmentProp.id){
+            if(this.departmentProp && this.departmentProp.id){
                 this.department = {...this.departmentProp}
                 if(this.department.active === 1){
                     this.department.active = true

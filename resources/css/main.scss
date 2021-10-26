@@ -79,7 +79,12 @@
     margin-left: 5px;
 }
 
-
+.pl-10{
+    padding-left: 10px;
+} 
+.pr-10{
+    padding-right: 10px;
+}
 .pt-5 {
     padding-top: 5px;
 }
@@ -96,6 +101,9 @@
     padding-top: 5px;
 }
 
+.p-10 {
+    padding: 10px;
+}
 .p-20 {
     padding: 20px;
 }
@@ -207,6 +215,10 @@ text-align: right;
 .text-primary {
 color: #409EFF;
 }
+
+.border-primary{
+    border-color: #409EFF;
+}
 .text-grey {
 color: #606266;
 }
@@ -256,6 +268,9 @@ padding-bottom: 0 !important;
 color: #f66;
 }
 
+.border-danger {
+    border-color: #f66;
+}
 .w-100 {
     width: 100%;
 }

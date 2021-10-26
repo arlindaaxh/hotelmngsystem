@@ -2340,7 +2340,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   beforeMount: function beforeMount() {
-    if (this.departmentProp.id) {
+    if (this.departmentProp && this.departmentProp.id) {
       this.department = _objectSpread({}, this.departmentProp);
 
       if (this.department.active === 1) {
