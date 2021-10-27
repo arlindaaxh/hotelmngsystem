@@ -2186,6 +2186,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 /* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
 /* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
+/* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
 //
 //
 //
@@ -2210,9 +2211,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
+
 
 
 
@@ -2221,6 +2220,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['room'],
   data: function data() {
     return {
       loading: false,
@@ -2321,6 +2321,42 @@ __webpack_require__.r(__webpack_exports__);
       if (found) {
         return found.name;
       }
+    },
+    assignHousekeeper: function assignHousekeeper() {
+      var _this4 = this;
+
+      this.loading = true;
+      var payload = {
+        room_id: this.room.id,
+        employee_id: this.selectedHousekeeper
+      };
+      _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_3__["default"].postHousekeepingSchedule(payload).then(function (res) {
+        _this4.$notify.success({
+          title: 'Success',
+          type: 'Success',
+          message: 'Housekeeper was assigned successfully'
+        });
+
+        _this4.$emit('close');
+      })["catch"](function (error) {
+        var _error$data3, _error$response7, _error$response8, _error$response8$data, _error$response9;
+
+        _this4.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data3 = error.data) === null || _error$data3 === void 0 ? void 0 : _error$data3.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response7 = error.response) === null || _error$response7 === void 0 ? void 0 : _error$response7.message) || (error === null || error === void 0 ? void 0 : (_error$response8 = error.response) === null || _error$response8 === void 0 ? void 0 : (_error$response8$data = _error$response8.data) === null || _error$response8$data === void 0 ? void 0 : _error$response8$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this4.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response9 = error.response) === null || _error$response9 === void 0 ? void 0 : _error$response9.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this4.loading = false;
+      });
     }
   },
   beforeMount: function beforeMount() {
@@ -2344,6 +2380,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
 /* harmony import */ var _RoomModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoomModal.vue */ "./resources/js/components/frontdesk/RoomModal.vue");
+/* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
+/* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
+/* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
 //
 //
 //
@@ -2389,6 +2428,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2406,31 +2448,69 @@ __webpack_require__.r(__webpack_exports__);
         dirty: 'Dirty',
         clean: 'Clean',
         ready: 'Ready'
-      }
+      },
+      schedules: [],
+      employees: [],
+      departments: []
     };
   },
   computed: {
-    filteredRoomsA: function filteredRoomsA() {
+    // filteredRoomsA() {
+    //     let result = this.rooms
+    //     if(this.rooms && this.rooms.length > 0){
+    //         result = this.rooms.filter((room) =>
+    //             room.cleaning_status === this.filterModel.dirty ||
+    //             (!this.filterModel.dirty && !this.filterModel.clean && !this.filterModel.ready) ||
+    //             (this.filterModel.dirty && this.filterModel.clean && this.filterModel.ready) ||
+    //             room.cleaning_status === this.filterModel.clean || 
+    //             room.cleaning_status === this.filterModel.ready 
+    //         );
+    //         if (this.query && this.query.length > 0) {
+    //             result = result.filter(
+    //                 (r) =>
+    //                     r.type?.toLowerCase().includes(this.query.toLowerCase()) ||
+    //                     r.code?.toLowerCase().includes(this.query.toLowerCase())
+    //             );
+    //         }
+    //     }
+    //     console.log('res', result)
+    //     return result;
+    // },
+    housekeepers: function housekeepers() {
       var _this = this;
 
-      var result = this.rooms;
-
-      if (this.rooms && this.rooms.length > 0) {
-        result = this.rooms.filter(function (room) {
-          return room.cleaning_status === _this.filterModel.dirty || !_this.filterModel.dirty && !_this.filterModel.clean && !_this.filterModel.ready || _this.filterModel.dirty && _this.filterModel.clean && _this.filterModel.ready || room.cleaning_status === _this.filterModel.clean || room.cleaning_status === _this.filterModel.ready;
+      var housekeepers = [];
+      var allEmployees = this.employees.filter(function (employee) {
+        return _this.departments.some(function (dep) {
+          return dep.id === employee.department_id;
         });
+      });
+      allEmployees.forEach(function (emp) {
+        var depName = _this.getName(emp.department_id);
 
-        if (this.query && this.query.length > 0) {
-          result = result.filter(function (r) {
-            var _r$type, _r$code;
-
-            return ((_r$type = r.type) === null || _r$type === void 0 ? void 0 : _r$type.toLowerCase().includes(_this.query.toLowerCase())) || ((_r$code = r.code) === null || _r$code === void 0 ? void 0 : _r$code.toLowerCase().includes(_this.query.toLowerCase()));
+        if (depName && depName === 'Housekeeping') {
+          var found = housekeepers.find(function (element) {
+            return element.id === emp.id;
           });
-        }
-      }
 
-      console.log('res');
-      return result;
+          if (!found) {
+            housekeepers.push(emp);
+          }
+        }
+      });
+      return housekeepers;
+    },
+    scheduledRooms: function scheduledRooms() {
+      var _this2 = this;
+
+      var scheduledHousekeepers = this.housekeepers.forEach(function (hk) {
+        var _this2$schedules;
+
+        return (_this2$schedules = _this2.schedules) === null || _this2$schedules === void 0 ? void 0 : _this2$schedules.some(function (schedule) {
+          return schedule.employee_id === hk.id;
+        });
+      });
+      console.log('scheduledHousekeepers', scheduledHousekeepers);
     },
     dirtyRooms: function dirtyRooms() {
       var dirtyRooms = [];
@@ -2458,43 +2538,137 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
       return rooms;
-    }
+    } //  housekeepers(){
+    //     const housekeepers = []
+    //     let allEmployees = this.employees.filter(employee => this.departments.some(dep => dep.id === employee.department_id))
+    //     allEmployees.forEach(emp => {
+    //         let depName = this.getName(emp.department_id)
+    //         if(depName && depName === 'Housekeeping'){
+    //             let found = housekeepers.find(element => element.id === emp.id)
+    //             if(!found) {
+    //                 housekeepers.push(emp) 
+    //             }
+    //         }
+    //     })
+    //     return housekeepers
+    // }
+
   },
   methods: {
-    getRooms: function getRooms() {
-      var _this2 = this;
-
-      this.loading = true;
-      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms().then(function (res) {
-        _this2.rooms = res.data;
-        console.log('rooms', _this2.rooms);
-      })["catch"](function (error) {
-        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
-
-        _this2.loading = false;
-        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
-
-        if (!errorMessage && error !== null && error !== void 0 && error.data) {
-          errorMessage = error.data;
-        }
-
-        if (!errorMessage) errorMessage = 'Error_occurred';
-
-        _this2.$notify.error({
-          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
-          message: errorMessage
-        });
-      })["finally"](function () {
-        _this2.loading = false;
-      });
-    },
+    // getRooms(){
+    //     this.loading = true
+    //     RoomServices.getRooms().then((res) => {
+    //         this.rooms = res.data
+    //         console.log('rooms', this.rooms)
+    //     })
+    //     .catch((error) => {
+    //         this.loading=false
+    //         let errorMessage = error?.data?.message ||
+    //         error?.message ||
+    //         error?.response?.message ||
+    //         error?.response?.data?.message
+    //         if(!errorMessage && error?.data){
+    //         errorMessage =  error.data
+    //         }
+    //         if(!errorMessage) errorMessage = 'Error_occurred'
+    //         this.$notify.error({
+    //             title: error?.status || error?.response?.status,
+    //             message: errorMessage,
+    //         });
+    //     })
+    //     .finally(() => {
+    //         this.loading = false
+    //     })
+    // },
     openRoomModal: function openRoomModal(room) {
       this.roomProp = room;
       this.showRoomModal = true;
+    },
+    // getHousekeepingSchedules(){
+    //     this.loading = true
+    //     HousekeepingServices.getHousekeepingSchedules().then((res) => {
+    //         this.schedules = res.data
+    //         console.log('shc', this.schedules)
+    //     })
+    //     .catch((error) => {
+    //         this.loading=false
+    //         let errorMessage = error?.data?.message ||
+    //         error?.message ||
+    //         error?.response?.message ||
+    //         error?.response?.data?.message
+    //         if(!errorMessage && error?.data){
+    //         errorMessage =  error.data
+    //         }
+    //         if(!errorMessage) errorMessage = 'Error_occurred'
+    //         this.$notify.error({
+    //             title: error?.status || error?.response?.status,
+    //             message: errorMessage,
+    //         });
+    //     })
+    //     .finally(() => {
+    //         this.loading = false
+    //     })
+    // },
+    getOptionsData: function getOptionsData() {
+      var _this3 = this;
+
+      this.loading = true;
+      Promise.all([_services_employee_services__WEBPACK_IMPORTED_MODULE_4__["default"].getEmployees(), _services_department_services__WEBPACK_IMPORTED_MODULE_3__["default"].getDepartments(), _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms(), _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__["default"].getHousekeepingSchedules()].map(function (p, index) {
+        return p.then(function (v) {
+          return {
+            data: v.data,
+            status: "success",
+            type: index == 0 ? "employees" : index == 1 ? "departments" : index == 2 ? "rooms" : index == 3 ? "schedules" : "unknown"
+          };
+        }, function (e) {
+          return {
+            e: e,
+            status: "error"
+          };
+        });
+      })).then(function (results) {
+        if (results.length) {
+          results.filter(function (r) {
+            return r.status == "success";
+          }).forEach(function (res) {
+            if (res.type == "employees") {
+              _this3.employees = res.data;
+              console.log('empl', _this3.employees);
+            } else if (res.type == "departments") {
+              _this3.departments = res.data;
+              console.log('depts', _this3.departments);
+            } else if (res.type == "rooms") {
+              _this3.rooms = res.data;
+              console.log('rooms', _this3.rooms);
+            } else if (res.type == "schedules") {
+              _this3.schedules = res.data;
+              console.log('scj', _this3.schedules);
+            }
+          });
+        }
+      })["catch"](function (error) {
+        _this3.loading = false;
+        throw error;
+      })["finally"](function () {
+        _this3.loading = false;
+      });
+    },
+    getName: function getName(departmentId) {
+      var _this$departments;
+
+      var found = (_this$departments = this.departments) === null || _this$departments === void 0 ? void 0 : _this$departments.find(function (element) {
+        return element.id === departmentId;
+      });
+
+      if (found) {
+        return found.name;
+      }
     }
   },
   beforeMount: function beforeMount() {
-    this.getRooms();
+    // this.getRooms()
+    // this.getHousekeepingSchedules()
+    this.getOptionsData();
   }
 });
 
@@ -2513,6 +2687,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 /* harmony import */ var _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HousekeepersModal.vue */ "./resources/js/components/frontdesk/HousekeepersModal.vue");
+//
 //
 //
 //
@@ -2669,6 +2844,41 @@ __webpack_require__.r(__webpack_exports__);
   },
   deleteEmployee: function deleteEmployee(id) {
     var url = "http://127.0.0.1:8000/api/employees/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/housekeeping.services.js":
+/*!********************************************************!*\
+  !*** ./resources/js/services/housekeeping.services.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  getHousekeepingSchedules: function getHousekeepingSchedules() {
+    var url = "http://127.0.0.1:8000/api/housekeeping";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  postHousekeepingSchedule: function postHousekeepingSchedule(payload) {
+    var url = "http://127.0.0.1:8000/api/housekeeping";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putHousekeepingSchedule: function putHousekeepingSchedule(payload, id) {
+    var url = "http://127.0.0.1:8000/api/housekeeping/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteHousekeepingSchedule: function deleteHousekeepingSchedule(id) {
+    var url = "http://127.0.0.1:8000/api/housekeeping/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
@@ -3273,7 +3483,14 @@ var render = function() {
           _vm._v(" "),
           _c(
             "el-button",
-            { attrs: { size: "medium", type: "primary", plain: "" } },
+            {
+              attrs: { size: "medium", type: "primary", plain: "" },
+              on: {
+                click: function($event) {
+                  return _vm.assignHousekeeper()
+                }
+              }
+            },
             [_vm._v("Save")]
           )
         ],
@@ -3428,7 +3645,6 @@ var render = function() {
               {
                 staticClass: "flexed mt-30",
                 staticStyle: {
-                  "background-color": "rgb(245,245,245)",
                   height: "100px",
                   padding: "10px",
                   "border-radius": "10px"
@@ -3477,7 +3693,7 @@ var render = function() {
                 staticClass: "flex-wrap gap-10 mt-30",
                 staticStyle: { gap: "20px" }
               },
-              _vm._l(_vm.filteredRoomsA, function(room, index) {
+              _vm._l(_vm.rooms, function(room, index) {
                 return _c(
                   "el-card",
                   {
@@ -3528,6 +3744,11 @@ var render = function() {
                             }
                           },
                           [_vm._v(_vm._s(room.cleaning_status))]
+                        ),
+                        _vm._v(
+                          "\n               " +
+                            _vm._s(_vm.scheduledRooms) +
+                            "\n                "
                         )
                       ]
                     )
@@ -3797,12 +4018,16 @@ var render = function() {
                   _c(
                     "div",
                     {
-                      staticClass: "flexed justify-between  align-center p-10"
+                      staticClass:
+                        "flexed justify-between  align-center p-10 w-100"
                     },
                     [
                       _c(
                         "el-button",
-                        { attrs: { type: "primary", plain: "" } },
+                        {
+                          staticClass: "w-100",
+                          attrs: { type: "primary", plain: "" }
+                        },
                         [_vm._v("Ready for guest")]
                       )
                     ],
@@ -3850,20 +4075,39 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    [
-                      _c(
-                        "el-button",
-                        {
-                          staticClass: "w-100",
-                          attrs: { type: "primary", plain: "" }
-                        },
-                        [_vm._v("Return to clean")]
+                  _vm.roomProp.cleaning_status === "Ready"
+                    ? _c(
+                        "div",
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              staticClass: "w-100",
+                              attrs: { type: "primary", plain: "" }
+                            },
+                            [_vm._v("Return to clean")]
+                          )
+                        ],
+                        1
                       )
-                    ],
-                    1
-                  ),
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.roomProp.cleaning_status === "Clean"
+                    ? _c(
+                        "div",
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              staticClass: "w-100",
+                              attrs: { type: "primary", plain: "" }
+                            },
+                            [_vm._v("Mark Ready")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "el-button",
@@ -3881,6 +4125,7 @@ var render = function() {
       _vm._v(" "),
       _vm.showHousekeepersModal
         ? _c("housekeepers-modal", {
+            attrs: { room: _vm.roomProp },
             on: {
               close: function($event) {
                 _vm.showHousekeepersModal = false

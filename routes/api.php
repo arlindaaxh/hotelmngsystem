@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\HousekeepingController;
 use App\Models\Employee;
 
 /*
@@ -41,3 +42,9 @@ Route::post('/add-room', [RoomController::class, 'store']);
 Route::get('/rooms', [RoomController::class, 'index']);
 Route::put('/edit-room/{id}', [RoomController::class, 'update']);
 Route::delete('/rooms/{id}', [RoomController::class, 'delete']);
+
+//HOUSEKEEPING SCHEDULES
+Route::post('/housekeeping', [HousekeepingController::class, 'store']);
+Route::get('/housekeeping', [HousekeepingController::class, 'index']);
+Route::put('/housekeeping/{id}', [HousekeepingController::class, 'update']);
+Route::delete('/housekeeping/{id}', [HousekeepingController::class, 'delete']);

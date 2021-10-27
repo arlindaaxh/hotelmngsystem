@@ -5,7 +5,7 @@
                 <i class="el-icon-close" @click="$emit('close')"></i>
             </span>
             <span class="label-no-height m-t-5 m-b-5">Assign Housekeeper</span>
-            <el-button size="medium" type="primary" plain>Save</el-button>
+            <el-button size="medium" type="primary" plain @click=assignHousekeeper()>Save</el-button>
         </div>
         <div v-loading="loading"  class="body" style="height:360px;">
             <div class="flexed-column" style="gap:20px; overflow-y:scroll;">
@@ -17,10 +17,7 @@
                         </el-radio>
                     </el-card>
                 </el-radio-group>
-                
-     
             </div>
-
         </div>
     </NormalPopup>
 </template>
@@ -29,11 +26,13 @@
 import NormalPopup from '../NormalPopup.vue'
 import EmployeeServices from '../../services/employee.services'
 import DepartmentServices from '../../services/department.services'
+import HousekeepingServices from '../../services/housekeeping.services'
     export default {
         name: 'HousekeepersModal',
         components: {
             NormalPopup
         },
+        props: ['room'],
         data() {
             return {
                 loading: false,
@@ -116,6 +115,40 @@ import DepartmentServices from '../../services/department.services'
                     return found.name
                 }
             },
+            assignHousekeeper(){
+                this.loading=true
+                let payload = {
+                    room_id: this.room.id,
+                    employee_id: this.selectedHousekeeper
+                }
+                HousekeepingServices.postHousekeepingSchedule(payload).then((res) => {
+                    this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Housekeeper was assigned successfully'
+                    })
+                    this.$emit('close')
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+
+            }
         },
         beforeMount(){
             this.getDepartments()

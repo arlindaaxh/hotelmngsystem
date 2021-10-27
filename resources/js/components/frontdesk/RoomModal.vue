@@ -38,11 +38,9 @@
                     <span>Facilities</span>
                     <i class="el-icon-arrow-right"></i>
                 </div>
-                <div class="flexed justify-between  align-center p-10">
-                    <el-button type="primary" plain>Ready for guest</el-button>
+                <div class="flexed justify-between  align-center p-10 w-100">
+                    <el-button type="primary" class="w-100" plain>Ready for guest</el-button>
                 </div>
-              
-            
             </div>
         </div>
         <div v-loading="loading" v-else class="body" style="height: 400px;">
@@ -51,16 +49,19 @@
                     <el-button type="primary" plain class="w-100">Mark Dirty</el-button>   
                 </div>
              
-                <div>
+                <div v-if="roomProp.cleaning_status === 'Ready'">
                     <el-button type="primary" plain class="w-100">Return to clean</el-button> 
+                </div>
+                <div v-if="roomProp.cleaning_status === 'Clean'">
+                    <el-button type="primary" plain class="w-100">Mark Ready</el-button> 
                 </div>
 
 
-                <el-button type="primary" plain class="w-100">Ready for guest</el-button>
+                <el-button type="primary" plain class="w-100" >Ready for guest</el-button>
             </div>
         </div>
 
-        <housekeepers-modal v-if="showHousekeepersModal" @close="showHousekeepersModal = false"/>
+        <housekeepers-modal :room="roomProp" v-if="showHousekeepersModal" @close="showHousekeepersModal = false"/>
     </NormalPopup>
 
 </template>
