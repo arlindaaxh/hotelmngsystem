@@ -27,19 +27,17 @@
                         <div class="flexed-column align-center mb-20">
                             <span>{{room.code}}</span>
                             <strong>{{room.number}}</strong>
-                        
                              <!-- <span>{{room.status === 1 ? 'Available' : 'Booked'}}</span> -->
-                     
                         </div>
                         <span style="border:1px solid ;padding-top:3px; padding-bottom:3px; border-radius:20px;" 
                             :class="room.cleaning_status === 'Dirty' ? 'pl-10 pr-10 text-danger border-danger' : 'text-primary border-primary pl-10 pr-10'"
                         >{{room.cleaning_status}}</span>
-                   {{scheduledRooms}}
+                        {{getScheduledHousekeepers(room)}}
                     </div>
                 </el-card>
             </div>
         </div>
-        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" />
+        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" />
     </div>
 </template>
 
@@ -103,11 +101,8 @@ import EmployeeServices from '../../services/employee.services'
                 })
                 return housekeepers
             },
-            scheduledRooms(){
-                let scheduledHousekeepers = this.housekeepers.forEach(hk => this.schedules?.some(schedule => schedule.employee_id === hk.id))
-                console.log('scheduledHousekeepers',scheduledHousekeepers)
-
-            },
+        
+            
             dirtyRooms(){
                 let dirtyRooms = []
                 this.rooms.forEach(room => {
@@ -135,80 +130,17 @@ import EmployeeServices from '../../services/employee.services'
                 })
                 return rooms
             },
-            //  housekeepers(){
-            //     const housekeepers = []
-            //     let allEmployees = this.employees.filter(employee => this.departments.some(dep => dep.id === employee.department_id))
-            //     allEmployees.forEach(emp => {
-            //         let depName = this.getName(emp.department_id)
-            //         if(depName && depName === 'Housekeeping'){
-            //             let found = housekeepers.find(element => element.id === emp.id)
-            //             if(!found) {
-            //                 housekeepers.push(emp) 
-            //             }
-            //         }
-            //     })
-            //     return housekeepers
-            // }
-
+       
            
 
         },
         methods: {
-            // getRooms(){
-            //     this.loading = true
-            //     RoomServices.getRooms().then((res) => {
-            //         this.rooms = res.data
-            //         console.log('rooms', this.rooms)
-            //     })
-            //     .catch((error) => {
-            //         this.loading=false
-            //         let errorMessage = error?.data?.message ||
-            //         error?.message ||
-            //         error?.response?.message ||
-            //         error?.response?.data?.message
-            //         if(!errorMessage && error?.data){
-            //         errorMessage =  error.data
-            //         }
-            //         if(!errorMessage) errorMessage = 'Error_occurred'
-            //         this.$notify.error({
-            //             title: error?.status || error?.response?.status,
-            //             message: errorMessage,
-            //         });
-            //     })
-            //     .finally(() => {
-            //         this.loading = false
-            //     })
-
-            // },
-                openRoomModal(room){
-                    this.roomProp = room
-                    this.showRoomModal = true
-                },
-            // getHousekeepingSchedules(){
-            //     this.loading = true
-            //     HousekeepingServices.getHousekeepingSchedules().then((res) => {
-            //         this.schedules = res.data
-            //         console.log('shc', this.schedules)
-            //     })
-            //     .catch((error) => {
-            //         this.loading=false
-            //         let errorMessage = error?.data?.message ||
-            //         error?.message ||
-            //         error?.response?.message ||
-            //         error?.response?.data?.message
-            //         if(!errorMessage && error?.data){
-            //         errorMessage =  error.data
-            //         }
-            //         if(!errorMessage) errorMessage = 'Error_occurred'
-            //         this.$notify.error({
-            //             title: error?.status || error?.response?.status,
-            //             message: errorMessage,
-            //         });
-            //     })
-            //     .finally(() => {
-            //         this.loading = false
-            //     })
-            // },
+        
+            openRoomModal(room){
+                this.roomProp = room
+                this.showRoomModal = true
+            },
+        
             getOptionsData() {
                 this.loading = true;
                 Promise.all(
@@ -267,6 +199,20 @@ import EmployeeServices from '../../services/employee.services'
                     return found.name
                 }
             },
+                
+            getScheduledHousekeepers(room){
+                let scheduledRoom = this.schedules.find(sch => sch.room_id === room.id)
+                if(scheduledRoom){
+           
+                    return this.getHousekeeper(scheduledRoom)
+                }
+                  //    let scheduledHousekeepers = this.housekeepers.filter(sch => this.schedules.some(hk => hk.employee_id === sch.id && this.rooms.some(room => room.id === hk.room_id)))
+                //    console.log('scheduledHousekeepers',scheduledHousekeepers)
+            },
+            getHousekeeper(schedule){
+                let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)           
+                return housekeeper.name + ' ' + housekeeper.surname 
+            }
         },
         beforeMount(){
             // this.getRooms()

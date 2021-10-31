@@ -2220,7 +2220,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['room'],
+  props: ['room', 'housekeeper'],
   data: function data() {
     return {
       loading: false,
@@ -2335,9 +2335,10 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Success',
           type: 'Success',
           message: 'Housekeeper was assigned successfully'
-        });
+        }); // this.$emit('close')
 
-        _this4.$emit('close');
+
+        _this4.$emit('housekeeperAssigned');
       })["catch"](function (error) {
         var _error$data3, _error$response7, _error$response8, _error$response8$data, _error$response9;
 
@@ -2362,6 +2363,8 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     this.getDepartments();
     this.getEmployees();
+    console.log('hou', this.housekeeper);
+    this.selectedHousekeeper = this.housekeeper.id;
   }
 });
 
@@ -2383,8 +2386,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
 /* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
 /* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
-//
-//
 //
 //
 //
@@ -2500,18 +2501,6 @@ __webpack_require__.r(__webpack_exports__);
       });
       return housekeepers;
     },
-    scheduledRooms: function scheduledRooms() {
-      var _this2 = this;
-
-      var scheduledHousekeepers = this.housekeepers.forEach(function (hk) {
-        var _this2$schedules;
-
-        return (_this2$schedules = _this2.schedules) === null || _this2$schedules === void 0 ? void 0 : _this2$schedules.some(function (schedule) {
-          return schedule.employee_id === hk.id;
-        });
-      });
-      console.log('scheduledHousekeepers', scheduledHousekeepers);
-    },
     dirtyRooms: function dirtyRooms() {
       var dirtyRooms = [];
       this.rooms.forEach(function (room) {
@@ -2538,79 +2527,15 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
       return rooms;
-    } //  housekeepers(){
-    //     const housekeepers = []
-    //     let allEmployees = this.employees.filter(employee => this.departments.some(dep => dep.id === employee.department_id))
-    //     allEmployees.forEach(emp => {
-    //         let depName = this.getName(emp.department_id)
-    //         if(depName && depName === 'Housekeeping'){
-    //             let found = housekeepers.find(element => element.id === emp.id)
-    //             if(!found) {
-    //                 housekeepers.push(emp) 
-    //             }
-    //         }
-    //     })
-    //     return housekeepers
-    // }
-
+    }
   },
   methods: {
-    // getRooms(){
-    //     this.loading = true
-    //     RoomServices.getRooms().then((res) => {
-    //         this.rooms = res.data
-    //         console.log('rooms', this.rooms)
-    //     })
-    //     .catch((error) => {
-    //         this.loading=false
-    //         let errorMessage = error?.data?.message ||
-    //         error?.message ||
-    //         error?.response?.message ||
-    //         error?.response?.data?.message
-    //         if(!errorMessage && error?.data){
-    //         errorMessage =  error.data
-    //         }
-    //         if(!errorMessage) errorMessage = 'Error_occurred'
-    //         this.$notify.error({
-    //             title: error?.status || error?.response?.status,
-    //             message: errorMessage,
-    //         });
-    //     })
-    //     .finally(() => {
-    //         this.loading = false
-    //     })
-    // },
     openRoomModal: function openRoomModal(room) {
       this.roomProp = room;
       this.showRoomModal = true;
     },
-    // getHousekeepingSchedules(){
-    //     this.loading = true
-    //     HousekeepingServices.getHousekeepingSchedules().then((res) => {
-    //         this.schedules = res.data
-    //         console.log('shc', this.schedules)
-    //     })
-    //     .catch((error) => {
-    //         this.loading=false
-    //         let errorMessage = error?.data?.message ||
-    //         error?.message ||
-    //         error?.response?.message ||
-    //         error?.response?.data?.message
-    //         if(!errorMessage && error?.data){
-    //         errorMessage =  error.data
-    //         }
-    //         if(!errorMessage) errorMessage = 'Error_occurred'
-    //         this.$notify.error({
-    //             title: error?.status || error?.response?.status,
-    //             message: errorMessage,
-    //         });
-    //     })
-    //     .finally(() => {
-    //         this.loading = false
-    //     })
-    // },
     getOptionsData: function getOptionsData() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.loading = true;
       Promise.all([_services_employee_services__WEBPACK_IMPORTED_MODULE_4__["default"].getEmployees(), _services_department_services__WEBPACK_IMPORTED_MODULE_3__["default"].getDepartments(), _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms(), _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__["default"].getHousekeepingSchedules()].map(function (p, index) {
@@ -2632,25 +2557,25 @@ __webpack_require__.r(__webpack_exports__);
             return r.status == "success";
           }).forEach(function (res) {
             if (res.type == "employees") {
-              _this3.employees = res.data;
-              console.log('empl', _this3.employees);
+              _this2.employees = res.data;
+              console.log('empl', _this2.employees);
             } else if (res.type == "departments") {
-              _this3.departments = res.data;
-              console.log('depts', _this3.departments);
+              _this2.departments = res.data;
+              console.log('depts', _this2.departments);
             } else if (res.type == "rooms") {
-              _this3.rooms = res.data;
-              console.log('rooms', _this3.rooms);
+              _this2.rooms = res.data;
+              console.log('rooms', _this2.rooms);
             } else if (res.type == "schedules") {
-              _this3.schedules = res.data;
-              console.log('scj', _this3.schedules);
+              _this2.schedules = res.data;
+              console.log('scj', _this2.schedules);
             }
           });
         }
       })["catch"](function (error) {
-        _this3.loading = false;
+        _this2.loading = false;
         throw error;
       })["finally"](function () {
-        _this3.loading = false;
+        _this2.loading = false;
       });
     },
     getName: function getName(departmentId) {
@@ -2663,6 +2588,23 @@ __webpack_require__.r(__webpack_exports__);
       if (found) {
         return found.name;
       }
+    },
+    getScheduledHousekeepers: function getScheduledHousekeepers(room) {
+      var scheduledRoom = this.schedules.find(function (sch) {
+        return sch.room_id === room.id;
+      });
+
+      if (scheduledRoom) {
+        return this.getHousekeeper(scheduledRoom);
+      } //    let scheduledHousekeepers = this.housekeepers.filter(sch => this.schedules.some(hk => hk.employee_id === sch.id && this.rooms.some(room => room.id === hk.room_id)))
+      //    console.log('scheduledHousekeepers',scheduledHousekeepers)
+
+    },
+    getHousekeeper: function getHousekeeper(schedule) {
+      var housekeeper = this.housekeepers.find(function (hk) {
+        return hk.id === schedule.employee_id;
+      });
+      return housekeeper.name + ' ' + housekeeper.surname;
     }
   },
   beforeMount: function beforeMount() {
@@ -2687,6 +2629,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 /* harmony import */ var _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HousekeepersModal.vue */ "./resources/js/components/frontdesk/HousekeepersModal.vue");
+/* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
 //
 //
 //
@@ -2755,6 +2698,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2763,17 +2711,84 @@ __webpack_require__.r(__webpack_exports__);
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     HousekeepersModal: _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ['roomProp'],
+  props: ['roomProp', 'housekeepers', 'departments', 'schedules'],
   data: function data() {
     return {
       loading: false,
       activeIndex: 1,
-      showHousekeepersModal: false
+      showHousekeepersModal: false,
+      scheduledHousekeeper: null
     };
   },
   methods: {
-    assignHousekeeper: function assignHousekeeper() {
+    assignHousekeeper: function assignHousekeeper(event) {
+      if (event) {}
+
       this.showHousekeepersModal = true;
+    },
+    getScheduledHousekeepers: function getScheduledHousekeepers(room) {
+      var scheduledRoom = this.schedules.find(function (sch) {
+        return sch.room_id === room.id;
+      });
+
+      if (scheduledRoom) {
+        this.housekeeperAssigned = true;
+        return this.getHousekeeper(scheduledRoom);
+      }
+    },
+    getHousekeeper: function getHousekeeper(schedule) {
+      var housekeeper = this.housekeepers.find(function (hk) {
+        return hk.id === schedule.employee_id;
+      });
+      this.scheduledHousekeeper = housekeeper;
+      return housekeeper.name + ' ' + housekeeper.surname;
+    },
+    changeStatus: function changeStatus(room, mark) {
+      var _this = this;
+
+      console.log('mark', mark);
+
+      if (mark.mark === 'Dirty') {
+        room.cleaning_status = "Dirty";
+      } else if (mark.mark === 'Clean') {
+        room.cleaning_status = "Clean";
+      } else if (mark.mark === 'Ready') {
+        room.cleaning_status = "Ready";
+      }
+
+      this.loading = true;
+
+      if (room.status === true) {
+        room.status = 1;
+      } else if (room.status === false) {
+        room.status = 0;
+      }
+
+      _services_room_services__WEBPACK_IMPORTED_MODULE_2__["default"].putRoom(room, room.id).then(function (res) {
+        _this.$emit('close');
+      })["catch"](function (error) {
+        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+        _this.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this.loading = false;
+      });
+    },
+    housekeeperAssigned: function housekeeperAssigned() {
+      this.showHousekeepersModal = false;
+      this.getScheduledHousekeepers(this.roomProp);
     }
   }
 });
@@ -3746,8 +3761,8 @@ var render = function() {
                           [_vm._v(_vm._s(room.cleaning_status))]
                         ),
                         _vm._v(
-                          "\n               " +
-                            _vm._s(_vm.scheduledRooms) +
+                          "\n                    " +
+                            _vm._s(_vm.getScheduledHousekeepers(room)) +
                             "\n                "
                         )
                       ]
@@ -3761,7 +3776,12 @@ var render = function() {
           _vm._v(" "),
           _vm.showRoomModal
             ? _c("room-modal", {
-                attrs: { roomProp: _vm.roomProp },
+                attrs: {
+                  roomProp: _vm.roomProp,
+                  housekeepers: _vm.housekeepers,
+                  departments: _vm.departments,
+                  schedules: _vm.schedules
+                },
                 on: {
                   close: function($event) {
                     _vm.showRoomModal = false
@@ -3989,15 +4009,34 @@ var render = function() {
                       _c(
                         "el-button",
                         {
-                          attrs: { type: "primary", plain: "" },
+                          attrs: { plain: "" },
                           on: {
                             click: function($event) {
-                              return _vm.assignHousekeeper()
+                              return _vm.assignHousekeeper(true)
                             }
                           }
                         },
-                        [_vm._v("Assign Housekeeper")]
-                      )
+                        [
+                          _vm._v(
+                            _vm._s(_vm.getScheduledHousekeepers(_vm.roomProp))
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      !_vm.getScheduledHousekeepers(_vm.roomProp)
+                        ? _c(
+                            "el-button",
+                            {
+                              attrs: { type: "primary", plain: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.assignHousekeeper()
+                                }
+                              }
+                            },
+                            [_vm._v("Assign Housekeeper")]
+                          )
+                        : _vm._e()
                     ],
                     1
                   ),
@@ -4026,7 +4065,14 @@ var render = function() {
                         "el-button",
                         {
                           staticClass: "w-100",
-                          attrs: { type: "primary", plain: "" }
+                          attrs: { type: "primary", plain: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.changeStatus(_vm.roomProp, {
+                                mark: "Clean"
+                              })
+                            }
+                          }
                         },
                         [_vm._v("Ready for guest")]
                       )
@@ -4067,7 +4113,14 @@ var render = function() {
                         "el-button",
                         {
                           staticClass: "w-100",
-                          attrs: { type: "primary", plain: "" }
+                          attrs: { type: "primary", plain: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.changeStatus(_vm.roomProp, {
+                                mark: "Dirty"
+                              })
+                            }
+                          }
                         },
                         [_vm._v("Mark Dirty")]
                       )
@@ -4083,7 +4136,14 @@ var render = function() {
                             "el-button",
                             {
                               staticClass: "w-100",
-                              attrs: { type: "primary", plain: "" }
+                              attrs: { type: "primary", plain: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.changeStatus(_vm.roomProp, {
+                                    mark: "Clean"
+                                  })
+                                }
+                              }
                             },
                             [_vm._v("Return to clean")]
                           )
@@ -4100,7 +4160,14 @@ var render = function() {
                             "el-button",
                             {
                               staticClass: "w-100",
-                              attrs: { type: "primary", plain: "" }
+                              attrs: { type: "primary", plain: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.changeStatus(_vm.roomProp, {
+                                    mark: "Ready"
+                                  })
+                                }
+                              }
                             },
                             [_vm._v("Mark Ready")]
                           )
@@ -4110,25 +4177,43 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _c(
-                    "el-button",
-                    {
-                      staticClass: "w-100",
-                      attrs: { type: "primary", plain: "" }
-                    },
-                    [_vm._v("Ready for guest")]
+                    "div",
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticClass: "w-100",
+                          attrs: { type: "primary", plain: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.changeStatus(_vm.roomProp, {
+                                mark: "Clean"
+                              })
+                            }
+                          }
+                        },
+                        [_vm._v("Ready for guest")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
+                ]
               )
             ]
           ),
       _vm._v(" "),
       _vm.showHousekeepersModal
         ? _c("housekeepers-modal", {
-            attrs: { room: _vm.roomProp },
+            attrs: {
+              room: _vm.roomProp,
+              housekeeper: _vm.scheduledHousekeeper
+            },
             on: {
               close: function($event) {
                 _vm.showHousekeepersModal = false
+              },
+              housekeeperAssigned: function($event) {
+                return _vm.housekeeperAssigned()
               }
             }
           })

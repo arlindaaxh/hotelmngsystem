@@ -32,36 +32,40 @@
                 </div>
                 <div class="flexed justify-between align-center p-10" style="border-bottom:1px solid lightgrey;">
                     <span>Housekeeper</span>
-                    <el-button type="primary" plain @click="assignHousekeeper()">Assign Housekeeper</el-button>
+                    <el-button plain @click="assignHousekeeper(true)">{{getScheduledHousekeepers(roomProp)}}</el-button>
+                    <el-button v-if="!getScheduledHousekeepers(roomProp)" type="primary" plain @click="assignHousekeeper()">Assign Housekeeper</el-button>
                 </div>
                 <div class="flexed justify-between  align-center p-10" style="border-bottom:1px solid lightgrey;">
                     <span>Facilities</span>
                     <i class="el-icon-arrow-right"></i>
                 </div>
                 <div class="flexed justify-between  align-center p-10 w-100">
-                    <el-button type="primary" class="w-100" plain>Ready for guest</el-button>
+                    <el-button type="primary" class="w-100" @click="changeStatus(roomProp, {mark: 'Clean'})" plain>Ready for guest</el-button>
                 </div>
             </div>
         </div>
         <div v-loading="loading" v-else class="body" style="height: 400px;">
             <div class="flexed-column w-100" style="gap:20px;">
                 <div>
-                    <el-button type="primary" plain class="w-100">Mark Dirty</el-button>   
+                    <el-button type="primary" plain class="w-100" @click="changeStatus(roomProp, {mark: 'Dirty'})">Mark Dirty</el-button>   
                 </div>
              
                 <div v-if="roomProp.cleaning_status === 'Ready'">
-                    <el-button type="primary" plain class="w-100">Return to clean</el-button> 
+                    <el-button type="primary" plain class="w-100" @click="changeStatus(roomProp, {mark: 'Clean'})">Return to clean</el-button> 
                 </div>
                 <div v-if="roomProp.cleaning_status === 'Clean'">
-                    <el-button type="primary" plain class="w-100">Mark Ready</el-button> 
+                    <el-button type="primary" plain class="w-100"  @click="changeStatus(roomProp, {mark: 'Ready'})">Mark Ready</el-button> 
                 </div>
 
-
-                <el-button type="primary" plain class="w-100" >Ready for guest</el-button>
+                <div>
+                    <el-button type="primary" plain class="w-100" @click="changeStatus(roomProp, {mark: 'Clean'})">Ready for guest</el-button>
+                </div>
+       
             </div>
         </div>
 
-        <housekeepers-modal :room="roomProp" v-if="showHousekeepersModal" @close="showHousekeepersModal = false"/>
+
+        <housekeepers-modal :room="roomProp" v-if="showHousekeepersModal" @close="showHousekeepersModal = false" @housekeeperAssigned="housekeeperAssigned()" :housekeeper="scheduledHousekeeper"/>
     </NormalPopup>
 
 </template>
@@ -69,25 +73,91 @@
 <script>
 import NormalPopup from '../NormalPopup.vue'
 import HousekeepersModal from './HousekeepersModal.vue'
+import RoomServices from '../../services/room.services'
     export default {
         name: 'RoomModal',
         components: {
             NormalPopup,
                 HousekeepersModal
         },
-        props: ['roomProp'],
+        props: ['roomProp', 'housekeepers', 'departments','schedules'],
         data() {
             return {
                 loading: false,
                 activeIndex: 1,
                 showHousekeepersModal: false,
+                scheduledHousekeeper: null,
+
             }
         },
         methods: {
-            assignHousekeeper(){
+            assignHousekeeper(event){
+                if(event){
+
+                }
                 this.showHousekeepersModal = true
+            },
+
+            getScheduledHousekeepers(room){
+                let scheduledRoom = this.schedules.find(sch => sch.room_id === room.id)
+                if(scheduledRoom){
+                    this.housekeeperAssigned = true
+                    return this.getHousekeeper(scheduledRoom)
+                }
+               
+            },
+            getHousekeeper(schedule){
+                let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)     
+                this.scheduledHousekeeper = housekeeper      
+                return housekeeper.name + ' ' + housekeeper.surname 
+            },
+            changeStatus(room, mark){
+                console.log('mark', mark)
+                if(mark.mark === 'Dirty'){
+                    room.cleaning_status = "Dirty" 
+                }
+                else if(mark.mark === 'Clean'){
+                    room.cleaning_status = "Clean" 
+                }
+                else if(mark.mark === 'Ready'){
+                    room.cleaning_status = "Ready" 
+                }
+               
+                this.loading = true
+                if(room.status === true){
+                    room.status = 1
+                }
+                else if(room.status === false){
+                    room.status = 0
+                }
+                RoomServices.putRoom(room, room.id).then((res) => {
+                    this.$emit('close')
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
+            housekeeperAssigned(){
+                this.showHousekeepersModal = false
+                this.getScheduledHousekeepers(this.roomProp)
             }
-        }
+        },
+
     }
 </script>
 

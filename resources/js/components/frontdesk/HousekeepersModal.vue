@@ -32,7 +32,7 @@ import HousekeepingServices from '../../services/housekeeping.services'
         components: {
             NormalPopup
         },
-        props: ['room'],
+        props: ['room', 'housekeeper'],
         data() {
             return {
                 loading: false,
@@ -127,7 +127,8 @@ import HousekeepingServices from '../../services/housekeeping.services'
                         type: 'Success',
                         message: 'Housekeeper was assigned successfully'
                     })
-                    this.$emit('close')
+                    // this.$emit('close')
+                    this.$emit('housekeeperAssigned')
                 })
                 .catch((error) => {
                     this.loading=false
@@ -153,6 +154,8 @@ import HousekeepingServices from '../../services/housekeeping.services'
         beforeMount(){
             this.getDepartments()
             this.getEmployees()
+            console.log('hou', this.housekeeper)
+            this.selectedHousekeeper = this.housekeeper.id
         }
     }
 </script>
