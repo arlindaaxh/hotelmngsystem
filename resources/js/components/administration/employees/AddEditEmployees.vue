@@ -182,6 +182,7 @@ import EmployeeServices from '../../../services/employee.services'
 
                 // let url = `https://127.0.0.1:8000/api/edit-employee/${this.employee.id}`;
            
+            
                 EmployeeServices.putEmployee(employee, this.id).then((res) => {
                       this.$notify.success({
                         title: 'Success',

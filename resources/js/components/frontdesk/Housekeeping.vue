@@ -3,40 +3,73 @@
         <div class="shortcuts-header flexed justify-between">
             <h4>Housekeeping</h4>
         </div>
-        <div class="one-column-list">
-            <div class="flexed justify-between m-b-20">
-                <el-input class="search-input" size="big" placeholder="Search rooms by number or code" v-model="query" :style="'max-width:450px'">
-                <i class="el-icon-search el-input__icon" slot="suffix"></i>
-                </el-input>
-              
-            </div>
 
-            <div class="flexed mt-30" style=" height:100px; padding:10px; border-radius:10px;">
-                <!-- <el-button>DIRTY ({{dirtyRooms.length}})</el-button>
-                <el-button>CLEAN ({{cleanRooms.length}})</el-button>
-                <el-button>READY ({{readyRooms.length}})</el-button> -->
+        <div class="flexed justify-between align-center mt-30" style="gap:40px;">
+            <div class="one-column-list">
+                <div class="flexed justify-between m-b-20">
+                    <el-input class="search-input" size="big" placeholder="Search rooms by number or code" v-model="query" :style="'max-width:450px'">
+                    <i class="el-icon-search el-input__icon" slot="suffix"></i>
+                    </el-input>
+                
+                </div>
 
-                <el-checkbox v-model="filterModel.dirty" label="DIRTY" border></el-checkbox>
-                <el-checkbox v-model="filterModel.clean" label="CLEAN" border></el-checkbox>
-                <el-checkbox v-model="filterModel.ready" label="READY" border></el-checkbox>
-            </div>
-
-            <div class="flex-wrap gap-10 mt-30" style="gap:20px">
-                <el-card v-for="(room,index) in rooms" :key="index" class="box-card" style="width:200px; height:250px; background-color: rgb(245,245,245)">
-                    <div  class="text flexed-column align-center justify-center pointer" style="height:200px;" @click="openRoomModal(room)">
-                        <div class="flexed-column align-center mb-20">
-                            <span>{{room.code}}</span>
-                            <strong>{{room.number}}</strong>
-                             <!-- <span>{{room.status === 1 ? 'Available' : 'Booked'}}</span> -->
-                        </div>
-                        <span style="border:1px solid ;padding-top:3px; padding-bottom:3px; border-radius:20px;" 
-                            :class="room.cleaning_status === 'Dirty' ? 'pl-10 pr-10 text-danger border-danger' : 'text-primary border-primary pl-10 pr-10'"
-                        >{{room.cleaning_status}}</span>
-                        {{getScheduledHousekeepers(room)}}
+                <div class="flexed mt-30 align-center" style=" height:100px;  border-radius:10px;">
+                    <!-- <el-button>DIRTY ({{dirtyRooms.length}})</el-button>
+                    <el-button>CLEAN ({{cleanRooms.length}})</el-button>
+                    <el-button>READY ({{readyRooms.length}})</el-button> -->
+                    <div>
+                        
+                    <el-checkbox v-model="filterModel.dirty" label="DIRTY" border></el-checkbox>
+                    <el-checkbox v-model="filterModel.clean" label="CLEAN" border></el-checkbox>
+                    <el-checkbox v-model="filterModel.ready" label="READY" border></el-checkbox>
                     </div>
-                </el-card>
+
+
+                    <el-button @click="assignHousekeeperToRooms()" size="big">Select Rooms</el-button>
+                </div>
+
+                <div class="flex-wrap gap-10 mt-30" style="gap:20px">
+                    <el-card v-for="(room,index) in rooms" :key="index" class="box-card" style="width:200px; height:250px; background-color: rgb(245,245,245)">
+                        <div  class="text flexed-column align-center justify-center pointer" style="height:200px;" @click="openRoomModal(room)">
+                            <div style="flex:2">
+                            <div class="flexed-column align-center mb-20">
+                                <span>{{room.code}}</span>
+                                <strong>{{room.number}}</strong>
+                                <!-- <span>{{room.status === 1 ? 'Available' : 'Booked'}}</span> -->
+                                </div>
+                                <span style="border:1px solid ;padding-top:3px; padding-bottom:3px; border-radius:20px;" 
+                                    :class="room.cleaning_status === 'Dirty' ? 'pl-10 pr-10 text-danger border-danger' : 'text-primary border-primary pl-10 pr-10'"
+                                >{{room.cleaning_status}}
+                                </span>  
+                            </div>
+                        
+                            <span>
+                                    {{getScheduledHousekeepers(room)}} 
+                            </span>
+                    
+                        </div>
+                    </el-card>
+                </div>
+
+                
             </div>
+            <div>
+                <h4>Housekeepers</h4>
+                <div class="flexed-column" style="gap:20px; overflow-y:scroll; width:400px; max-height:600px">
+                
+                    <el-radio-group v-model="selectedHousekeeper" @change="test()">
+                        <el-card v-for="(housekeeper,index) in housekeepers" :key="index" class="mt-10">
+                            <el-radio :label="housekeeper.id" style="padding-top:0.5rem">  
+                                <strong>{{housekeeper.name}}</strong>
+                                <strong>{{housekeeper.surname}}</strong>
+                            </el-radio>
+                        </el-card>
+                    </el-radio-group>
+                </div>
+            </div>
+           
         </div>
+        
         <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" />
     </div>
 </template>
@@ -61,7 +94,8 @@ import EmployeeServices from '../../services/employee.services'
                 filterModel: {dirty: 'Dirty', clean:'Clean', ready: 'Ready'},
                 schedules: [],
                 employees:[],
-                departments: []
+                departments: [],
+                selectedHousekeeper:null
             }
         },
         computed: {
@@ -203,14 +237,13 @@ import EmployeeServices from '../../services/employee.services'
             getScheduledHousekeepers(room){
                 let scheduledRoom = this.schedules.find(sch => sch.room_id === room.id)
                 if(scheduledRoom){
-           
                     return this.getHousekeeper(scheduledRoom)
                 }
                   //    let scheduledHousekeepers = this.housekeepers.filter(sch => this.schedules.some(hk => hk.employee_id === sch.id && this.rooms.some(room => room.id === hk.room_id)))
                 //    console.log('scheduledHousekeepers',scheduledHousekeepers)
             },
             getHousekeeper(schedule){
-                let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)           
+                let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)         
                 return housekeeper.name + ' ' + housekeeper.surname 
             }
         },
@@ -225,6 +258,8 @@ import EmployeeServices from '../../services/employee.services'
 </script>
 
 <style lang="scss" scoped>
-
+.form-max-width {
+    max-width: 1500px;
+}
 </style>
 

@@ -2,11 +2,14 @@
 
     <NormalPopup :no-border="true" :dimmed="true" width="400px">
         <div slot="header" class="flexed justify-between align-center">
-            <span class="pointer m-t-5 m-b-5">
-                <i class="el-icon-close" @click="$emit('close')"></i>
+            <span class="pointer m-t-5 m-b-5" style="flex:1">
+                <i class="el-icon-close"  @click="$emit('close')"></i>
             </span>
-            <span class="label-no-height m-t-5 m-b-5">{{roomProp.code}}</span>
-            <el-button size="small" type="primary" plain>Housekeeping history</el-button>
+            <span class="label-no-height m-t-5 m-b-5" style="flex:1;text-align:center">{{roomProp.code}}</span>
+            <div style="display:flex;flex:1; justify-content:end">
+                <el-button size="small" style="width:150px;" type="primary" plain>Housekeeping history</el-button>  
+            </div>
+          
         </div>
         <div v-loading="loading" v-if="roomProp.cleaning_status === 'Dirty'" class="body">
             <el-button-group>
@@ -32,7 +35,7 @@
                 </div>
                 <div class="flexed justify-between align-center p-10" style="border-bottom:1px solid lightgrey;">
                     <span>Housekeeper</span>
-                    <el-button plain @click="assignHousekeeper(true)">{{getScheduledHousekeepers(roomProp)}}</el-button>
+                    <el-button plain @click="assignHousekeeper(true)">namw:{{getScheduledHousekeepers(roomProp)}}</el-button>
                     <el-button v-if="!getScheduledHousekeepers(roomProp)" type="primary" plain @click="assignHousekeeper()">Assign Housekeeper</el-button>
                 </div>
                 <div class="flexed justify-between  align-center p-10" style="border-bottom:1px solid lightgrey;">
@@ -74,6 +77,8 @@
 import NormalPopup from '../NormalPopup.vue'
 import HousekeepersModal from './HousekeepersModal.vue'
 import RoomServices from '../../services/room.services'
+import HousekeepingHistoryServices from '../../services/housekeeping-history.service'
+import HousekeepingServices from '../../services/housekeeping.services'
     export default {
         name: 'RoomModal',
         components: {
@@ -87,13 +92,11 @@ import RoomServices from '../../services/room.services'
                 activeIndex: 1,
                 showHousekeepersModal: false,
                 scheduledHousekeeper: null,
-
             }
         },
         methods: {
             assignHousekeeper(event){
                 if(event){
-
                 }
                 this.showHousekeepersModal = true
             },
@@ -104,7 +107,6 @@ import RoomServices from '../../services/room.services'
                     this.housekeeperAssigned = true
                     return this.getHousekeeper(scheduledRoom)
                 }
-               
             },
             getHousekeeper(schedule){
                 let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)     
@@ -118,6 +120,8 @@ import RoomServices from '../../services/room.services'
                 }
                 else if(mark.mark === 'Clean'){
                     room.cleaning_status = "Clean" 
+                    // let schedule = this.getScheduledHousekeepers(this.roomProp)
+                    // this.removeHousekeeper(schedule)
                 }
                 else if(mark.mark === 'Ready'){
                     room.cleaning_status = "Ready" 
@@ -130,6 +134,7 @@ import RoomServices from '../../services/room.services'
                 else if(room.status === false){
                     room.status = 0
                 }
+                
                 RoomServices.putRoom(room, room.id).then((res) => {
                     this.$emit('close')
                 })
@@ -155,6 +160,60 @@ import RoomServices from '../../services/room.services'
             housekeeperAssigned(){
                 this.showHousekeepersModal = false
                 this.getScheduledHousekeepers(this.roomProp)
+            },
+            removeHousekeeper(schedule){
+                this.loading = true
+                console.log('sche', schedule)
+                // HousekeepingHistoryServices.postHousekeepingHistorySchedule(schedule).then((res) => {
+                //     console.log('schedule', schedule)
+                        // this.deleteHousekeepingSchedule(schedule)
+                // })
+                // .catch((error) => {
+                //     this.loading=false
+                //     let errorMessage = error?.data?.message ||
+                //     error?.message ||
+                //     error?.response?.message ||
+                //     error?.response?.data?.message
+                //     if(!errorMessage && error?.data){
+                //     errorMessage =  error.data
+                //     }
+                //     if(!errorMessage) errorMessage = 'Error_occurred'
+                //     this.$notify.error({
+                //         title: error?.status || error?.response?.status,
+                //         message: errorMessage,
+                //     });
+                // })
+                // .finally(() => {
+                //     this.loading = false
+                // })
+
+            },
+            deleteHousekeepingSchedule(schedule){
+                HousekeepingServices.deleteHousekeepingSchedule(schedule.id).then((res) => {
+                    this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Housekeeper removed successfully'
+                    })
+                    .catch((error) => {
+                        this.loading=false
+                        let errorMessage = error?.data?.message ||
+                        error?.message ||
+                        error?.response?.message ||
+                        error?.response?.data?.message
+                        if(!errorMessage && error?.data){
+                        errorMessage =  error.data
+                        }
+                        if(!errorMessage) errorMessage = 'Error_occurred'
+                        this.$notify.error({
+                            title: error?.status || error?.response?.status,
+                            message: errorMessage,
+                        });
+                    })
+                    .finally(() => {
+                        this.loading = false
+                    })
+                })
             }
         },
 
@@ -162,5 +221,9 @@ import RoomServices from '../../services/room.services'
 </script>
 
 <style lang="scss" scoped>
-
+::v-deep  {
+    button.el-button.el-button--primary.el-button--small.is-plain {
+        width: 200px;
+    }
+}
 </style>

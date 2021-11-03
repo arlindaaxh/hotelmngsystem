@@ -2429,6 +2429,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2452,7 +2485,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       schedules: [],
       employees: [],
-      departments: []
+      departments: [],
+      selectedHousekeeper: null
     };
   },
   computed: {
@@ -2630,6 +2664,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 /* harmony import */ var _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HousekeepersModal.vue */ "./resources/js/components/frontdesk/HousekeepersModal.vue");
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
+/* harmony import */ var _services_housekeeping_history_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/housekeeping-history.service */ "./resources/js/services/housekeeping-history.service.js");
+/* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
 //
 //
 //
@@ -2702,6 +2738,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
+
 
 
 
@@ -2751,7 +2792,8 @@ __webpack_require__.r(__webpack_exports__);
       if (mark.mark === 'Dirty') {
         room.cleaning_status = "Dirty";
       } else if (mark.mark === 'Clean') {
-        room.cleaning_status = "Clean";
+        room.cleaning_status = "Clean"; // let schedule = this.getScheduledHousekeepers(this.roomProp)
+        // this.removeHousekeeper(schedule)
       } else if (mark.mark === 'Ready') {
         room.cleaning_status = "Ready";
       }
@@ -2789,6 +2831,60 @@ __webpack_require__.r(__webpack_exports__);
     housekeeperAssigned: function housekeeperAssigned() {
       this.showHousekeepersModal = false;
       this.getScheduledHousekeepers(this.roomProp);
+    },
+    removeHousekeeper: function removeHousekeeper(schedule) {
+      this.loading = true;
+      console.log('sche', schedule); // HousekeepingHistoryServices.postHousekeepingHistorySchedule(schedule).then((res) => {
+      //     console.log('schedule', schedule)
+      // this.deleteHousekeepingSchedule(schedule)
+      // })
+      // .catch((error) => {
+      //     this.loading=false
+      //     let errorMessage = error?.data?.message ||
+      //     error?.message ||
+      //     error?.response?.message ||
+      //     error?.response?.data?.message
+      //     if(!errorMessage && error?.data){
+      //     errorMessage =  error.data
+      //     }
+      //     if(!errorMessage) errorMessage = 'Error_occurred'
+      //     this.$notify.error({
+      //         title: error?.status || error?.response?.status,
+      //         message: errorMessage,
+      //     });
+      // })
+      // .finally(() => {
+      //     this.loading = false
+      // })
+    },
+    deleteHousekeepingSchedule: function deleteHousekeepingSchedule(schedule) {
+      var _this2 = this;
+
+      _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_4__["default"].deleteHousekeepingSchedule(schedule.id).then(function (res) {
+        _this2.$notify.success({
+          title: 'Success',
+          type: 'Success',
+          message: 'Housekeeper removed successfully'
+        })["catch"](function (error) {
+          var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+          _this2.loading = false;
+          var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+          if (!errorMessage && error !== null && error !== void 0 && error.data) {
+            errorMessage = error.data;
+          }
+
+          if (!errorMessage) errorMessage = 'Error_occurred';
+
+          _this2.$notify.error({
+            title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+            message: errorMessage
+          });
+        })["finally"](function () {
+          _this2.loading = false;
+        });
+      });
     }
   }
 });
@@ -2861,6 +2957,41 @@ __webpack_require__.r(__webpack_exports__);
     var url = "http://127.0.0.1:8000/api/employees/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/housekeeping-history.service.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/services/housekeeping-history.service.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  getHousekeepingSchedules: function getHousekeepingSchedules() {
+    var url = "http://127.0.0.1:8000/api/housekeeping";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  postHousekeepingHistorySchedule: function postHousekeepingHistorySchedule(payload) {
+    var url = "http://127.0.0.1:8000/api/housekeeping";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  } // putHousekeepingSchedule(payload, id){
+  //     const url = `http://127.0.0.1:8000/api/housekeeping/${id}`
+  //     return axios.put(url, payload)
+  // },
+  // deleteHousekeepingSchedule(id){
+  //     const url = `http://127.0.0.1:8000/api/housekeeping/${id}`
+  //     return axios.delete(url)
+  // }
+
 });
 
 /***/ }),
@@ -2983,6 +3114,54 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".label[data-v-4eaa9138] {\n  margin: 0
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".form-max-width[data-v-b7454216] {\n  max-width: 1500px;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-fdb3ff2c] button.el-button.el-button--primary.el-button--small.is-plain {\n  width: 200px;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/NormalPopup.vue?vue&type=style&index=0&id=8135a72c&lang=scss&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/NormalPopup.vue?vue&type=style&index=0&id=8135a72c&lang=scss&scoped=true& ***!
@@ -3040,6 +3219,66 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepersModal_vue_vue_type_style_index_0_id_4eaa9138_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_style_index_0_id_b7454216_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_style_index_0_id_b7454216_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_style_index_0_id_b7454216_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomModal_vue_vue_type_style_index_0_id_fdb3ff2c_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomModal_vue_vue_type_style_index_0_id_fdb3ff2c_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomModal_vue_vue_type_style_index_0_id_fdb3ff2c_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -3138,15 +3377,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Housekeeping_vue_vue_type_template_id_b7454216_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Housekeeping.vue?vue&type=template&id=b7454216&scoped=true& */ "./resources/js/components/frontdesk/Housekeeping.vue?vue&type=template&id=b7454216&scoped=true&");
 /* harmony import */ var _Housekeeping_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Housekeeping.vue?vue&type=script&lang=js& */ "./resources/js/components/frontdesk/Housekeeping.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Housekeeping_vue_vue_type_style_index_0_id_b7454216_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& */ "./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Housekeeping_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Housekeeping_vue_vue_type_template_id_b7454216_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
   _Housekeeping_vue_vue_type_template_id_b7454216_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -3177,15 +3418,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _RoomModal_vue_vue_type_template_id_fdb3ff2c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoomModal.vue?vue&type=template&id=fdb3ff2c&scoped=true& */ "./resources/js/components/frontdesk/RoomModal.vue?vue&type=template&id=fdb3ff2c&scoped=true&");
 /* harmony import */ var _RoomModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoomModal.vue?vue&type=script&lang=js& */ "./resources/js/components/frontdesk/RoomModal.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _RoomModal_vue_vue_type_style_index_0_id_fdb3ff2c_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& */ "./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _RoomModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _RoomModal_vue_vue_type_template_id_fdb3ff2c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
   _RoomModal_vue_vue_type_template_id_fdb3ff2c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -3289,6 +3532,32 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepersModal_vue_vue_type_style_index_0_id_4eaa9138_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./HousekeepersModal.vue?vue&type=style&index=0&id=4eaa9138&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepersModal.vue?vue&type=style&index=0&id=4eaa9138&lang=scss&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&":
+/*!**********************************************************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& ***!
+  \**********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_style_index_0_id_b7454216_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=style&index=0&id=b7454216&lang=scss&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& ***!
+  \*******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomModal_vue_vue_type_style_index_0_id_fdb3ff2c_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/RoomModal.vue?vue&type=style&index=0&id=fdb3ff2c&lang=scss&scoped=true&");
 
 
 /***/ }),
@@ -3621,158 +3890,258 @@ var render = function() {
         [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "one-column-list" }, [
-            _c(
-              "div",
-              { staticClass: "flexed justify-between m-b-20" },
-              [
+          _c(
+            "div",
+            {
+              staticClass: "flexed justify-between align-center mt-30",
+              staticStyle: { gap: "40px" }
+            },
+            [
+              _c("div", { staticClass: "one-column-list" }, [
                 _c(
-                  "el-input",
-                  {
-                    staticClass: "search-input",
-                    style: "max-width:450px",
-                    attrs: {
-                      size: "big",
-                      placeholder: "Search rooms by number or code"
-                    },
-                    model: {
-                      value: _vm.query,
-                      callback: function($$v) {
-                        _vm.query = $$v
-                      },
-                      expression: "query"
-                    }
-                  },
+                  "div",
+                  { staticClass: "flexed justify-between m-b-20" },
                   [
-                    _c("i", {
-                      staticClass: "el-icon-search el-input__icon",
-                      attrs: { slot: "suffix" },
-                      slot: "suffix"
-                    })
-                  ]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "flexed mt-30",
-                staticStyle: {
-                  height: "100px",
-                  padding: "10px",
-                  "border-radius": "10px"
-                }
-              },
-              [
-                _c("el-checkbox", {
-                  attrs: { label: "DIRTY", border: "" },
-                  model: {
-                    value: _vm.filterModel.dirty,
-                    callback: function($$v) {
-                      _vm.$set(_vm.filterModel, "dirty", $$v)
-                    },
-                    expression: "filterModel.dirty"
-                  }
-                }),
+                    _c(
+                      "el-input",
+                      {
+                        staticClass: "search-input",
+                        style: "max-width:450px",
+                        attrs: {
+                          size: "big",
+                          placeholder: "Search rooms by number or code"
+                        },
+                        model: {
+                          value: _vm.query,
+                          callback: function($$v) {
+                            _vm.query = $$v
+                          },
+                          expression: "query"
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-search el-input__icon",
+                          attrs: { slot: "suffix" },
+                          slot: "suffix"
+                        })
+                      ]
+                    )
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("el-checkbox", {
-                  attrs: { label: "CLEAN", border: "" },
-                  model: {
-                    value: _vm.filterModel.clean,
-                    callback: function($$v) {
-                      _vm.$set(_vm.filterModel, "clean", $$v)
-                    },
-                    expression: "filterModel.clean"
-                  }
-                }),
-                _vm._v(" "),
-                _c("el-checkbox", {
-                  attrs: { label: "READY", border: "" },
-                  model: {
-                    value: _vm.filterModel.ready,
-                    callback: function($$v) {
-                      _vm.$set(_vm.filterModel, "ready", $$v)
-                    },
-                    expression: "filterModel.ready"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "flex-wrap gap-10 mt-30",
-                staticStyle: { gap: "20px" }
-              },
-              _vm._l(_vm.rooms, function(room, index) {
-                return _c(
-                  "el-card",
+                _c(
+                  "div",
                   {
-                    key: index,
-                    staticClass: "box-card",
-                    staticStyle: {
-                      width: "200px",
-                      height: "250px",
-                      "background-color": "rgb(245,245,245)"
-                    }
+                    staticClass: "flexed mt-30 align-center",
+                    staticStyle: { height: "100px", "border-radius": "10px" }
                   },
                   [
                     _c(
                       "div",
+                      [
+                        _c("el-checkbox", {
+                          attrs: { label: "DIRTY", border: "" },
+                          model: {
+                            value: _vm.filterModel.dirty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.filterModel, "dirty", $$v)
+                            },
+                            expression: "filterModel.dirty"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("el-checkbox", {
+                          attrs: { label: "CLEAN", border: "" },
+                          model: {
+                            value: _vm.filterModel.clean,
+                            callback: function($$v) {
+                              _vm.$set(_vm.filterModel, "clean", $$v)
+                            },
+                            expression: "filterModel.clean"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("el-checkbox", {
+                          attrs: { label: "READY", border: "" },
+                          model: {
+                            value: _vm.filterModel.ready,
+                            callback: function($$v) {
+                              _vm.$set(_vm.filterModel, "ready", $$v)
+                            },
+                            expression: "filterModel.ready"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
                       {
-                        staticClass:
-                          "text flexed-column align-center justify-center pointer",
-                        staticStyle: { height: "200px" },
+                        attrs: { size: "big" },
                         on: {
                           click: function($event) {
-                            return _vm.openRoomModal(room)
+                            return _vm.assignHousekeeperToRooms()
                           }
+                        }
+                      },
+                      [_vm._v("Select Rooms")]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex-wrap gap-10 mt-30",
+                    staticStyle: { gap: "20px" }
+                  },
+                  _vm._l(_vm.rooms, function(room, index) {
+                    return _c(
+                      "el-card",
+                      {
+                        key: index,
+                        staticClass: "box-card",
+                        staticStyle: {
+                          width: "200px",
+                          height: "250px",
+                          "background-color": "rgb(245,245,245)"
                         }
                       },
                       [
                         _c(
                           "div",
-                          { staticClass: "flexed-column align-center mb-20" },
-                          [
-                            _c("span", [_vm._v(_vm._s(room.code))]),
-                            _vm._v(" "),
-                            _c("strong", [_vm._v(_vm._s(room.number))])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "span",
                           {
-                            class:
-                              room.cleaning_status === "Dirty"
-                                ? "pl-10 pr-10 text-danger border-danger"
-                                : "text-primary border-primary pl-10 pr-10",
-                            staticStyle: {
-                              border: "1px solid",
-                              "padding-top": "3px",
-                              "padding-bottom": "3px",
-                              "border-radius": "20px"
+                            staticClass:
+                              "text flexed-column align-center justify-center pointer",
+                            staticStyle: { height: "200px" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openRoomModal(room)
+                              }
                             }
                           },
-                          [_vm._v(_vm._s(room.cleaning_status))]
-                        ),
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(_vm.getScheduledHousekeepers(room)) +
-                            "\n                "
+                          [
+                            _c("div", { staticStyle: { flex: "2" } }, [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "flexed-column align-center mb-20"
+                                },
+                                [
+                                  _c("span", [_vm._v(_vm._s(room.code))]),
+                                  _vm._v(" "),
+                                  _c("strong", [_vm._v(_vm._s(room.number))])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  class:
+                                    room.cleaning_status === "Dirty"
+                                      ? "pl-10 pr-10 text-danger border-danger"
+                                      : "text-primary border-primary pl-10 pr-10",
+                                  staticStyle: {
+                                    border: "1px solid",
+                                    "padding-top": "3px",
+                                    "padding-bottom": "3px",
+                                    "border-radius": "20px"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(room.cleaning_status) +
+                                      "\n                            "
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("span", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.getScheduledHousekeepers(room)) +
+                                  " \n                        "
+                              )
+                            ])
+                          ]
                         )
                       ]
                     )
-                  ]
+                  }),
+                  1
                 )
-              }),
-              1
-            )
-          ]),
+              ]),
+              _vm._v(" "),
+              _c("div", [
+                _c("h4", [_vm._v("Housekeepers")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed-column",
+                    staticStyle: {
+                      gap: "20px",
+                      "overflow-y": "scroll",
+                      width: "400px",
+                      "max-height": "600px"
+                    }
+                  },
+                  [
+                    _c(
+                      "el-radio-group",
+                      {
+                        on: {
+                          change: function($event) {
+                            return _vm.test()
+                          }
+                        },
+                        model: {
+                          value: _vm.selectedHousekeeper,
+                          callback: function($$v) {
+                            _vm.selectedHousekeeper = $$v
+                          },
+                          expression: "selectedHousekeeper"
+                        }
+                      },
+                      _vm._l(_vm.housekeepers, function(housekeeper, index) {
+                        return _c(
+                          "el-card",
+                          { key: index, staticClass: "mt-10" },
+                          [
+                            _c(
+                              "el-radio",
+                              {
+                                staticStyle: { "padding-top": "0.5rem" },
+                                attrs: { label: housekeeper.id }
+                              },
+                              [
+                                _c("strong", [
+                                  _vm._v(_vm._s(housekeeper.name))
+                                ]),
+                                _vm._v(" "),
+                                _c("strong", [
+                                  _vm._v(_vm._s(housekeeper.surname))
+                                ])
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      }),
+                      1
+                    )
+                  ],
+                  1
+                )
+              ])
+            ]
+          ),
           _vm._v(" "),
           _vm.showRoomModal
             ? _c("room-modal", {
@@ -3840,28 +4209,52 @@ var render = function() {
           slot: "header"
         },
         [
-          _c("span", { staticClass: "pointer m-t-5 m-b-5" }, [
-            _c("i", {
-              staticClass: "el-icon-close",
-              on: {
-                click: function($event) {
-                  return _vm.$emit("close")
+          _c(
+            "span",
+            { staticClass: "pointer m-t-5 m-b-5", staticStyle: { flex: "1" } },
+            [
+              _c("i", {
+                staticClass: "el-icon-close",
+                on: {
+                  click: function($event) {
+                    return _vm.$emit("close")
+                  }
                 }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("span", { staticClass: "label-no-height m-t-5 m-b-5" }, [
-            _vm._v(_vm._s(_vm.roomProp.code))
-          ]),
+              })
+            ]
+          ),
           _vm._v(" "),
           _c(
-            "el-button",
-            { attrs: { size: "small", type: "primary", plain: "" } },
-            [_vm._v("Housekeeping history")]
+            "span",
+            {
+              staticClass: "label-no-height m-t-5 m-b-5",
+              staticStyle: { flex: "1", "text-align": "center" }
+            },
+            [_vm._v(_vm._s(_vm.roomProp.code))]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticStyle: {
+                display: "flex",
+                flex: "1",
+                "justify-content": "end"
+              }
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  staticStyle: { width: "150px" },
+                  attrs: { size: "small", type: "primary", plain: "" }
+                },
+                [_vm._v("Housekeeping history")]
+              )
+            ],
+            1
           )
-        ],
-        1
+        ]
       ),
       _vm._v(" "),
       _vm.roomProp.cleaning_status === "Dirty"
@@ -4018,7 +4411,8 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            _vm._s(_vm.getScheduledHousekeepers(_vm.roomProp))
+                            "namw:" +
+                              _vm._s(_vm.getScheduledHousekeepers(_vm.roomProp))
                           )
                         ]
                       ),

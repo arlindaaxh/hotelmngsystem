@@ -6,7 +6,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HousekeepingController;
-use App\Models\Employee;
+use App\Http\Controllers\HousekeepingHistoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +49,8 @@ Route::post('/housekeeping', [HousekeepingController::class, 'store']);
 Route::get('/housekeeping', [HousekeepingController::class, 'index']);
 Route::put('/housekeeping/{id}', [HousekeepingController::class, 'update']);
 Route::delete('/housekeeping/{id}', [HousekeepingController::class, 'delete']);
+
+//HOUSEKEEPING HISTORY
+
+// Route::post('/housekeeping', [HousekeepingHistoryController::class, 'store']);
+// Route::get('/housekeeping', [HousekeepingHistoryController::class, 'index']);

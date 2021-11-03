@@ -165,13 +165,13 @@ import RoomServices from '../../../services/room.services'
                     name: 'rooms'
                 })
             },
-            addFacility(){
-                this.room.facilities.push(this.facility_item)
-                console.log('facilities', this.room.facilities )
-            },
+            // addFacility(){
+            //     this.room.facilities.push(this.facility_item)
+            //     console.log('facilities', this.room.facilities )
+            // },
             save() {
                 this.loading = true
-                console.log('facility', this.facility_items)
+                
                 this.room.facilities = this.facility_items
                 if(this.room.status === true){
                     this.room.status = 1
@@ -180,7 +180,7 @@ import RoomServices from '../../../services/room.services'
                     this.room.status = 0
                 }
                 RoomServices.postRoom(this.room).then((res) => {
-                     this.$notify.success({
+                    this.$notify.success({
                         title: 'Success',
                         type: 'Success',
                         message: 'Room was added successfully'
@@ -215,6 +215,9 @@ import RoomServices from '../../../services/room.services'
                 else if(this.room.status === false){
                     this.room.status = 0
                 }
+           
+                this.room.facilities = this.facility_items
+        
                 RoomServices.putRoom(this.room, this.room.id).then((res) => {
                    this.$notify.success({
                         title: 'Success',

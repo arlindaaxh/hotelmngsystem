@@ -2216,15 +2216,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name: 'rooms'
       });
     },
-    addFacility: function addFacility() {
-      this.room.facilities.push(this.facility_item);
-      console.log('facilities', this.room.facilities);
-    },
+    // addFacility(){
+    //     this.room.facilities.push(this.facility_item)
+    //     console.log('facilities', this.room.facilities )
+    // },
     save: function save() {
       var _this = this;
 
       this.loading = true;
-      console.log('facility', this.facility_items);
       this.room.facilities = this.facility_items;
 
       if (this.room.status === true) {
@@ -2272,6 +2271,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.room.status = 0;
       }
 
+      this.room.facilities = this.facility_items;
       _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].putRoom(this.room, this.room.id).then(function (res) {
         _this2.$notify.success({
           title: 'Success',
