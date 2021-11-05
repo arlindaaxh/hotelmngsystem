@@ -154,8 +154,10 @@ import HousekeepingServices from '../../services/housekeeping.services'
         beforeMount(){
             this.getDepartments()
             this.getEmployees()
-            console.log('hou', this.housekeeper)
-            this.selectedHousekeeper = this.housekeeper.id
+            if(this.housekeeper){
+                this.selectedHousekeeper = this.housekeeper.id 
+            }
+           
         }
     }
 </script>

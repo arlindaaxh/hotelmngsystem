@@ -17,20 +17,20 @@
                     <!-- <el-button>DIRTY ({{dirtyRooms.length}})</el-button>
                     <el-button>CLEAN ({{cleanRooms.length}})</el-button>
                     <el-button>READY ({{readyRooms.length}})</el-button> -->
-                    <div>
+                    <!-- <div>
                         
                     <el-checkbox v-model="filterModel.dirty" label="DIRTY" border></el-checkbox>
                     <el-checkbox v-model="filterModel.clean" label="CLEAN" border></el-checkbox>
                     <el-checkbox v-model="filterModel.ready" label="READY" border></el-checkbox>
-                    </div>
+                    </div> -->
 
 
-                    <el-button @click="assignHousekeeperToRooms()" size="big">Select Rooms</el-button>
+                    <el-button :type="canSelect ? 'primary' : 'default'" @click="assignHousekeeperToRooms()" size="big">Select Rooms</el-button>
                 </div>
-
+                <h5 v-if="canSelect">Select Rooms ({{selectedRooms.length}}/{{rooms.length}})</h5>
                 <div class="flex-wrap gap-10 mt-30" style="gap:20px">
-                    <el-card v-for="(room,index) in rooms" :key="index" class="box-card" style="width:200px; height:250px; background-color: rgb(245,245,245)">
-                        <div  class="text flexed-column align-center justify-center pointer" style="height:200px;" @click="openRoomModal(room)">
+                    <el-card v-for="(room,index) in rooms" :key="index" class="box-card" :style="{border: room.checked && canSelect ? '1px solid  #ff7b50' : ''}">
+                        <div  class="text flexed-column align-center justify-center pointer " style="height:200px; " @click="openRoomModalOrSelect(room)">
                             <div style="flex:2">
                             <div class="flexed-column align-center mb-20">
                                 <span>{{room.code}}</span>
@@ -55,9 +55,12 @@
             </div>
             <div>
                 <h4>Housekeepers</h4>
+                
+
+                <el-button v-if="canSelect && selectedHousekeeper" @click="saveSchedules()" size="big">Assign housekeeper</el-button>
                 <div class="flexed-column" style="gap:20px; overflow-y:scroll; width:400px; max-height:600px">
                 
-                    <el-radio-group v-model="selectedHousekeeper" @change="test()">
+                    <el-radio-group v-model="selectedHousekeeper">
                         <el-card v-for="(housekeeper,index) in housekeepers" :key="index" class="mt-10">
                             <el-radio :label="housekeeper.id" style="padding-top:0.5rem">  
                                 <strong>{{housekeeper.name}}</strong>
@@ -70,7 +73,7 @@
            
         </div>
         
-        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" />
+        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" @refreshData="refreshData()" />
     </div>
 </template>
 
@@ -95,7 +98,9 @@ import EmployeeServices from '../../services/employee.services'
                 schedules: [],
                 employees:[],
                 departments: [],
-                selectedHousekeeper:null
+                selectedHousekeeper: null,
+                canSelect: false,
+                selectedRooms: []
             }
         },
         computed: {
@@ -170,11 +175,48 @@ import EmployeeServices from '../../services/employee.services'
         },
         methods: {
         
-            openRoomModal(room){
-                this.roomProp = room
-                this.showRoomModal = true
+            openRoomModalOrSelect(room){
+                if(this.canSelect && (room.cleaning_status === 'Clean' || room.cleaning_status === 'Ready')){
+                    if(!room.checked){
+                        this.selectedRooms.push(room.id)  
+                        room.checked = true
+                    }
+                    else {
+                        room.checked = false
+                        let x = this.selectedRooms.find(r => r === room.id)
+                        let index = this.selectedRooms.indexOf(x)
+                        this.selectedRooms.splice(index,1)
+            
+                    }  
+                }else if(this.canSelect && room.cleaning_status === 'Dirty'  ){
+                    this.$notify.error({
+                        title: 'Info',
+                        type: 'Error',
+                        message: 'This room already has a housekeeper assigned'
+                    })
+                }else {
+                    room.checked = false
+                    if(this.selectedRooms.length > 0){
+                        this.selectedRooms = []
+                    }
+                    this.roomProp = room
+                    this.showRoomModal = true
+                }
+                
+            },
+            isSelected(room){
+                let found = this.selectedRooms.find(r => r === room.id)
+                 console.log('foundi', found)
+                if(found){
+                    console.log('foundi', found)
+                    return true
+                }
+                return false
             },
         
+            assignHousekeeperToRooms(){
+                this.canSelect = !this.canSelect
+            },
             getOptionsData() {
                 this.loading = true;
                 Promise.all(
@@ -211,6 +253,9 @@ import EmployeeServices from '../../services/employee.services'
                                 console.log('depts', this.departments)
                             } else if (res.type == "rooms") {
                                 this.rooms = res.data
+                                this.rooms.forEach(room => {
+                                    this.$set(room, 'checked', false)
+                                })
                                 console.log('rooms', this.rooms)
                             }else if(res.type == "schedules"){
                                 this.schedules = res.data
@@ -245,7 +290,44 @@ import EmployeeServices from '../../services/employee.services'
             getHousekeeper(schedule){
                 let housekeeper = this.housekeepers.find(hk => hk.id === schedule.employee_id)         
                 return housekeeper.name + ' ' + housekeeper.surname 
+            },
+
+            saveSchedules(){
+         
+                this.selectedRooms.forEach(room => {
+                    let payload = {
+                        room_id: room,
+                        employee_id: this.selectedHousekeeper
+                    }
+                    this.loading = true
+                    HousekeepingServices.postHousekeepingSchedule(payload).then((res) => {
+                        console.log('payload', payload)
+                    })
+                    .catch((error) => {
+                        this.loading=false
+                        let errorMessage = error?.data?.message ||
+                        error?.message ||
+                        error?.response?.message ||
+                        error?.response?.data?.message
+                        if(!errorMessage && error?.data){
+                        errorMessage =  error.data
+                        }
+                        if(!errorMessage) errorMessage = 'Error_occurred'
+                        this.$notify.error({
+                            title: error?.status || error?.response?.status,
+                            message: errorMessage,
+                        });
+                    })
+                    .finally(() => {
+                        this.loading = false
+                    })
+                })
+                this.refreshData()
+            },
+            refreshData(){
+                this.getOptionsData
             }
+            // selectHousekeeper
         },
         beforeMount(){
             // this.getRooms()
@@ -253,6 +335,10 @@ import EmployeeServices from '../../services/employee.services'
             this.getOptionsData()
            
         },
+        beforeRouteUpdate(to, from, next){
+            if(to.name === 'housekeeping') this.getOptionsData
+            next()
+        }
     
     }
 </script>
@@ -260,6 +346,12 @@ import EmployeeServices from '../../services/employee.services'
 <style lang="scss" scoped>
 .form-max-width {
     max-width: 1500px;
+
+    .box-card {
+        width:200px; 
+        height:250px; 
+        background-color: rgb(245,245,245);
+    }
 }
 </style>
 

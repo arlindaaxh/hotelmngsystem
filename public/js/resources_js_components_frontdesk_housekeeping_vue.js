@@ -2363,8 +2363,10 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     this.getDepartments();
     this.getEmployees();
-    console.log('hou', this.housekeeper);
-    this.selectedHousekeeper = this.housekeeper.id;
+
+    if (this.housekeeper) {
+      this.selectedHousekeeper = this.housekeeper.id;
+    }
   }
 });
 
@@ -2386,6 +2388,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
 /* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
 /* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
+//
+//
+//
 //
 //
 //
@@ -2486,7 +2491,9 @@ __webpack_require__.r(__webpack_exports__);
       schedules: [],
       employees: [],
       departments: [],
-      selectedHousekeeper: null
+      selectedHousekeeper: null,
+      canSelect: false,
+      selectedRooms: []
     };
   },
   computed: {
@@ -2564,9 +2571,51 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    openRoomModal: function openRoomModal(room) {
-      this.roomProp = room;
-      this.showRoomModal = true;
+    openRoomModalOrSelect: function openRoomModalOrSelect(room) {
+      if (this.canSelect && (room.cleaning_status === 'Clean' || room.cleaning_status === 'Ready')) {
+        if (!room.checked) {
+          this.selectedRooms.push(room.id);
+          room.checked = true;
+        } else {
+          room.checked = false;
+          var x = this.selectedRooms.find(function (r) {
+            return r === room.id;
+          });
+          var index = this.selectedRooms.indexOf(x);
+          this.selectedRooms.splice(index, 1);
+        }
+      } else if (this.canSelect && room.cleaning_status === 'Dirty') {
+        this.$notify.error({
+          title: 'Info',
+          type: 'Error',
+          message: 'This room already has a housekeeper assigned'
+        });
+      } else {
+        room.checked = false;
+
+        if (this.selectedRooms.length > 0) {
+          this.selectedRooms = [];
+        }
+
+        this.roomProp = room;
+        this.showRoomModal = true;
+      }
+    },
+    isSelected: function isSelected(room) {
+      var found = this.selectedRooms.find(function (r) {
+        return r === room.id;
+      });
+      console.log('foundi', found);
+
+      if (found) {
+        console.log('foundi', found);
+        return true;
+      }
+
+      return false;
+    },
+    assignHousekeeperToRooms: function assignHousekeeperToRooms() {
+      this.canSelect = !this.canSelect;
     },
     getOptionsData: function getOptionsData() {
       var _this2 = this;
@@ -2598,6 +2647,11 @@ __webpack_require__.r(__webpack_exports__);
               console.log('depts', _this2.departments);
             } else if (res.type == "rooms") {
               _this2.rooms = res.data;
+
+              _this2.rooms.forEach(function (room) {
+                _this2.$set(room, 'checked', false);
+              });
+
               console.log('rooms', _this2.rooms);
             } else if (res.type == "schedules") {
               _this2.schedules = res.data;
@@ -2639,12 +2693,156 @@ __webpack_require__.r(__webpack_exports__);
         return hk.id === schedule.employee_id;
       });
       return housekeeper.name + ' ' + housekeeper.surname;
-    }
+    },
+    saveSchedules: function saveSchedules() {
+      var _this3 = this;
+
+      this.selectedRooms.forEach(function (room) {
+        var payload = {
+          room_id: room,
+          employee_id: _this3.selectedHousekeeper
+        };
+        _this3.loading = true;
+        _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__["default"].postHousekeepingSchedule(payload).then(function (res) {
+          console.log('payload', payload);
+        })["catch"](function (error) {
+          var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+          _this3.loading = false;
+          var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+          if (!errorMessage && error !== null && error !== void 0 && error.data) {
+            errorMessage = error.data;
+          }
+
+          if (!errorMessage) errorMessage = 'Error_occurred';
+
+          _this3.$notify.error({
+            title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+            message: errorMessage
+          });
+        })["finally"](function () {
+          _this3.loading = false;
+        });
+      });
+      this.refreshData();
+    },
+    refreshData: function refreshData() {
+      this.getOptionsData;
+    } // selectHousekeeper
+
   },
   beforeMount: function beforeMount() {
     // this.getRooms()
     // this.getHousekeepingSchedules()
     this.getOptionsData();
+  },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    if (to.name === 'housekeeping') this.getOptionsData;
+    next();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
+/* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
+/* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
+/* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'HousekeepingHistoryModal',
+  props: ['room', 'housekeepers', 'housekeepingHistorySchedules'],
+  components: {
+    NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      loading: false,
+      housekeepingHistoryList: []
+    };
+  },
+  methods: {
+    getName: function getName(sch) {
+      return this.housekeepers.find(function (hk) {
+        return hk.id === sch.employee_id;
+      }).name; // if(housekeeper){
+      //     return housekeeper.name + ' ' + housekeeper.surname
+      // }
+    },
+    getHousekeeperLastname: function getHousekeeperLastname(sch) {
+      return this.housekeepers.find(function (hk) {
+        return hk.id === sch.employee_id;
+      }).surname; // if(housekeeper){
+      //     return housekeeper.name + ' ' + housekeeper.surname
+      // }
+    }
+  },
+  beforeMount: function beforeMount() {
+    var _this = this;
+
+    var housekeepingHistory = [];
+    housekeepingHistory = this.housekeepingHistorySchedules.filter(function (sch) {
+      return sch.room_id === _this.room.id;
+    });
+    console.log('roomHis', housekeepingHistory);
+
+    if (housekeepingHistory && housekeepingHistory.length > 0) {
+      housekeepingHistory.forEach(function (sch) {
+        sch.housekeeperName = _this.getName(sch);
+        sch.housekeeperSurname = _this.getHousekeeperLastname(sch);
+      });
+      console.log('roomHi1', housekeepingHistory);
+    }
+
+    this.housekeepingHistoryList = housekeepingHistory;
   }
 });
 
@@ -2666,6 +2864,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
 /* harmony import */ var _services_housekeeping_history_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/housekeeping-history.service */ "./resources/js/services/housekeeping-history.service.js");
 /* harmony import */ var _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/housekeeping.services */ "./resources/js/services/housekeeping.services.js");
+/* harmony import */ var _HousekeepingHistoryModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./HousekeepingHistoryModal.vue */ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue");
 //
 //
 //
@@ -2741,6 +2940,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 
@@ -2750,7 +2951,8 @@ __webpack_require__.r(__webpack_exports__);
   name: 'RoomModal',
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    HousekeepersModal: _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    HousekeepersModal: _HousekeepersModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    HousekeepingHistoryModal: _HousekeepingHistoryModal_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   props: ['roomProp', 'housekeepers', 'departments', 'schedules'],
   data: function data() {
@@ -2758,7 +2960,11 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       activeIndex: 1,
       showHousekeepersModal: false,
-      scheduledHousekeeper: null
+      scheduledHousekeeper: null,
+      hk: false,
+      reRenderKey: 1,
+      showHousekeepingHistoryModal: false,
+      housekeepingHistory: []
     };
   },
   methods: {
@@ -2766,6 +2972,11 @@ __webpack_require__.r(__webpack_exports__);
       if (event) {}
 
       this.showHousekeepersModal = true;
+    },
+    getSchedule: function getSchedule(room) {
+      return this.schedules.find(function (sch) {
+        return sch.room_id === room.id;
+      });
     },
     getScheduledHousekeepers: function getScheduledHousekeepers(room) {
       var scheduledRoom = this.schedules.find(function (sch) {
@@ -2792,8 +3003,9 @@ __webpack_require__.r(__webpack_exports__);
       if (mark.mark === 'Dirty') {
         room.cleaning_status = "Dirty";
       } else if (mark.mark === 'Clean') {
-        room.cleaning_status = "Clean"; // let schedule = this.getScheduledHousekeepers(this.roomProp)
-        // this.removeHousekeeper(schedule)
+        room.cleaning_status = "Clean";
+        var schedule = this.getSchedule(this.roomProp);
+        this.removeHousekeeper(schedule);
       } else if (mark.mark === 'Ready') {
         room.cleaning_status = "Ready";
       }
@@ -2833,59 +3045,104 @@ __webpack_require__.r(__webpack_exports__);
       this.getScheduledHousekeepers(this.roomProp);
     },
     removeHousekeeper: function removeHousekeeper(schedule) {
-      this.loading = true;
-      console.log('sche', schedule); // HousekeepingHistoryServices.postHousekeepingHistorySchedule(schedule).then((res) => {
-      //     console.log('schedule', schedule)
-      // this.deleteHousekeepingSchedule(schedule)
-      // })
-      // .catch((error) => {
-      //     this.loading=false
-      //     let errorMessage = error?.data?.message ||
-      //     error?.message ||
-      //     error?.response?.message ||
-      //     error?.response?.data?.message
-      //     if(!errorMessage && error?.data){
-      //     errorMessage =  error.data
-      //     }
-      //     if(!errorMessage) errorMessage = 'Error_occurred'
-      //     this.$notify.error({
-      //         title: error?.status || error?.response?.status,
-      //         message: errorMessage,
-      //     });
-      // })
-      // .finally(() => {
-      //     this.loading = false
-      // })
-    },
-    deleteHousekeepingSchedule: function deleteHousekeepingSchedule(schedule) {
       var _this2 = this;
 
+      this.loading = true;
+      _services_housekeeping_history_service__WEBPACK_IMPORTED_MODULE_3__["default"].postHousekeepingHistorySchedule(schedule).then(function (res) {
+        _this2.deleteHousekeepingSchedule(schedule);
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
+    },
+    deleteHousekeepingSchedule: function deleteHousekeepingSchedule(schedule) {
+      var _this3 = this;
+
       _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_4__["default"].deleteHousekeepingSchedule(schedule.id).then(function (res) {
-        _this2.$notify.success({
+        _this3.$notify.success({
           title: 'Success',
           type: 'Success',
-          message: 'Housekeeper removed successfully'
-        })["catch"](function (error) {
-          var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+          message: 'Room returned to clean'
+        }); // this.$emit('refreshData')
 
-          _this2.loading = false;
-          var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+      })["catch"](function (error) {
+        var _error$data3, _error$response7, _error$response8, _error$response8$data, _error$response9;
 
-          if (!errorMessage && error !== null && error !== void 0 && error.data) {
-            errorMessage = error.data;
-          }
+        _this3.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data3 = error.data) === null || _error$data3 === void 0 ? void 0 : _error$data3.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response7 = error.response) === null || _error$response7 === void 0 ? void 0 : _error$response7.message) || (error === null || error === void 0 ? void 0 : (_error$response8 = error.response) === null || _error$response8 === void 0 ? void 0 : (_error$response8$data = _error$response8.data) === null || _error$response8$data === void 0 ? void 0 : _error$response8$data.message);
 
-          if (!errorMessage) errorMessage = 'Error_occurred';
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
 
-          _this2.$notify.error({
-            title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
-            message: errorMessage
-          });
-        })["finally"](function () {
-          _this2.loading = false;
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this3.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response9 = error.response) === null || _error$response9 === void 0 ? void 0 : _error$response9.status),
+          message: errorMessage
         });
+      })["finally"](function () {
+        _this3.loading = false;
+      });
+    },
+    closeHousekeepersModal: function closeHousekeepersModal() {
+      this.showHousekeepersModal = false;
+      this.reRenderKey++;
+    },
+    showHistoryModal: function showHistoryModal() {
+      this.showHousekeepingHistoryModal = true;
+    },
+    getHousekeepingHistory: function getHousekeepingHistory() {
+      var _this4 = this;
+
+      this.loading = true;
+      _services_housekeeping_history_service__WEBPACK_IMPORTED_MODULE_3__["default"].getHousekeepingHistorySchedules().then(function (res) {
+        _this4.housekeepingHistory = res.data;
+        console.log('housekeepingHistory', _this4.housekeepingHistory);
+      })["catch"](function (error) {
+        var _error$data4, _error$response10, _error$response11, _error$response11$dat, _error$response12;
+
+        _this4.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data4 = error.data) === null || _error$data4 === void 0 ? void 0 : _error$data4.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response10 = error.response) === null || _error$response10 === void 0 ? void 0 : _error$response10.message) || (error === null || error === void 0 ? void 0 : (_error$response11 = error.response) === null || _error$response11 === void 0 ? void 0 : (_error$response11$dat = _error$response11.data) === null || _error$response11$dat === void 0 ? void 0 : _error$response11$dat.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this4.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response12 = error.response) === null || _error$response12 === void 0 ? void 0 : _error$response12.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this4.loading = false;
       });
     }
+  },
+  beforeMount: function beforeMount() {
+    var hk = this.getScheduledHousekeepers(this.roomProp);
+
+    if (hk) {
+      this.hk = true;
+    }
+
+    this.getHousekeepingHistory();
   }
 });
 
@@ -2976,12 +3233,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  getHousekeepingSchedules: function getHousekeepingSchedules() {
-    var url = "http://127.0.0.1:8000/api/housekeeping";
+  getHousekeepingHistorySchedules: function getHousekeepingHistorySchedules() {
+    var url = "http://127.0.0.1:8000/api/housekeeping-history";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   },
   postHousekeepingHistorySchedule: function postHousekeepingHistorySchedule(payload) {
-    var url = "http://127.0.0.1:8000/api/housekeeping";
+    var url = "http://127.0.0.1:8000/api/housekeeping-history";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
   } // putHousekeepingSchedule(payload, id){
   //     const url = `http://127.0.0.1:8000/api/housekeeping/${id}`
@@ -3131,7 +3388,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".form-max-width[data-v-b7454216] {\n  max-width: 1500px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".form-max-width[data-v-b7454216] {\n  max-width: 1500px;\n}\n.form-max-width .box-card[data-v-b7454216] {\n  width: 200px;\n  height: 250px;\n  background-color: whitesmoke;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3405,6 +3662,45 @@ component.options.__file = "resources/js/components/frontdesk/Housekeeping.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/HousekeepingHistoryModal.vue ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true& */ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true&");
+/* harmony import */ var _HousekeepingHistoryModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HousekeepingHistoryModal.vue?vue&type=script&lang=js& */ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _HousekeepingHistoryModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "028dfd8e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/frontdesk/HousekeepingHistoryModal.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/frontdesk/RoomModal.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/frontdesk/RoomModal.vue ***!
@@ -3491,6 +3787,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Housekeeping.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepingHistoryModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./HousekeepingHistoryModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepingHistoryModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -3609,6 +3921,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_template_id_b7454216_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Housekeeping_vue_vue_type_template_id_b7454216_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Housekeeping.vue?vue&type=template&id=b7454216&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/Housekeeping.vue?vue&type=template&id=b7454216&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true&":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true& ***!
+  \*******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HousekeepingHistoryModal_vue_vue_type_template_id_028dfd8e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true&");
 
 
 /***/ }),
@@ -3939,48 +4268,12 @@ var render = function() {
                   },
                   [
                     _c(
-                      "div",
-                      [
-                        _c("el-checkbox", {
-                          attrs: { label: "DIRTY", border: "" },
-                          model: {
-                            value: _vm.filterModel.dirty,
-                            callback: function($$v) {
-                              _vm.$set(_vm.filterModel, "dirty", $$v)
-                            },
-                            expression: "filterModel.dirty"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("el-checkbox", {
-                          attrs: { label: "CLEAN", border: "" },
-                          model: {
-                            value: _vm.filterModel.clean,
-                            callback: function($$v) {
-                              _vm.$set(_vm.filterModel, "clean", $$v)
-                            },
-                            expression: "filterModel.clean"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("el-checkbox", {
-                          attrs: { label: "READY", border: "" },
-                          model: {
-                            value: _vm.filterModel.ready,
-                            callback: function($$v) {
-                              _vm.$set(_vm.filterModel, "ready", $$v)
-                            },
-                            expression: "filterModel.ready"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
                       "el-button",
                       {
-                        attrs: { size: "big" },
+                        attrs: {
+                          type: _vm.canSelect ? "primary" : "default",
+                          size: "big"
+                        },
                         on: {
                           click: function($event) {
                             return _vm.assignHousekeeperToRooms()
@@ -3992,6 +4285,18 @@ var render = function() {
                   ],
                   1
                 ),
+                _vm._v(" "),
+                _vm.canSelect
+                  ? _c("h5", [
+                      _vm._v(
+                        "Select Rooms (" +
+                          _vm._s(_vm.selectedRooms.length) +
+                          "/" +
+                          _vm._s(_vm.rooms.length) +
+                          ")"
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -4005,10 +4310,11 @@ var render = function() {
                       {
                         key: index,
                         staticClass: "box-card",
-                        staticStyle: {
-                          width: "200px",
-                          height: "250px",
-                          "background-color": "rgb(245,245,245)"
+                        style: {
+                          border:
+                            room.checked && _vm.canSelect
+                              ? "1px solid  #ff7b50"
+                              : ""
                         }
                       },
                       [
@@ -4016,11 +4322,11 @@ var render = function() {
                           "div",
                           {
                             staticClass:
-                              "text flexed-column align-center justify-center pointer",
+                              "text flexed-column align-center justify-center pointer ",
                             staticStyle: { height: "200px" },
                             on: {
                               click: function($event) {
-                                return _vm.openRoomModal(room)
+                                return _vm.openRoomModalOrSelect(room)
                               }
                             }
                           },
@@ -4078,68 +4384,82 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("div", [
-                _c("h4", [_vm._v("Housekeepers")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flexed-column",
-                    staticStyle: {
-                      gap: "20px",
-                      "overflow-y": "scroll",
-                      width: "400px",
-                      "max-height": "600px"
-                    }
-                  },
-                  [
-                    _c(
-                      "el-radio-group",
-                      {
-                        on: {
-                          change: function($event) {
-                            return _vm.test()
+              _c(
+                "div",
+                [
+                  _c("h4", [_vm._v("Housekeepers")]),
+                  _vm._v(" "),
+                  _vm.canSelect && _vm.selectedHousekeeper
+                    ? _c(
+                        "el-button",
+                        {
+                          attrs: { size: "big" },
+                          on: {
+                            click: function($event) {
+                              return _vm.saveSchedules()
+                            }
                           }
                         },
-                        model: {
-                          value: _vm.selectedHousekeeper,
-                          callback: function($$v) {
-                            _vm.selectedHousekeeper = $$v
-                          },
-                          expression: "selectedHousekeeper"
-                        }
-                      },
-                      _vm._l(_vm.housekeepers, function(housekeeper, index) {
-                        return _c(
-                          "el-card",
-                          { key: index, staticClass: "mt-10" },
-                          [
-                            _c(
-                              "el-radio",
-                              {
-                                staticStyle: { "padding-top": "0.5rem" },
-                                attrs: { label: housekeeper.id }
-                              },
-                              [
-                                _c("strong", [
-                                  _vm._v(_vm._s(housekeeper.name))
-                                ]),
-                                _vm._v(" "),
-                                _c("strong", [
-                                  _vm._v(_vm._s(housekeeper.surname))
-                                ])
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      }),
-                      1
-                    )
-                  ],
-                  1
-                )
-              ])
+                        [_vm._v("Assign housekeeper")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flexed-column",
+                      staticStyle: {
+                        gap: "20px",
+                        "overflow-y": "scroll",
+                        width: "400px",
+                        "max-height": "600px"
+                      }
+                    },
+                    [
+                      _c(
+                        "el-radio-group",
+                        {
+                          model: {
+                            value: _vm.selectedHousekeeper,
+                            callback: function($$v) {
+                              _vm.selectedHousekeeper = $$v
+                            },
+                            expression: "selectedHousekeeper"
+                          }
+                        },
+                        _vm._l(_vm.housekeepers, function(housekeeper, index) {
+                          return _c(
+                            "el-card",
+                            { key: index, staticClass: "mt-10" },
+                            [
+                              _c(
+                                "el-radio",
+                                {
+                                  staticStyle: { "padding-top": "0.5rem" },
+                                  attrs: { label: housekeeper.id }
+                                },
+                                [
+                                  _c("strong", [
+                                    _vm._v(_vm._s(housekeeper.name))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("strong", [
+                                    _vm._v(_vm._s(housekeeper.surname))
+                                  ])
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        }),
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ]
           ),
           _vm._v(" "),
@@ -4154,6 +4474,9 @@ var render = function() {
                 on: {
                   close: function($event) {
                     _vm.showRoomModal = false
+                  },
+                  refreshData: function($event) {
+                    return _vm.refreshData()
                   }
                 }
               })
@@ -4175,6 +4498,110 @@ var staticRenderFns = [
     )
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/HousekeepingHistoryModal.vue?vue&type=template&id=028dfd8e&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "NormalPopup",
+    { attrs: { "no-border": true, dimmed: true, width: "400px" } },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "flexed justify-between align-center",
+          attrs: { slot: "header" },
+          slot: "header"
+        },
+        [
+          _c("span", { staticClass: "pointer m-t-5 m-b-5" }, [
+            _c("i", {
+              staticClass: "el-icon-close",
+              on: {
+                click: function($event) {
+                  return _vm.$emit("close")
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "label-no-height m-t-5 m-b-5" }, [
+            _vm._v("Room Housekeeping History")
+          ]),
+          _vm._v(" "),
+          _c(
+            "el-button",
+            { attrs: { size: "medium", type: "primary", plain: "" } },
+            [_vm._v("CSV")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
+            }
+          ],
+          staticClass: "body",
+          staticStyle: { height: "400px", gap: "20px", "overflow-y": "scroll" }
+        },
+        [
+          _c("div", { staticClass: "flexed-column" }, [
+            _c("table", { staticClass: "table" }, [
+              _c("thead", [
+                _c("th", [_vm._v("First Name")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Last Name")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Date")])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.housekeepingHistoryList, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", [_vm._v(_vm._s(item.housekeeperName))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.housekeeperSurname))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.created_at.split("T")[0]))])
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -4247,7 +4674,12 @@ var render = function() {
                 "el-button",
                 {
                   staticStyle: { width: "150px" },
-                  attrs: { size: "small", type: "primary", plain: "" }
+                  attrs: { size: "small", type: "primary", plain: "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.showHistoryModal()
+                    }
+                  }
                 },
                 [_vm._v("Housekeeping history")]
               )
@@ -4399,23 +4831,27 @@ var render = function() {
                     [
                       _c("span", [_vm._v("Housekeeper")]),
                       _vm._v(" "),
-                      _c(
-                        "el-button",
-                        {
-                          attrs: { plain: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.assignHousekeeper(true)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "namw:" +
-                              _vm._s(_vm.getScheduledHousekeepers(_vm.roomProp))
+                      _vm.hk
+                        ? _c(
+                            "el-button",
+                            {
+                              key: _vm.reRenderKey,
+                              attrs: { plain: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.assignHousekeeper(true)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.getScheduledHousekeepers(_vm.roomProp)
+                                )
+                              )
+                            ]
                           )
-                        ]
-                      ),
+                        : _vm._e(),
                       _vm._v(" "),
                       !_vm.getScheduledHousekeepers(_vm.roomProp)
                         ? _c(
@@ -4604,10 +5040,25 @@ var render = function() {
             },
             on: {
               close: function($event) {
-                _vm.showHousekeepersModal = false
+                return _vm.closeHousekeepersModal()
               },
               housekeeperAssigned: function($event) {
                 return _vm.housekeeperAssigned()
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showHousekeepingHistoryModal
+        ? _c("housekeeping-history-modal", {
+            attrs: {
+              room: _vm.roomProp,
+              housekeepers: _vm.housekeepers,
+              housekeepingHistorySchedules: _vm.housekeepingHistory
+            },
+            on: {
+              close: function($event) {
+                _vm.showHousekeepingHistoryModal = false
               }
             }
           })

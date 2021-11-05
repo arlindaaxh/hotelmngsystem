@@ -7,7 +7,7 @@
             </span>
             <span class="label-no-height m-t-5 m-b-5" style="flex:1;text-align:center">{{roomProp.code}}</span>
             <div style="display:flex;flex:1; justify-content:end">
-                <el-button size="small" style="width:150px;" type="primary" plain>Housekeeping history</el-button>  
+                <el-button size="small" style="width:150px;" type="primary" plain @click="showHistoryModal()">Housekeeping history</el-button>  
             </div>
           
         </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="flexed justify-between align-center p-10" style="border-bottom:1px solid lightgrey;">
                     <span>Housekeeper</span>
-                    <el-button plain @click="assignHousekeeper(true)">namw:{{getScheduledHousekeepers(roomProp)}}</el-button>
+                    <el-button plain @click="assignHousekeeper(true)" v-if="hk" :key="reRenderKey">{{getScheduledHousekeepers(roomProp)}}</el-button>
                     <el-button v-if="!getScheduledHousekeepers(roomProp)" type="primary" plain @click="assignHousekeeper()">Assign Housekeeper</el-button>
                 </div>
                 <div class="flexed justify-between  align-center p-10" style="border-bottom:1px solid lightgrey;">
@@ -68,7 +68,8 @@
         </div>
 
 
-        <housekeepers-modal :room="roomProp" v-if="showHousekeepersModal" @close="showHousekeepersModal = false" @housekeeperAssigned="housekeeperAssigned()" :housekeeper="scheduledHousekeeper"/>
+        <housekeepers-modal :room="roomProp" v-if="showHousekeepersModal" @close="closeHousekeepersModal()" @housekeeperAssigned="housekeeperAssigned()" :housekeeper="scheduledHousekeeper"/>
+        <housekeeping-history-modal :room="roomProp" :housekeepers="housekeepers" :housekeepingHistorySchedules="housekeepingHistory" v-if="showHousekeepingHistoryModal" @close="showHousekeepingHistoryModal = false"/>
     </NormalPopup>
 
 </template>
@@ -79,11 +80,14 @@ import HousekeepersModal from './HousekeepersModal.vue'
 import RoomServices from '../../services/room.services'
 import HousekeepingHistoryServices from '../../services/housekeeping-history.service'
 import HousekeepingServices from '../../services/housekeeping.services'
+import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
+
     export default {
         name: 'RoomModal',
         components: {
             NormalPopup,
-                HousekeepersModal
+                HousekeepersModal,
+                HousekeepingHistoryModal
         },
         props: ['roomProp', 'housekeepers', 'departments','schedules'],
         data() {
@@ -92,6 +96,10 @@ import HousekeepingServices from '../../services/housekeeping.services'
                 activeIndex: 1,
                 showHousekeepersModal: false,
                 scheduledHousekeeper: null,
+                hk: false,
+                reRenderKey: 1,
+                showHousekeepingHistoryModal: false,
+                housekeepingHistory: []
             }
         },
         methods: {
@@ -99,6 +107,10 @@ import HousekeepingServices from '../../services/housekeeping.services'
                 if(event){
                 }
                 this.showHousekeepersModal = true
+            },
+            getSchedule(room){
+               return this.schedules.find(sch => sch.room_id === room.id)
+               
             },
 
             getScheduledHousekeepers(room){
@@ -120,8 +132,8 @@ import HousekeepingServices from '../../services/housekeeping.services'
                 }
                 else if(mark.mark === 'Clean'){
                     room.cleaning_status = "Clean" 
-                    // let schedule = this.getScheduledHousekeepers(this.roomProp)
-                    // this.removeHousekeeper(schedule)
+                    let schedule = this.getSchedule(this.roomProp)
+                    this.removeHousekeeper(schedule)
                 }
                 else if(mark.mark === 'Ready'){
                     room.cleaning_status = "Ready" 
@@ -163,29 +175,27 @@ import HousekeepingServices from '../../services/housekeeping.services'
             },
             removeHousekeeper(schedule){
                 this.loading = true
-                console.log('sche', schedule)
-                // HousekeepingHistoryServices.postHousekeepingHistorySchedule(schedule).then((res) => {
-                //     console.log('schedule', schedule)
-                        // this.deleteHousekeepingSchedule(schedule)
-                // })
-                // .catch((error) => {
-                //     this.loading=false
-                //     let errorMessage = error?.data?.message ||
-                //     error?.message ||
-                //     error?.response?.message ||
-                //     error?.response?.data?.message
-                //     if(!errorMessage && error?.data){
-                //     errorMessage =  error.data
-                //     }
-                //     if(!errorMessage) errorMessage = 'Error_occurred'
-                //     this.$notify.error({
-                //         title: error?.status || error?.response?.status,
-                //         message: errorMessage,
-                //     });
-                // })
-                // .finally(() => {
-                //     this.loading = false
-                // })
+                HousekeepingHistoryServices.postHousekeepingHistorySchedule(schedule).then((res) => {
+                    this.deleteHousekeepingSchedule(schedule)
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
 
             },
             deleteHousekeepingSchedule(schedule){
@@ -193,30 +203,72 @@ import HousekeepingServices from '../../services/housekeeping.services'
                     this.$notify.success({
                         title: 'Success',
                         type: 'Success',
-                        message: 'Housekeeper removed successfully'
+                        message: 'Room returned to clean'
                     })
-                    .catch((error) => {
-                        this.loading=false
-                        let errorMessage = error?.data?.message ||
-                        error?.message ||
-                        error?.response?.message ||
-                        error?.response?.data?.message
-                        if(!errorMessage && error?.data){
-                        errorMessage =  error.data
-                        }
-                        if(!errorMessage) errorMessage = 'Error_occurred'
-                        this.$notify.error({
-                            title: error?.status || error?.response?.status,
-                            message: errorMessage,
-                        });
-                    })
-                    .finally(() => {
-                        this.loading = false
-                    })
+                    // this.$emit('refreshData')
+                    
                 })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
+            closeHousekeepersModal(){
+                this.showHousekeepersModal = false
+                this.reRenderKey++
+            },
+            showHistoryModal(){
+                this.showHousekeepingHistoryModal = true
+            },
+            getHousekeepingHistory(){
+                this.loading = true
+                HousekeepingHistoryServices.getHousekeepingHistorySchedules().then((res) => {
+                    this.housekeepingHistory = res.data
+                    console.log('housekeepingHistory', this.housekeepingHistory)
+                }).catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+        
             }
+           
         },
+        beforeMount(){
+            let hk = this.getScheduledHousekeepers(this.roomProp)
+            if(hk){
+                this.hk = true
+            }
 
+            this.getHousekeepingHistory()
+        }
     }
 </script>
 

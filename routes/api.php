@@ -52,5 +52,5 @@ Route::delete('/housekeeping/{id}', [HousekeepingController::class, 'delete']);
 
 //HOUSEKEEPING HISTORY
 
-// Route::post('/housekeeping', [HousekeepingHistoryController::class, 'store']);
-// Route::get('/housekeeping', [HousekeepingHistoryController::class, 'index']);
+Route::post('/housekeeping-history', [HousekeepingHistoryController::class, 'store']);
+Route::get('/housekeeping-history', [HousekeepingHistoryController::class, 'index']);

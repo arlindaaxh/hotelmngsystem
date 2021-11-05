@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export default {
-    getHousekeepingSchedules(){
-        const url = `http://127.0.0.1:8000/api/housekeeping`
+    getHousekeepingHistorySchedules(){
+        const url = `http://127.0.0.1:8000/api/housekeeping-history`
         return axios.get(url)
     },
     postHousekeepingHistorySchedule(payload){
-        const url = `http://127.0.0.1:8000/api/housekeeping`
+        const url = `http://127.0.0.1:8000/api/housekeeping-history`
         return axios.post(url, payload)
     },
     // putHousekeepingSchedule(payload, id){
