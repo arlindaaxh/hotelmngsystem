@@ -4,7 +4,7 @@
             <h4>Housekeeping</h4>
         </div>
 
-        <div class="flexed justify-between align-center mt-30" style="gap:40px;">
+        <div class="flexed justify-between  mt-30" style="gap:40px;align-items:start !important">
             <div class="one-column-list">
                 <div class="flexed justify-between m-b-20">
                     <el-input class="search-input" size="big" placeholder="Search rooms by number or code" v-model="query" :style="'max-width:450px'">
@@ -62,7 +62,7 @@
 
                 
             </div>
-            <div>
+            <div class="flexed">
                 <h4>Housekeepers</h4>
                 
 
@@ -374,5 +374,6 @@ import EmployeeServices from '../../services/employee.services'
         background-color: rgb(245,245,245);
     }
 }
+
 </style>
 
