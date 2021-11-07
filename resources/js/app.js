@@ -11,11 +11,14 @@ import '../css/app.css';
 // import '../css/main.scss'
 // import '../js/services/filters'
 import '../css/main.scss'
+import JsonCSV from 'vue-json-csv'
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(ElementUI);
+
+Vue.component('downloadCsv', JsonCSV)
 
 let app = new Vue({
     el: '#app',

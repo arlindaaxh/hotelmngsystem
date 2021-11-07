@@ -2467,6 +2467,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2493,42 +2502,47 @@ __webpack_require__.r(__webpack_exports__);
       departments: [],
       selectedHousekeeper: null,
       canSelect: false,
-      selectedRooms: []
+      selectedRooms: [],
+      selectedFilter: 'All'
     };
   },
   computed: {
-    // filteredRoomsA() {
-    //     let result = this.rooms
-    //     if(this.rooms && this.rooms.length > 0){
-    //         result = this.rooms.filter((room) =>
-    //             room.cleaning_status === this.filterModel.dirty ||
-    //             (!this.filterModel.dirty && !this.filterModel.clean && !this.filterModel.ready) ||
-    //             (this.filterModel.dirty && this.filterModel.clean && this.filterModel.ready) ||
-    //             room.cleaning_status === this.filterModel.clean || 
-    //             room.cleaning_status === this.filterModel.ready 
-    //         );
-    //         if (this.query && this.query.length > 0) {
-    //             result = result.filter(
-    //                 (r) =>
-    //                     r.type?.toLowerCase().includes(this.query.toLowerCase()) ||
-    //                     r.code?.toLowerCase().includes(this.query.toLowerCase())
-    //             );
-    //         }
-    //     }
-    //     console.log('res', result)
-    //     return result;
-    // },
-    housekeepers: function housekeepers() {
+    filteredRooms: function filteredRooms() {
       var _this = this;
+
+      var result = this.rooms;
+
+      if (this.rooms && this.rooms.length > 0) {
+        result = this.rooms.filter(function (room) {
+          return room.cleaning_status === _this.selectedFilter;
+        });
+
+        if (this.selectedFilter === 'All') {
+          result = this.rooms;
+        }
+
+        if (this.query && this.query.length > 0) {
+          result = result.filter(function (r) {
+            var _r$type, _r$code;
+
+            return ((_r$type = r.type) === null || _r$type === void 0 ? void 0 : _r$type.toLowerCase().includes(_this.query.toLowerCase())) || ((_r$code = r.code) === null || _r$code === void 0 ? void 0 : _r$code.toLowerCase().includes(_this.query.toLowerCase()));
+          });
+        }
+      }
+
+      return result;
+    },
+    housekeepers: function housekeepers() {
+      var _this2 = this;
 
       var housekeepers = [];
       var allEmployees = this.employees.filter(function (employee) {
-        return _this.departments.some(function (dep) {
+        return _this2.departments.some(function (dep) {
           return dep.id === employee.department_id;
         });
       });
       allEmployees.forEach(function (emp) {
-        var depName = _this.getName(emp.department_id);
+        var depName = _this2.getName(emp.department_id);
 
         if (depName && depName === 'Housekeeping') {
           var found = housekeepers.find(function (element) {
@@ -2601,14 +2615,20 @@ __webpack_require__.r(__webpack_exports__);
         this.showRoomModal = true;
       }
     },
+    closeRoomModal: function closeRoomModal() {
+      var _this3 = this;
+
+      this.showRoomModal = false;
+      this.$nextTick(function () {
+        _this3.refreshData();
+      });
+    },
     isSelected: function isSelected(room) {
       var found = this.selectedRooms.find(function (r) {
         return r === room.id;
       });
-      console.log('foundi', found);
 
       if (found) {
-        console.log('foundi', found);
         return true;
       }
 
@@ -2618,7 +2638,7 @@ __webpack_require__.r(__webpack_exports__);
       this.canSelect = !this.canSelect;
     },
     getOptionsData: function getOptionsData() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.loading = true;
       Promise.all([_services_employee_services__WEBPACK_IMPORTED_MODULE_4__["default"].getEmployees(), _services_department_services__WEBPACK_IMPORTED_MODULE_3__["default"].getDepartments(), _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms(), _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__["default"].getHousekeepingSchedules()].map(function (p, index) {
@@ -2640,30 +2660,30 @@ __webpack_require__.r(__webpack_exports__);
             return r.status == "success";
           }).forEach(function (res) {
             if (res.type == "employees") {
-              _this2.employees = res.data;
-              console.log('empl', _this2.employees);
+              _this4.employees = res.data;
+              console.log('empl', _this4.employees);
             } else if (res.type == "departments") {
-              _this2.departments = res.data;
-              console.log('depts', _this2.departments);
+              _this4.departments = res.data;
+              console.log('depts', _this4.departments);
             } else if (res.type == "rooms") {
-              _this2.rooms = res.data;
+              _this4.rooms = res.data;
 
-              _this2.rooms.forEach(function (room) {
-                _this2.$set(room, 'checked', false);
+              _this4.rooms.forEach(function (room) {
+                _this4.$set(room, 'checked', false);
               });
 
-              console.log('rooms', _this2.rooms);
+              console.log('rooms', _this4.rooms);
             } else if (res.type == "schedules") {
-              _this2.schedules = res.data;
-              console.log('scj', _this2.schedules);
+              _this4.schedules = res.data;
+              console.log('scj', _this4.schedules);
             }
           });
         }
       })["catch"](function (error) {
-        _this2.loading = false;
+        _this4.loading = false;
         throw error;
       })["finally"](function () {
-        _this2.loading = false;
+        _this4.loading = false;
       });
     },
     getName: function getName(departmentId) {
@@ -2695,20 +2715,22 @@ __webpack_require__.r(__webpack_exports__);
       return housekeeper.name + ' ' + housekeeper.surname;
     },
     saveSchedules: function saveSchedules() {
-      var _this3 = this;
+      var _this5 = this;
 
       this.selectedRooms.forEach(function (room) {
         var payload = {
           room_id: room,
-          employee_id: _this3.selectedHousekeeper
+          employee_id: _this5.selectedHousekeeper
         };
-        _this3.loading = true;
+        _this5.loading = true;
         _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_2__["default"].postHousekeepingSchedule(payload).then(function (res) {
           console.log('payload', payload);
+
+          _this5.refreshData();
         })["catch"](function (error) {
           var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
-          _this3.loading = false;
+          _this5.loading = false;
           var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
 
           if (!errorMessage && error !== null && error !== void 0 && error.data) {
@@ -2717,18 +2739,18 @@ __webpack_require__.r(__webpack_exports__);
 
           if (!errorMessage) errorMessage = 'Error_occurred';
 
-          _this3.$notify.error({
+          _this5.$notify.error({
             title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
             message: errorMessage
           });
         })["finally"](function () {
-          _this3.loading = false;
+          _this5.loading = false;
         });
       });
-      this.refreshData();
     },
     refreshData: function refreshData() {
-      this.getOptionsData;
+      console.log('here');
+      this.getOptionsData();
     } // selectHousekeeper
 
   },
@@ -2793,6 +2815,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -2806,7 +2833,13 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       loading: false,
-      housekeepingHistoryList: []
+      housekeepingHistoryList: [],
+      fields: ['housekeeperName', 'housekeeperSurname', 'created_at'],
+      labels: {
+        name: 'housekeeperName',
+        surname: 'housekeeperSurname',
+        date: 'created_at'
+      }
     };
   },
   methods: {
@@ -2832,14 +2865,12 @@ __webpack_require__.r(__webpack_exports__);
     housekeepingHistory = this.housekeepingHistorySchedules.filter(function (sch) {
       return sch.room_id === _this.room.id;
     });
-    console.log('roomHis', housekeepingHistory);
 
     if (housekeepingHistory && housekeepingHistory.length > 0) {
       housekeepingHistory.forEach(function (sch) {
         sch.housekeeperName = _this.getName(sch);
         sch.housekeeperSurname = _this.getHousekeeperLastname(sch);
       });
-      console.log('roomHi1', housekeepingHistory);
     }
 
     this.housekeepingHistoryList = housekeepingHistory;
@@ -2998,8 +3029,6 @@ __webpack_require__.r(__webpack_exports__);
     changeStatus: function changeStatus(room, mark) {
       var _this = this;
 
-      console.log('mark', mark);
-
       if (mark.mark === 'Dirty') {
         room.cleaning_status = "Dirty";
       } else if (mark.mark === 'Clean') {
@@ -3113,7 +3142,6 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       _services_housekeeping_history_service__WEBPACK_IMPORTED_MODULE_3__["default"].getHousekeepingHistorySchedules().then(function (res) {
         _this4.housekeepingHistory = res.data;
-        console.log('housekeepingHistory', _this4.housekeepingHistory);
       })["catch"](function (error) {
         var _error$data4, _error$response10, _error$response11, _error$response11$dat, _error$response12;
 
@@ -4226,163 +4254,257 @@ var render = function() {
               staticStyle: { gap: "40px" }
             },
             [
-              _c("div", { staticClass: "one-column-list" }, [
-                _c(
-                  "div",
-                  { staticClass: "flexed justify-between m-b-20" },
-                  [
-                    _c(
-                      "el-input",
-                      {
-                        staticClass: "search-input",
-                        style: "max-width:450px",
-                        attrs: {
-                          size: "big",
-                          placeholder: "Search rooms by number or code"
-                        },
-                        model: {
-                          value: _vm.query,
-                          callback: function($$v) {
-                            _vm.query = $$v
+              _c(
+                "div",
+                { staticClass: "one-column-list" },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "flexed justify-between m-b-20" },
+                    [
+                      _c(
+                        "el-input",
+                        {
+                          staticClass: "search-input",
+                          style: "max-width:450px",
+                          attrs: {
+                            size: "big",
+                            placeholder: "Search rooms by number or code"
                           },
-                          expression: "query"
-                        }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-search el-input__icon",
-                          attrs: { slot: "suffix" },
-                          slot: "suffix"
-                        })
-                      ]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flexed mt-30 align-center",
-                    staticStyle: { height: "100px", "border-radius": "10px" }
-                  },
-                  [
-                    _c(
-                      "el-button",
-                      {
-                        attrs: {
-                          type: _vm.canSelect ? "primary" : "default",
-                          size: "big"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.assignHousekeeperToRooms()
+                          model: {
+                            value: _vm.query,
+                            callback: function($$v) {
+                              _vm.query = $$v
+                            },
+                            expression: "query"
                           }
-                        }
-                      },
-                      [_vm._v("Select Rooms")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm.canSelect
-                  ? _c("h5", [
-                      _vm._v(
-                        "Select Rooms (" +
-                          _vm._s(_vm.selectedRooms.length) +
-                          "/" +
-                          _vm._s(_vm.rooms.length) +
-                          ")"
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-search el-input__icon",
+                            attrs: { slot: "suffix" },
+                            slot: "suffix"
+                          })
+                        ]
                       )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flex-wrap gap-10 mt-30",
-                    staticStyle: { gap: "20px" }
-                  },
-                  _vm._l(_vm.rooms, function(room, index) {
-                    return _c(
-                      "el-card",
-                      {
-                        key: index,
-                        staticClass: "box-card",
-                        style: {
-                          border:
-                            room.checked && _vm.canSelect
-                              ? "1px solid  #ff7b50"
-                              : ""
-                        }
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "text flexed-column align-center justify-center pointer ",
-                            staticStyle: { height: "200px" },
-                            on: {
-                              click: function($event) {
-                                return _vm.openRoomModalOrSelect(room)
-                              }
-                            }
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flexed mt-30 align-center",
+                      staticStyle: { height: "100px", "border-radius": "10px" }
+                    },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            type: _vm.selectedFilter === "All" ? "primary" : ""
                           },
-                          [
-                            _c("div", { staticStyle: { flex: "2" } }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "flexed-column align-center mb-20"
-                                },
-                                [
-                                  _c("span", [_vm._v(_vm._s(room.code))]),
-                                  _vm._v(" "),
-                                  _c("strong", [_vm._v(_vm._s(room.number))])
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  class:
-                                    room.cleaning_status === "Dirty"
-                                      ? "pl-10 pr-10 text-danger border-danger"
-                                      : "text-primary border-primary pl-10 pr-10",
-                                  staticStyle: {
-                                    border: "1px solid",
-                                    "padding-top": "3px",
-                                    "padding-bottom": "3px",
-                                    "border-radius": "20px"
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(room.cleaning_status) +
-                                      "\n                            "
-                                  )
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("span", [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(_vm.getScheduledHousekeepers(room)) +
-                                  " \n                        "
-                              )
-                            ])
-                          ]
+                          on: {
+                            click: function($event) {
+                              _vm.selectedFilter = "All"
+                            }
+                          }
+                        },
+                        [_vm._v("ALL (" + _vm._s(_vm.rooms.length) + ")")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            type:
+                              _vm.selectedFilter === "Dirty" ? "primary" : ""
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.selectedFilter = "Dirty"
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "DIRTY (" + _vm._s(_vm.dirtyRooms.length) + ")"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            type:
+                              _vm.selectedFilter === "Clean" ? "primary" : ""
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.selectedFilter = "Clean"
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "CLEAN (" + _vm._s(_vm.cleanRooms.length) + ")"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            type:
+                              _vm.selectedFilter === "Ready" ? "primary" : ""
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.selectedFilter = "Ready"
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "READY (" + _vm._s(_vm.readyRooms.length) + ")"
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            type: _vm.canSelect ? "primary" : "default",
+                            size: "big"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.assignHousekeeperToRooms()
+                            }
+                          }
+                        },
+                        [_vm._v("Select Rooms")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.canSelect
+                    ? _c("h5", [
+                        _vm._v(
+                          "Select Rooms (" +
+                            _vm._s(_vm.selectedRooms.length) +
+                            "/" +
+                            _vm._s(_vm.rooms.length) +
+                            ")"
                         )
-                      ]
-                    )
-                  }),
-                  1
-                )
-              ]),
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flex-wrap gap-10 mt-30",
+                      staticStyle: { gap: "20px" }
+                    },
+                    _vm._l(_vm.filteredRooms, function(room, index) {
+                      return _c(
+                        "el-card",
+                        {
+                          key: index,
+                          staticClass: "box-card",
+                          style: {
+                            border:
+                              room.checked && _vm.canSelect
+                                ? "1px solid  #ff7b50"
+                                : ""
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "text flexed-column align-center justify-center pointer ",
+                              staticStyle: { height: "200px" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.openRoomModalOrSelect(room)
+                                }
+                              }
+                            },
+                            [
+                              _c("div", { staticStyle: { flex: "2" } }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "flexed-column align-center mb-20"
+                                  },
+                                  [
+                                    _c("span", [_vm._v(_vm._s(room.code))]),
+                                    _vm._v(" "),
+                                    _c("strong", [_vm._v(_vm._s(room.number))])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    class:
+                                      room.cleaning_status === "Dirty"
+                                        ? "pl-10 pr-10 text-danger border-danger"
+                                        : "text-primary border-primary pl-10 pr-10",
+                                    staticStyle: {
+                                      border: "1px solid",
+                                      "padding-top": "3px",
+                                      "padding-bottom": "3px",
+                                      "border-radius": "20px"
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      _vm._s(room.cleaning_status) +
+                                        "\n                            "
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(_vm.getScheduledHousekeepers(room)) +
+                                    " \n                        "
+                                )
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    }),
+                    1
+                  ),
+                  _vm._v(" "),
+                  !_vm.loading &&
+                  _vm.filteredRooms &&
+                  _vm.filteredRooms.length === 0
+                    ? _c("el-alert", {
+                        staticClass: "mt-30",
+                        attrs: {
+                          type: "info",
+                          closable: false,
+                          title: "No results found",
+                          "show-icon": ""
+                        }
+                      })
+                    : _vm._e()
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "div",
@@ -4473,7 +4595,7 @@ var render = function() {
                 },
                 on: {
                   close: function($event) {
-                    _vm.showRoomModal = false
+                    return _vm.closeRoomModal()
                   },
                   refreshData: function($event) {
                     return _vm.refreshData()
@@ -4548,9 +4670,26 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c(
-            "el-button",
-            { attrs: { size: "medium", type: "primary", plain: "" } },
-            [_vm._v("CSV")]
+            "download-csv",
+            {
+              attrs: {
+                data: _vm.housekeepingHistoryList,
+                fields: _vm.fields,
+                labels: _vm.labels,
+                name: "HousekeepingHistory.csv"
+              }
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  staticClass: "el-icon-download",
+                  attrs: { size: "medium", type: "primary" }
+                },
+                [_vm._v("CSV")]
+              )
+            ],
+            1
           )
         ],
         1

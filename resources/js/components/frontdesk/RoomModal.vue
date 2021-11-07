@@ -126,7 +126,6 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
                 return housekeeper.name + ' ' + housekeeper.surname 
             },
             changeStatus(room, mark){
-                console.log('mark', mark)
                 if(mark.mark === 'Dirty'){
                     room.cleaning_status = "Dirty" 
                 }
@@ -238,7 +237,6 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
                 this.loading = true
                 HousekeepingHistoryServices.getHousekeepingHistorySchedules().then((res) => {
                     this.housekeepingHistory = res.data
-                    console.log('housekeepingHistory', this.housekeepingHistory)
                 }).catch((error) => {
                     this.loading=false
                     let errorMessage = error?.data?.message ||

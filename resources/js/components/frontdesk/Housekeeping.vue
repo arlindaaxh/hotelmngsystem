@@ -14,22 +14,23 @@
                 </div>
 
                 <div class="flexed mt-30 align-center" style=" height:100px;  border-radius:10px;">
-                    <!-- <el-button>DIRTY ({{dirtyRooms.length}})</el-button>
-                    <el-button>CLEAN ({{cleanRooms.length}})</el-button>
-                    <el-button>READY ({{readyRooms.length}})</el-button> -->
-                    <!-- <div>
-                        
-                    <el-checkbox v-model="filterModel.dirty" label="DIRTY" border></el-checkbox>
-                    <el-checkbox v-model="filterModel.clean" label="CLEAN" border></el-checkbox>
-                    <el-checkbox v-model="filterModel.ready" label="READY" border></el-checkbox>
-                    </div> -->
+                    <el-button :type="selectedFilter === 'All' ? 'primary' : ''" @click="selectedFilter = 'All'">ALL ({{rooms.length}})</el-button>
+                    <el-button :type="selectedFilter === 'Dirty' ? 'primary' : ''" @click="selectedFilter = 'Dirty'">DIRTY ({{dirtyRooms.length}})</el-button>
+                    <el-button :type="selectedFilter === 'Clean' ? 'primary' : ''" @click="selectedFilter = 'Clean'">CLEAN ({{cleanRooms.length}})</el-button>
+                    <el-button :type="selectedFilter === 'Ready' ? 'primary' : ''" @click="selectedFilter = 'Ready'">READY ({{readyRooms.length}})</el-button>
+                    <!-- <el-radio-group v-model="selectedFilter">
+                        <el-radio label="ALL" border></el-radio>
+                        <el-radio label="Dirty" border></el-radio>
+                        <el-radio label="Clean" border></el-radio>
+                        <el-radio  label="Ready" border></el-radio>
+                    </el-radio-group> -->
 
 
                     <el-button :type="canSelect ? 'primary' : 'default'" @click="assignHousekeeperToRooms()" size="big">Select Rooms</el-button>
                 </div>
                 <h5 v-if="canSelect">Select Rooms ({{selectedRooms.length}}/{{rooms.length}})</h5>
                 <div class="flex-wrap gap-10 mt-30" style="gap:20px">
-                    <el-card v-for="(room,index) in rooms" :key="index" class="box-card" :style="{border: room.checked && canSelect ? '1px solid  #ff7b50' : ''}">
+                    <el-card v-for="(room,index) in filteredRooms" :key="index" class="box-card" :style="{border: room.checked && canSelect ? '1px solid  #ff7b50' : ''}">
                         <div  class="text flexed-column align-center justify-center pointer " style="height:200px; " @click="openRoomModalOrSelect(room)">
                             <div style="flex:2">
                             <div class="flexed-column align-center mb-20">
@@ -50,6 +51,14 @@
                         </div>
                     </el-card>
                 </div>
+
+                <el-alert  v-if="!loading && filteredRooms && filteredRooms.length === 0"
+                    type="info" 
+                    :closable="false" 
+                    class="mt-30"
+                    title="No results found" 
+                    show-icon
+                />
 
                 
             </div>
@@ -73,7 +82,7 @@
            
         </div>
         
-        <room-modal v-if="showRoomModal" @close="showRoomModal = false" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" @refreshData="refreshData()" />
+        <room-modal v-if="showRoomModal" @close="closeRoomModal()" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" @refreshData="refreshData()" />
     </div>
 </template>
 
@@ -100,32 +109,36 @@ import EmployeeServices from '../../services/employee.services'
                 departments: [],
                 selectedHousekeeper: null,
                 canSelect: false,
-                selectedRooms: []
+                selectedRooms: [],
+                selectedFilter: 'All'
             }
         },
         computed: {
-            // filteredRoomsA() {
-            //     let result = this.rooms
-            //     if(this.rooms && this.rooms.length > 0){
-            //         result = this.rooms.filter((room) =>
-            //             room.cleaning_status === this.filterModel.dirty ||
-            //             (!this.filterModel.dirty && !this.filterModel.clean && !this.filterModel.ready) ||
-            //             (this.filterModel.dirty && this.filterModel.clean && this.filterModel.ready) ||
-            //             room.cleaning_status === this.filterModel.clean || 
-            //             room.cleaning_status === this.filterModel.ready 
-            //         );
-            //         if (this.query && this.query.length > 0) {
-            //             result = result.filter(
-            //                 (r) =>
-            //                     r.type?.toLowerCase().includes(this.query.toLowerCase()) ||
-            //                     r.code?.toLowerCase().includes(this.query.toLowerCase())
-            //             );
-            //         }
-            //     }
-            //     console.log('res', result)
-            //     return result;
-                
-            // },
+            filteredRooms(){
+                let result = this.rooms
+                if(this.rooms && this.rooms.length > 0){
+    
+                    result = this.rooms.filter((room) => 
+                        room.cleaning_status === this.selectedFilter 
+                    )
+                    if(this.selectedFilter === 'All'){
+                        result = this.rooms
+                    }
+
+                    if (this.query && this.query.length > 0) {
+                        result = result.filter(
+                            (r) =>
+                                r.type?.toLowerCase().includes(this.query.toLowerCase()) ||
+                                r.code?.toLowerCase().includes(this.query.toLowerCase())
+                        );
+                    }
+              
+                }
+                  
+                return result
+              
+            },
+
             housekeepers(){
                 const housekeepers = []
                 let allEmployees = this.employees.filter(employee => this.departments.some(dep => dep.id === employee.department_id))
@@ -188,7 +201,7 @@ import EmployeeServices from '../../services/employee.services'
                         this.selectedRooms.splice(index,1)
             
                     }  
-                }else if(this.canSelect && room.cleaning_status === 'Dirty'  ){
+                }else if(this.canSelect && room.cleaning_status === 'Dirty'){
                     this.$notify.error({
                         title: 'Info',
                         type: 'Error',
@@ -204,11 +217,16 @@ import EmployeeServices from '../../services/employee.services'
                 }
                 
             },
+            closeRoomModal(){
+                this.showRoomModal = false
+                this.$nextTick(() => {
+                   this.refreshData() 
+                })
+                
+            },
             isSelected(room){
                 let found = this.selectedRooms.find(r => r === room.id)
-                 console.log('foundi', found)
                 if(found){
-                    console.log('foundi', found)
                     return true
                 }
                 return false
@@ -302,6 +320,7 @@ import EmployeeServices from '../../services/employee.services'
                     this.loading = true
                     HousekeepingServices.postHousekeepingSchedule(payload).then((res) => {
                         console.log('payload', payload)
+                        this.refreshData()
                     })
                     .catch((error) => {
                         this.loading=false
@@ -322,10 +341,11 @@ import EmployeeServices from '../../services/employee.services'
                         this.loading = false
                     })
                 })
-                this.refreshData()
+            
             },
             refreshData(){
-                this.getOptionsData
+                console.log('here')
+                this.getOptionsData()
             }
             // selectHousekeeper
         },
@@ -338,7 +358,8 @@ import EmployeeServices from '../../services/employee.services'
         beforeRouteUpdate(to, from, next){
             if(to.name === 'housekeeping') this.getOptionsData
             next()
-        }
+        },
+        
     
     }
 </script>

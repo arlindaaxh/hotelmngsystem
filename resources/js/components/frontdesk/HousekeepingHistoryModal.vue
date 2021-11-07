@@ -5,7 +5,12 @@
                 <i class="el-icon-close" @click="$emit('close')"></i>
             </span>
             <span class="label-no-height m-t-5 m-b-5">Room Housekeeping History</span>
-            <el-button size="medium" type="primary" plain>CSV</el-button>
+            
+       
+            <download-csv :data="housekeepingHistoryList" :fields="fields" :labels="labels" name="HousekeepingHistory.csv">
+               <el-button size="medium" class="el-icon-download" type="primary">CSV</el-button> 
+            </download-csv>
+
         </div>
         <div v-loading="loading"  class="body" style="height:400px;gap:20px; overflow-y:scroll;">
             <div class="flexed-column">
@@ -45,7 +50,12 @@ import HousekeepingServices from '../../services/housekeeping.services'
         data() {
             return {
                 loading: false,
-                housekeepingHistoryList: []
+                housekeepingHistoryList: [],
+                fields: ['housekeeperName', 'housekeeperSurname', 'created_at'],
+                labels: { name: 'housekeeperName', surname: 'housekeeperSurname', date:'created_at'}
+        
+            
+                
             }
         },
         methods: {
@@ -65,15 +75,12 @@ import HousekeepingServices from '../../services/housekeeping.services'
         beforeMount(){
             let housekeepingHistory = []
             housekeepingHistory = this.housekeepingHistorySchedules.filter(sch => sch.room_id === this.room.id)
-            console.log('roomHis', housekeepingHistory)
         
             if(housekeepingHistory && housekeepingHistory.length > 0){
                 housekeepingHistory.forEach(sch => {
                     sch.housekeeperName = this.getName(sch)
                     sch.housekeeperSurname = this.getHousekeeperLastname(sch)
                 })
-
-                          console.log('roomHi1', housekeepingHistory)
             }
 
             this.housekeepingHistoryList = housekeepingHistory
