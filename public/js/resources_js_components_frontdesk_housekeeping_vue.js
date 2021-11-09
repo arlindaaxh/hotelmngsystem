@@ -4250,8 +4250,8 @@ var render = function() {
           _c(
             "div",
             {
-              staticClass: "flexed justify-between align-center mt-30",
-              staticStyle: { gap: "40px" }
+              staticClass: "flexed justify-between  mt-30",
+              staticStyle: { gap: "40px", "align-items": "start !important" }
             },
             [
               _c(

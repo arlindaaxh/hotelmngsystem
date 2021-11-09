@@ -62,7 +62,7 @@
 
                 
             </div>
-            <div class="flexed">
+            <div>
                 <h4>Housekeepers</h4>
                 
 

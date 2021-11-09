@@ -8,10 +8,8 @@
             class="el-menu-vertical-demo"
             :router="true"
             background-color="#f5f5f5"
-       
             active-text-color="#ffd04b"
         >
-           
             <el-menu-item 
                 index="frontdesk-dashboard" 
                 :route="{name: 'frontdesk-dashboard'}" 
@@ -24,19 +22,22 @@
                 <span :style="[$route.name === 'frontdesk-dashboard' ? {'color': 'white'} : {'color':'black'}]" >Dashboard</span>
             </el-menu-item>
             <el-menu-item 
+                index="in-house" 
+                :route="{name: 'in-house'}" 
+                v-bind:class="[$route.name === 'in-house' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i class="el-icon-house"></i>
+                <span :style="[$route.name === 'in-house' ? {'color': 'white'} : {'color':'black'}]">In House</span>
+            </el-menu-item>
+            <el-menu-item 
                 index="housekeeping" 
                 :route="{name: 'housekeeping'}" 
-                v-bind:class="[$route.name === 'housekeeping' ? 'el-menu-item is-active' : 'el-menu-item']"
-                
+                v-bind:class="[$route.name === 'housekeeping' ? 'el-menu-item is-active' : 'el-menu-item']"  
             >
                 <i class="el-icon-s-open"></i>
-                <span :style="[$route.name === 'housekeeping' ? {'color': 'white'} : {'color':'black'}]" >Housekeeping</span>
+                <span :style="[$route.name === 'housekeeping' ? {'color': 'white'} : {'color':'black'}]">Housekeeping</span>
             </el-menu-item>
-            
-       
-        
         </el-menu>
-
     </div>
 </template>
 

@@ -89,6 +89,11 @@ export default {
                     component: () => import('./components/frontdesk/Housekeeping'),
                     name: 'housekeeping'
                 },
+                {
+                    path: '/in-house',
+                    component: () => import('./views/frontdesk/InHouse'),
+                    name: 'in-house'
+                }
             ]
         }
 

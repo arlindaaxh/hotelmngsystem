@@ -54,6 +54,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FrontdeskSidebar',
@@ -15470,6 +15471,33 @@ var render = function() {
                   ]
                 },
                 [_vm._v("Dashboard")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "in-house"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "in-house", route: { name: "in-house" } }
+            },
+            [
+              _c("i", { staticClass: "el-icon-house" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  style: [
+                    _vm.$route.name === "in-house"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("In House")]
               )
             ]
           ),
