@@ -2758,6 +2758,11 @@ __webpack_require__.r(__webpack_exports__);
     // this.getRooms()
     // this.getHousekeepingSchedules()
     this.getOptionsData();
+
+    if (this.$route.params.selectedFilter) {
+      console.log('this.$route.params.selectedFilter', this.$route.params.selectedFilter);
+      this.selectedFilter = this.$route.params.selectedFilter;
+    }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     if (to.name === 'housekeeping') this.getOptionsData;

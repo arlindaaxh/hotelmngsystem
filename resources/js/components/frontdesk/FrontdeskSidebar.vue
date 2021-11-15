@@ -19,7 +19,7 @@
                <!-- <i class="el-icon-menu"></i> -->
                 <!-- <img src="../../css/assets/dashboard_icn.svg" style="width:22px; margin:3px"/> -->
                 <i class="el-icon-s-data"></i>
-                <span :style="[$route.name === 'frontdesk-dashboard' ? {'color': 'white'} : {'color':'black'}]" >Dashboard</span>
+                <span :style="[$route.name === 'frontdesk-dashboard' ? {'color': 'white'} : {'color':'black'}]">Dashboard</span>
             </el-menu-item>
             <el-menu-item 
                 index="in-house" 

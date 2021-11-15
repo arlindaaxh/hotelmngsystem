@@ -353,6 +353,10 @@ import EmployeeServices from '../../services/employee.services'
             // this.getRooms()
             // this.getHousekeepingSchedules()
             this.getOptionsData()
+            if(this.$route.params.selectedFilter){
+                console.log('this.$route.params.selectedFilter',this.$route.params.selectedFilter)
+                this.selectedFilter = this.$route.params.selectedFilter
+            }
            
         },
         beforeRouteUpdate(to, from, next){
