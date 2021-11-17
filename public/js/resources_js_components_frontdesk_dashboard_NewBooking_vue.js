@@ -37,6 +37,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewBooking',
@@ -45,7 +88,65 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      active: 0
+      activeStep: 1,
+      guest: {
+        first_name: null,
+        last_name: null,
+        email: null,
+        address: null,
+        phone_number: null,
+        birth_date: null,
+        personal_number: null,
+        citizenship: null,
+        sex: null
+      },
+      rules: {
+        first_name: [{
+          required: true,
+          message: "Field is required",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }],
+        last_name: [{
+          required: true,
+          message: "Field is required",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }],
+        address: [{
+          required: true,
+          message: "Field is required",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }],
+        birth_date: [{
+          required: true,
+          message: "Field is required",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }],
+        citizenship: [{
+          required: true,
+          message: "Field is required",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }]
+      }
     };
   },
   methods: {
@@ -14914,24 +15015,6 @@ var render = function() {
             _c("h5", [_vm._v("Create a New Booking")])
           ],
           1
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      [
-        _c(
-          "el-steps",
-          { attrs: { active: _vm.active, "finish-status": "success" } },
-          [
-            _c("el-step", { attrs: { title: "Guest Data" } }),
-            _vm._v(" "),
-            _c("el-step", { attrs: { title: "Charges" } }),
-            _vm._v(" "),
-            _c("el-step", { attrs: { title: "Payment" } })
-          ],
-          1
         ),
         _vm._v(" "),
         _c(
@@ -14939,6 +15022,227 @@ var render = function() {
           { staticStyle: { "margin-top": "12px" }, on: { click: _vm.next } },
           [_vm._v("Next step")]
         )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      [
+        _c(
+          "el-steps",
+          {
+            staticStyle: { "margin-top": "20px" },
+            attrs: {
+              active: _vm.activeStep,
+              "finish-status": "success",
+              simple: ""
+            }
+          },
+          [
+            _c("el-step", { attrs: { title: "Step 1" } }),
+            _vm._v(" "),
+            _c("el-step", { attrs: { title: "Step 2" } }),
+            _vm._v(" "),
+            _c("el-step", { attrs: { title: "Step 3" } })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm.activeStep === 1
+          ? _c(
+              "div",
+              { staticStyle: { "margin-top": "30px" } },
+              [
+                _c(
+                  "el-form",
+                  {
+                    ref: "guest-details-form",
+                    staticClass: "form-data m-t-20",
+                    attrs: {
+                      model: _vm.guest,
+                      rules: _vm.rules,
+                      size: "medium",
+                      "hide-required-asterisk": true,
+                      "label-position": "top"
+                    }
+                  },
+                  [
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "first_name", label: "First Name" } },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "first_name", size: "big" },
+                          model: {
+                            value: _vm.guest.first_name,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "first_name", $$v)
+                            },
+                            expression: "guest.first_name"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "last_name", label: "Last Name" } },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "last_name", size: "big" },
+                          model: {
+                            value: _vm.guest.last_name,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "last_name", $$v)
+                            },
+                            expression: "guest.last_name"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "email", label: "Email" } },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "email", size: "big" },
+                          model: {
+                            value: _vm.guest.email,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "email", $$v)
+                            },
+                            expression: "guest.email"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "address", label: "Address" } },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "address", size: "big" },
+                          model: {
+                            value: _vm.guest.address,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "address", $$v)
+                            },
+                            expression: "guest.address"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "birth_date", label: "Birthdate" } },
+                      [
+                        _c("el-date-picker", {
+                          attrs: {
+                            type: "date",
+                            placeholder: "Select date of birth"
+                          },
+                          model: {
+                            value: _vm.guest.birth_date,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "birth_date", $$v)
+                            },
+                            expression: "guest.birth_date"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "sex", label: "Sex" } },
+                      [
+                        _c(
+                          "el-radio-group",
+                          {
+                            attrs: { name: "sex", size: "big" },
+                            model: {
+                              value: _vm.guest.sex,
+                              callback: function($$v) {
+                                _vm.$set(_vm.guest, "sex", $$v)
+                              },
+                              expression: "guest.sex"
+                            }
+                          },
+                          [
+                            _c("el-radio", { attrs: { label: "F" } }, [
+                              _vm._v("Female")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-radio", { attrs: { label: "M" } }, [
+                              _vm._v("Male")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-radio", { attrs: { label: "Other" } }, [
+                              _vm._v("Other")
+                            ])
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "citizenship", label: "Citizenship" } },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "citizenship", size: "big" },
+                          model: {
+                            value: _vm.guest.citizenship,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "citizenship", $$v)
+                            },
+                            expression: "guest.citizenship"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      {
+                        attrs: {
+                          prop: "personal_number",
+                          label: "Personal Number"
+                        }
+                      },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "personal_number", size: "big" },
+                          model: {
+                            value: _vm.guest.personal_number,
+                            callback: function($$v) {
+                              _vm.$set(_vm.guest, "personal_number", $$v)
+                            },
+                            expression: "guest.personal_number"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          : _vm._e()
       ],
       1
     )
