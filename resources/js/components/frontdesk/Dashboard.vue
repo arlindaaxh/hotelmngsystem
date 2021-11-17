@@ -1,71 +1,83 @@
 <template>
-    <div class="flexed" v-loading="loading">
-        <div class="p-30">
-            <span>House</span>
-            <div style="width:400px;">
-                <div class="form-data pointer">
-                    <el-card shadow="never" class="card-box">
-                        In House
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Departures
-                    </el-card>
-                    <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'Dirty')">
-                        <div class="flexed-column">
-                            <strong>Dirty Rooms</strong>
-                            <span class="pt-20" style="font-size:25px; font-weight:500">{{dirtyRooms.length}}</span>
-                        </div>
-                    </el-card>
-                      <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'Ready')">
-                        <div class="flexed-column">
-                            <strong>Ready Rooms</strong>
-                            <span class="pt-20" style="font-size:25px; font-weight:500">{{readyRooms.length}}</span>
-                        </div>
-                    </el-card>
+    <div v-if="$route.name === 'frontdesk-dashboard'" v-loading="loading" class="p-30">
+        <div class="flexed" style="gap: 40px;">
+            <div>
+                <span>House</span>
+                <div style="width:400px;">
+                    <div class="form-data pointer">
+                        <el-card shadow="never" class="card-box">
+                            In House
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Departures
+                        </el-card>
+                        <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'Dirty')">
+                            <div class="flexed-column">
+                                <strong>Dirty Rooms</strong>
+                                <span class="pt-20" style="font-size:25px; font-weight:500">{{dirtyRooms.length}}</span>
+                            </div>
+                        </el-card>
+                        <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'Ready')">
+                            <div class="flexed-column">
+                                <strong>Ready Rooms</strong>
+                                <span class="pt-20" style="font-size:25px; font-weight:500">{{readyRooms.length}}</span>
+                            </div>
+                        </el-card>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <span>Bookings</span>
+                <div style="width:400px;">
+                    <div class="form-data">
+                        <el-card shadow="never" class="card-box">
+                            Arrivals
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            No Show
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Booked Today
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Groups
+                        </el-card>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <span>House</span>
+                <div style="width:400px;">
+                    <div class="form-data">
+                        <el-card shadow="never" class="card-box">
+                            In House
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Departures
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Dirty Rooms
+                        </el-card>
+                        <el-card shadow="never" class="card-box">
+                            Ready Rooms
+                        </el-card>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="p-30">
-            <span>Bookings</span>
-            <div style="width:400px;">
-                <div class="form-data">
-                    <el-card shadow="never" class="card-box">
-                        Arrivals
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        No Show
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Booked Today
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Groups
-                    </el-card>
-                </div>
-            </div>
+        <div>
+            <el-button @click="openBookingTypeModal()">New Booking</el-button>
         </div>
 
-         <div class="p-30">
-            <span>House</span>
-            <div style="width:400px;">
-                <div class="form-data">
-                    <el-card shadow="never" class="card-box">
-                        In House
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Departures
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Dirty Rooms
-                    </el-card>
-                    <el-card shadow="never" class="card-box">
-                        Ready Rooms
-                    </el-card>
-                </div>
-            </div>
-        </div>
-        
+
+        <new-booking-type-modal v-if="showNewBookingTypeModal" @click="showNewBookingTypeModal = false"/>
+      
+    </div>
+    <div v-else>
+        <router-view/>
     </div>
 </template>
 
@@ -74,17 +86,19 @@ import RoomServices from '../../services/room.services'
 import HousekeepingServices from '../../services/housekeeping.services'
 import DepartmentServices from '../../services/department.services'
 import EmployeeServices from '../../services/employee.services'
+import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
     export default {
+        components: {
+            NewBookingTypeModal
+        },
         data() {
             return {
                 loading: false,
                 employees: [],
                 departments: [],
                 rooms: [],
-                schedules: []
-
-
-
+                schedules: [],
+                showNewBookingTypeModal: false,
             }
         },
         beforeMount(){
@@ -226,7 +240,11 @@ import EmployeeServices from '../../services/employee.services'
                     }
                    
                 })
+            },
+            openBookingTypeModal(){
+                this.showNewBookingTypeModal = true
             }
+       
         }
         
     }

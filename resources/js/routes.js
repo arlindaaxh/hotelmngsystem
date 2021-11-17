@@ -82,7 +82,14 @@ export default {
                 {
                     path: '/frontdesk-dashboard',
                     component: () => import('./components/frontdesk/Dashboard'),
-                    name: 'frontdesk-dashboard'
+                    name: 'frontdesk-dashboard',
+                    children: [
+                        {
+                            path: '/new-booking',
+                            component: () => import('./components/frontdesk/dashboard/NewBooking'),
+                            name: 'new-booking'
+                        }
+                    ]
                 },
                 {
                     path: '/housekeeping',
