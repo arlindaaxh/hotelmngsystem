@@ -55,6 +55,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FrontdeskSidebar',
@@ -264,6 +273,20 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   }
 });
+
+/***/ }),
+
+/***/ "./resources/css/assets/bed-svg.svg":
+/*!******************************************!*\
+  !*** ./resources/css/assets/bed-svg.svg ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/bed-svg.svg?3e2ca8bfa29f079456edbaaef2dbfc8e");
 
 /***/ }),
 
@@ -15498,6 +15521,35 @@ var render = function() {
                   ]
                 },
                 [_vm._v("In House")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "availability"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "availability", route: { name: "availability" } }
+            },
+            [
+              _c("img", {
+                attrs: { src: __webpack_require__(/*! ../../../css/assets/bed-svg.svg */ "./resources/css/assets/bed-svg.svg") }
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  style: [
+                    _vm.$route.name === "availability"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Availability")]
               )
             ]
           ),

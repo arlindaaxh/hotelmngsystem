@@ -22,8 +22,18 @@
 
             >
                 <el-form-item prop="type" label="Type">
-                    <el-input  name="type" v-model="room.type" size="big"></el-input>
+                    <!-- <el-input  name="type" v-model="room.type" size="big"></el-input> -->
+                    <el-select name="type" v-model="room.type"  placeholder="Select room type" style="width:100%" size="big" >
+                        <el-option
+                            v-for="item in roomTypes"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.label"
+                        >
+                        </el-option>
+                    </el-select>
                 </el-form-item>
+                
 
                 <el-form-item prop="code" label="Code">
                     <el-input  name="code" v-model="room.code" size="big"></el-input>
@@ -91,6 +101,36 @@ import RoomServices from '../../../services/room.services'
                     id: null,
                 },
                 facility_items: [],
+                roomTypes: [
+                    {
+                        value: '1',
+                        label: 'Standard Double Room'
+                    },
+                    {
+                        value: '2',
+                        label: 'Standard Single Room'
+                    },
+                    {
+                        value: '3',
+                        label: 'Standard Family Room'
+                    },
+                    {
+                        value: '4',
+                        label: 'Standard Suite'
+                    },
+                    {
+                        value: '5',
+                        label: 'Kings Room'
+                    },
+                    {
+                        value: '6',
+                        label: 'Standard Triple Room'
+                    },
+                    {
+                        value: '7',
+                        label: 'Standard Quad Room'
+                    }
+                ],
                 rules: {
 
                 },

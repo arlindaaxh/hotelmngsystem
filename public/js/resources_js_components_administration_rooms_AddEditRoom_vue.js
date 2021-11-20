@@ -2142,6 +2142,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2163,6 +2173,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         id: null
       },
       facility_items: [],
+      roomTypes: [{
+        value: '1',
+        label: 'Standard Double Room'
+      }, {
+        value: '2',
+        label: 'Standard Single Room'
+      }, {
+        value: '3',
+        label: 'Standard Family Room'
+      }, {
+        value: '4',
+        label: 'Standard Suite'
+      }, {
+        value: '5',
+        label: 'Kings Room'
+      }, {
+        value: '6',
+        label: 'Standard Triple Room'
+      }, {
+        value: '7',
+        label: 'Standard Quad Room'
+      }],
       rules: {},
       localfacilities: [{
         label: 'Free toiletries',
@@ -17361,16 +17393,31 @@ var render = function() {
                 "el-form-item",
                 { attrs: { prop: "type", label: "Type" } },
                 [
-                  _c("el-input", {
-                    attrs: { name: "type", size: "big" },
-                    model: {
-                      value: _vm.room.type,
-                      callback: function($$v) {
-                        _vm.$set(_vm.room, "type", $$v)
+                  _c(
+                    "el-select",
+                    {
+                      staticStyle: { width: "100%" },
+                      attrs: {
+                        name: "type",
+                        placeholder: "Select room type",
+                        size: "big"
                       },
-                      expression: "room.type"
-                    }
-                  })
+                      model: {
+                        value: _vm.room.type,
+                        callback: function($$v) {
+                          _vm.$set(_vm.room, "type", $$v)
+                        },
+                        expression: "room.type"
+                      }
+                    },
+                    _vm._l(_vm.roomTypes, function(item) {
+                      return _c("el-option", {
+                        key: item.value,
+                        attrs: { label: item.label, value: item.label }
+                      })
+                    }),
+                    1
+                  )
                 ],
                 1
               ),

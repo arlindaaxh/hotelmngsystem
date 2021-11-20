@@ -80,6 +80,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewBooking',
@@ -99,6 +119,9 @@ __webpack_require__.r(__webpack_exports__);
         personal_number: null,
         citizenship: null,
         sex: null
+      },
+      booking_details: {
+        booking_number: 0
       },
       rules: {
         first_name: [{
@@ -151,7 +174,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     next: function next() {
-      if (this.active++ > 2) this.active = 0;
+      if (this.activeStep++ > 2) this.activeStep = 1;
+    },
+    previous: function previous() {
+      if (this.activeStep-- === 1) this.activeStep = 1;
     },
     goBack: function goBack() {
       this.$router.push({
@@ -15018,12 +15044,37 @@ var render = function() {
         ),
         _vm._v(" "),
         _c(
-          "el-button",
-          { staticStyle: { "margin-top": "12px" }, on: { click: _vm.next } },
-          [_vm._v("Next step")]
+          "div",
+          [
+            _c(
+              "el-button",
+              {
+                staticStyle: { "margin-top": "12px" },
+                on: {
+                  click: function($event) {
+                    return _vm.previous()
+                  }
+                }
+              },
+              [_vm._v("Previous")]
+            ),
+            _vm._v(" "),
+            _c(
+              "el-button",
+              {
+                staticStyle: { "margin-top": "12px" },
+                on: {
+                  click: function($event) {
+                    return _vm.next()
+                  }
+                }
+              },
+              [_vm._v("Next step")]
+            )
+          ],
+          1
         )
-      ],
-      1
+      ]
     ),
     _vm._v(" "),
     _c(
@@ -15040,11 +15091,11 @@ var render = function() {
             }
           },
           [
-            _c("el-step", { attrs: { title: "Step 1" } }),
+            _c("el-step", { attrs: { title: "Guest Data" } }),
             _vm._v(" "),
-            _c("el-step", { attrs: { title: "Step 2" } }),
+            _c("el-step", { attrs: { title: "Booking Details" } }),
             _vm._v(" "),
-            _c("el-step", { attrs: { title: "Step 3" } })
+            _c("el-step", { attrs: { title: "Charges and Payment" } })
           ],
           1
         ),
@@ -15231,6 +15282,58 @@ var render = function() {
                               _vm.$set(_vm.guest, "personal_number", $$v)
                             },
                             expression: "guest.personal_number"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.activeStep === 2
+          ? _c(
+              "div",
+              [
+                _c(
+                  "el-form",
+                  {
+                    ref: "guest-details-form",
+                    staticClass: "form-data m-t-20",
+                    attrs: {
+                      model: _vm.booking_details,
+                      rules: _vm.rules,
+                      size: "medium",
+                      "hide-required-asterisk": true,
+                      "label-position": "top"
+                    }
+                  },
+                  [
+                    _c(
+                      "el-form-item",
+                      {
+                        attrs: {
+                          prop: "booking_number",
+                          label: "booking_number"
+                        }
+                      },
+                      [
+                        _c("el-input", {
+                          attrs: { name: "booking_number", size: "big" },
+                          model: {
+                            value: _vm.booking_details.booking_number,
+                            callback: function($$v) {
+                              _vm.$set(
+                                _vm.booking_details,
+                                "booking_number",
+                                $$v
+                              )
+                            },
+                            expression: "booking_details.booking_number"
                           }
                         })
                       ],

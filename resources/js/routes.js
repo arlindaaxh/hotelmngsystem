@@ -100,6 +100,11 @@ export default {
                     path: '/in-house',
                     component: () => import('./views/frontdesk/InHouse'),
                     name: 'in-house'
+                },
+                {
+                    path: '/availability',
+                    component: () => import('./views/frontdesk/Availability'),
+                    name: 'availability'
                 }
             ]
         }

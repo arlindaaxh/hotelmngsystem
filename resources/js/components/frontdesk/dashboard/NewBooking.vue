@@ -5,13 +5,17 @@
                 <arrow-left-icon size="1.2x" class="m-r-5" />
                 <h5>Create a New Booking</h5>
             </span>
-            <el-button style="margin-top: 12px;" @click="next">Next step</el-button>
+            <div>
+                <el-button style="margin-top: 12px;" @click="previous()">Previous</el-button>
+                <el-button style="margin-top: 12px;" @click="next()">Next step</el-button>
+            </div>
+            
         </div>
         <div>
             <el-steps :active="activeStep" finish-status="success" simple style="margin-top: 20px">
-                <el-step title="Step 1" ></el-step>
-                <el-step title="Step 2" ></el-step>
-                <el-step title="Step 3" ></el-step>
+                <el-step title="Guest Data" ></el-step>
+                <el-step title="Booking Details" ></el-step>
+                <el-step title="Charges and Payment" ></el-step>
             </el-steps>
 
 
@@ -62,6 +66,22 @@
 
                 </el-form>
             </div>
+            <div v-if="activeStep === 2">
+                <el-form
+                    ref="guest-details-form"
+                    :model="booking_details"
+                    :rules="rules"
+                    size="medium"
+                    :hide-required-asterisk="true"
+                    class="form-data m-t-20"
+                    label-position="top"
+                >
+                    <el-form-item prop="booking_number" label="booking_number">
+                        <el-input name="booking_number" v-model="booking_details.booking_number" size="big"/>
+                    </el-form-item>
+                </el-form>
+
+            </div>
         </div>
     </div>
 </template>
@@ -86,6 +106,9 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                     personal_number: null,
                     citizenship: null,
                     sex: null,
+                },
+                booking_details: {
+                    booking_number: 0,
                 },
                 rules: {
                     first_name: [
@@ -153,7 +176,10 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
         },
         methods: {
             next(){
-                if (this.active++ > 2) this.active = 0;
+                if (this.activeStep++ > 2) this.activeStep = 1;
+            },
+            previous(){
+                if(this.activeStep-- === 1) this.activeStep = 1
             },
             goBack(){
                 this.$router.push({
