@@ -3332,7 +3332,7 @@ var render = function() {
           _vm.showNewBookingTypeModal
             ? _c("new-booking-type-modal", {
                 on: {
-                  click: function($event) {
+                  close: function($event) {
                     _vm.showNewBookingTypeModal = false
                   }
                 }

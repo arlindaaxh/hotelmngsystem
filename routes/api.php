@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HousekeepingController;
 use App\Http\Controllers\HousekeepingHistoryController;
+use App\Http\Controllers\GuestController;
 
 
 /*
@@ -54,3 +55,6 @@ Route::delete('/housekeeping/{id}', [HousekeepingController::class, 'delete']);
 
 Route::post('/housekeeping-history', [HousekeepingHistoryController::class, 'store']);
 Route::get('/housekeeping-history', [HousekeepingHistoryController::class, 'index']);
+
+//GUESTS
+Route::post('/guests', [GuestController::class, 'store']);

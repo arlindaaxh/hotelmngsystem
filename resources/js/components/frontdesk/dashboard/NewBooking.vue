@@ -1,5 +1,5 @@
 <template>
-    <div class="form-max-width">
+    <div class="form-max-width" v-loading="loading">
         <div class="flexed justify-between align-center m-b-20" style="margin-bottom:30px;">
             <span @click="goBack()" class="flexed align-center pointer">
                 <arrow-left-icon size="1.2x" class="m-r-5" />
@@ -46,6 +46,7 @@
                             v-model="guest.birth_date"
                             type="date"
                             placeholder="Select date of birth"
+                            @change="dateChanged()"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -68,7 +69,7 @@
             </div>
             <div v-if="activeStep === 2">
                 <el-form
-                    ref="guest-details-form"
+                    
                     :model="booking_details"
                     :rules="rules"
                     size="medium"
@@ -88,6 +89,8 @@
 
 <script>
 import {ArrowLeftIcon} from 'vue-feather-icons'
+import GuestServices from '../../../services/guest.services'
+import dayjs from 'dayjs'
     export default {
         name: 'NewBooking',
         components: {
@@ -96,6 +99,7 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
         data() {
             return {
                 activeStep: 1,
+                loading: false,
                 guest: {
                     first_name: null,
                     last_name: null,
@@ -107,6 +111,7 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                     citizenship: null,
                     sex: null,
                 },
+                returnedGuest: null,
                 booking_details: {
                     booking_number: 0,
                 },
@@ -153,11 +158,7 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                             message: "Field is required",
                             trigger: "change",
                         },
-                        {
-                            max: 255,
-                            message: "Maximum characters allowed is 255",
-                            trigger: "change",
-                        },
+                
                     ],
                     citizenship: [
                         {
@@ -176,7 +177,11 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
         },
         methods: {
             next(){
-                if (this.activeStep++ > 2) this.activeStep = 1;
+                // if (this.activeStep++ > 2) this.activeStep = 1;
+                if(this.activeStep === 1){
+                    this.saveGuest()
+                
+                }
             },
             previous(){
                 if(this.activeStep-- === 1) this.activeStep = 1
@@ -185,7 +190,52 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                 this.$router.push({
                     name: 'frontdesk-dashboard'
                 })
-            } 
+            },
+            dateChanged(){
+                 console.log('bird1', this.guest.birth_date)
+                    let date = this.dayjs(this.guest.birth_date).format('YYYY-MM-DD')
+            
+                    this.guest.birth_date = date
+                                    console.log('bird', this.guest.birth_date)
+            },
+            saveGuest(){
+                this.$refs['guest-details-form'].validate((valid) => {
+                    if(valid){
+                        this.loading = true
+                        this.guest.birth_date = this.dayjs(this.guest.birth_date).format('YYYY-MM-DD')
+                        console.log('bird', this.guest.birth_date)
+                        GuestServices.postGuest(this.guest).then((res) => {
+                            this.returnedGuest = res.data
+                            console.log('returnedGuest', this.returnedGuest)
+                            this.$notify.success({
+                                title: 'Success',
+                                message: 'Guest data were saved successfully'
+                            })
+                            this.activeStep ++
+                        })
+                        .catch((error) => {
+                            this.loading=false
+                            let errorMessage = error?.data?.message ||
+                            error?.message ||
+                            error?.response?.message ||
+                            error?.response?.data?.message
+                            if(!errorMessage && error?.data){
+                            errorMessage =  error.data
+                            }
+                            if(!errorMessage) errorMessage = 'Error_occurred'
+                            this.$notify.error({
+                                title: error?.status || error?.response?.status,
+                                message: errorMessage,
+                            });
+                        })
+                        .finally(() => {
+                            this.loading = false
+                        })
+                    }
+                })
+              
+
+            }
         }
     }
 </script>

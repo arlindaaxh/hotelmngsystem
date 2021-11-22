@@ -73,7 +73,7 @@
         </div>
 
 
-        <new-booking-type-modal v-if="showNewBookingTypeModal" @click="showNewBookingTypeModal = false"/>
+        <new-booking-type-modal v-if="showNewBookingTypeModal" @close="showNewBookingTypeModal = false"/>
       
     </div>
     <div v-else>

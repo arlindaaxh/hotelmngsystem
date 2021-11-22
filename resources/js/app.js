@@ -5,18 +5,25 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import locale from 'element-ui/lib/theme-chalk/index.css';
+import i18n from 'vue-i18n';
 // import store from './store'
 import '../css/app.css';
 // import '../css/main.scss'
 // import '../js/services/filters'
 import '../css/main.scss'
 import JsonCSV from 'vue-json-csv'
+import dayjs from 'dayjs'
 
+Vue.prototype.dayjs = dayjs;
+Vue.prototype.dayjs.Ls.en.weekStart = 1;
+Vue.use(i18n);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
-Vue.use(ElementUI);
+Vue.use(ElementUI, { locale });
+Vue.config.lang = 'en';
+
 
 Vue.component('downloadCsv', JsonCSV)
 
