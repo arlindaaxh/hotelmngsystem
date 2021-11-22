@@ -4,20 +4,20 @@
             <div class="flexed-column" style="gap:5px">
                 <span>Check In</span>
                 <el-date-picker
-                    v-model="value1"
+                    v-model="checkinDate"
                     type="date"
                     placeholder="Pick a date"
-                    default-value="2010-10-01">
+                    :default-value="currentDay">
                 </el-date-picker>
             </div>
            
             <div class="flexed-column" style="gap:5px">
                 <span >Check Out</span>
                 <el-date-picker
-                    v-model="value1"
+                    v-model="checkoutDate"
                     type="date"
                     placeholder="Pick a date"
-                    default-value="2010-10-01">
+                    :default-value="dayAfterToday">
                 </el-date-picker>
             </div>
 
@@ -26,11 +26,11 @@
                 <div class="flexed" style="gap:20px; margin-left:50px;">
                     <div>
                         <span>Adults <i class="el-icon-user-solid"></i></span>
-                        <el-input-number v-model="num" @change="handleChange" :min="1" :max="10"></el-input-number> 
+                        <el-input-number v-model="num_of_adults" @change="handleChange" :min="1" :max="10"></el-input-number> 
                     </div>
                     <div>
                     <span>Children <i class="el-icon-user-solid"></i></span>
-                        <el-input-number v-model="num" @change="handleChange" :min="1" :max="10"></el-input-number> 
+                        <el-input-number v-model="num_of_children" @change="handleChange" :min="0" :max="10"></el-input-number> 
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                  
                         <el-button  style="color:#ff7b50" @click="openBookingTypeModal()">Book</el-button>
                     </div>
-                   
+                 here  {{dayAfterToday}}
                 </el-card>
             </div>
         </div>
@@ -62,18 +62,42 @@
 
 <script>
 import NewBookingTypeModal from '../../components/frontdesk/dashboard/NewBookingTypeModal.vue'
-    export default {
-  components: { NewBookingTypeModal },
+import dayjs from 'dayjs'
+export default {
+    components: { NewBookingTypeModal },
         data() {
             return {
                 value1: null,
                 showBookingTypeModal: false,
+                checkinDate: null,
+                checkoutDate: null,
+                num_of_adults: 1,
+                num_of_children: 0,
             }
         },
         methods: {
             openBookingTypeModal(){
                 this.showBookingTypeModal = true
+            },
+            handleChange(){
+                console.log('handleChange')
             }
+            
+
+        },
+        computed: {
+            currentDay(){
+                return this.dayjs().format('YYYY-MM-DD')
+            },
+            dayAfterToday(){
+                let currentDate = dayjs(this.checkinDate).date()
+                let tomorrow = dayjs().set('date', currentDate + 1).format('YYYY-MM-DD')
+                return tomorrow
+            }
+        },
+        beforeMount(){
+            this.checkinDate = this.currentDay
+            this.checkoutDate = this.dayAfterToday
         }
     }
 </script>

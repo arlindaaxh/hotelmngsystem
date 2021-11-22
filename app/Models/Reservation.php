@@ -12,6 +12,12 @@ class Reservation extends Model
         'made_by',
         'date_in',
         'date_out',
+        'rooms',
+        'active', 
+    ];
+
+    protected $casts = [
+        'rooms' => 'array',
     ];
 
 }

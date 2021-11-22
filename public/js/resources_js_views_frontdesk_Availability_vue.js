@@ -184,6 +184,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _components_frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/frontdesk/dashboard/NewBookingTypeModal.vue */ "./resources/js/components/frontdesk/dashboard/NewBookingTypeModal.vue");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -247,6 +249,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     NewBookingTypeModal: _components_frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -254,13 +257,34 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       value1: null,
-      showBookingTypeModal: false
+      showBookingTypeModal: false,
+      checkinDate: null,
+      checkoutDate: null,
+      num_of_adults: 1,
+      num_of_children: 0
     };
   },
   methods: {
     openBookingTypeModal: function openBookingTypeModal() {
       this.showBookingTypeModal = true;
+    },
+    handleChange: function handleChange() {
+      console.log('handleChange');
     }
+  },
+  computed: {
+    currentDay: function currentDay() {
+      return this.dayjs().format('YYYY-MM-DD');
+    },
+    dayAfterToday: function dayAfterToday() {
+      var currentDate = dayjs__WEBPACK_IMPORTED_MODULE_1___default()(this.checkinDate).date();
+      var tomorrow = dayjs__WEBPACK_IMPORTED_MODULE_1___default()().set('date', currentDate + 1).format('YYYY-MM-DD');
+      return tomorrow;
+    }
+  },
+  beforeMount: function beforeMount() {
+    this.checkinDate = this.currentDay;
+    this.checkoutDate = this.dayAfterToday;
   }
 });
 
@@ -820,14 +844,14 @@ var render = function() {
                 attrs: {
                   type: "date",
                   placeholder: "Pick a date",
-                  "default-value": "2010-10-01"
+                  "default-value": _vm.currentDay
                 },
                 model: {
-                  value: _vm.value1,
+                  value: _vm.checkinDate,
                   callback: function($$v) {
-                    _vm.value1 = $$v
+                    _vm.checkinDate = $$v
                   },
-                  expression: "value1"
+                  expression: "checkinDate"
                 }
               })
             ],
@@ -844,14 +868,14 @@ var render = function() {
                 attrs: {
                   type: "date",
                   placeholder: "Pick a date",
-                  "default-value": "2010-10-01"
+                  "default-value": _vm.dayAfterToday
                 },
                 model: {
-                  value: _vm.value1,
+                  value: _vm.checkoutDate,
                   callback: function($$v) {
-                    _vm.value1 = $$v
+                    _vm.checkoutDate = $$v
                   },
-                  expression: "value1"
+                  expression: "checkoutDate"
                 }
               })
             ],
@@ -880,11 +904,11 @@ var render = function() {
                         attrs: { min: 1, max: 10 },
                         on: { change: _vm.handleChange },
                         model: {
-                          value: _vm.num,
+                          value: _vm.num_of_adults,
                           callback: function($$v) {
-                            _vm.num = $$v
+                            _vm.num_of_adults = $$v
                           },
-                          expression: "num"
+                          expression: "num_of_adults"
                         }
                       })
                     ],
@@ -897,14 +921,14 @@ var render = function() {
                       _vm._m(1),
                       _vm._v(" "),
                       _c("el-input-number", {
-                        attrs: { min: 1, max: 10 },
+                        attrs: { min: 0, max: 10 },
                         on: { change: _vm.handleChange },
                         model: {
-                          value: _vm.num,
+                          value: _vm.num_of_children,
                           callback: function($$v) {
-                            _vm.num = $$v
+                            _vm.num_of_children = $$v
                           },
-                          expression: "num"
+                          expression: "num_of_children"
                         }
                       })
                     ],
@@ -964,6 +988,11 @@ var render = function() {
                   )
                 ],
                 1
+              ),
+              _vm._v(
+                "\n             here  " +
+                  _vm._s(_vm.dayAfterToday) +
+                  "\n            "
               )
             ])
           ],

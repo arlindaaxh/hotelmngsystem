@@ -18,6 +18,8 @@ class CreateReservationsTable extends Migration
             $table->string('made_by');
             $table->date('date_in');
             $table->date('date_out');
+            $table->json('rooms');
+            $table->boolean('active');
             $table->id();
             $table->timestamps();
         });
