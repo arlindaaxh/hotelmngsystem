@@ -69,17 +69,79 @@
             </div>
             <div v-if="activeStep === 2">
                 <el-form
-                    
                     :model="booking_details"
                     :rules="rules"
                     size="medium"
                     :hide-required-asterisk="true"
-                    class="form-data m-t-20"
+                    class=" m-t-20"
                     label-position="top"
                 >
-                    <el-form-item prop="booking_number" label="booking_number">
-                        <el-input name="booking_number" v-model="booking_details.booking_number" size="big"/>
-                    </el-form-item>
+                    <div class="flexed-column w-100 mt-30 booking_data" style="gap:30px">
+                        <div  class="bordered mt-10 w-100 form-data" style="border:1px solid lightgrey; border-radius:5px">
+                            <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;  border-right:1px solid lightgrey">
+                                <span>Check In</span>
+                                <span>{{booking_details.date_in}}</span>
+                            </div>
+                            <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                                <span>Check Out</span>
+                                <span>{{booking_details.date_out}}</span>
+                            </div>
+                            <div class="flexed justify-between align-center p-10" style="border-bottom:1px solid lightgrey;  border-right:1px solid lightgrey">
+                                <span>Guest</span>
+                                <!-- <span>{{returnedGuest.name}}</span> -->
+                            </div>
+                            <div class="flexed justify-between align-center p-10" style="border-bottom:1px solid lightgrey;">
+                                <span>Guest Info</span>
+                                <div class="flexed" style="gap:10px;">
+                                    <div class="flexed">
+                                        <span>Adults <i class="el-icon-user-solid"></i></span>
+                                        <span> {{adultsNo}}</span>
+                                    </div>
+                                    <div class="flexed">
+                                        <span>Children <i class="el-icon-user-solid"></i></span>
+                                        <span> {{childrenNo}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flexed justify-between  align-center p-10" style=" border-right:1px solid lightgrey">
+                                <span>Room Type</span>
+                            </div>
+                            <div class="flexed justify-between  align-center p-10 w-100">
+                                <span>Room No.</span>
+                            </div>
+                        </div>
+                        <div style="align-content:start">
+                            <span class="label-no-height" style="padding:10px">Add-Ons</span>
+                            <div class="bordered mt-10 form-data w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start">
+                                <div>
+                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                        <el-checkbox>Premium Wi-Fi</el-checkbox>
+                                        <span>$20.00</span>  
+                                    </div>
+                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                        <el-checkbox>Parking</el-checkbox>
+                                        <span>$20.00</span>  
+                                    </div>
+                                    <div class="flexed justify-between p-10" style="margin-top:10px">
+                                        <el-checkbox>Room Service</el-checkbox>
+                                        <span>$50.00</span>  
+                                    </div> 
+                                </div>
+                                <div style="align-content:flex-start; align-items:start; height:100%">
+                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                        <el-checkbox>SPA</el-checkbox>
+                                        <span>$20.00</span>  
+                                    </div>
+                                
+                                </div>
+                               
+
+                            </div> 
+                        </div>
+                        
+                    </div>
+                    
+                   
                 </el-form>
 
             </div>
@@ -96,6 +158,7 @@ import dayjs from 'dayjs'
         components: {
             ArrowLeftIcon
         },
+        props: ['checkin', 'checkout'],
         data() {
             return {
                 activeStep: 1,
@@ -113,8 +176,12 @@ import dayjs from 'dayjs'
                 },
                 returnedGuest: null,
                 booking_details: {
-                    booking_number: 0,
+                    date_in: null,
+                    date_out: null,
+
                 },
+                childrenNo: null,
+                adultsNo: null,
                 rules: {
                     first_name: [
                         {
@@ -175,6 +242,16 @@ import dayjs from 'dayjs'
                 }
             }
         },
+        beforeMount(){
+            console.log('this', this.$route.params)
+            if(this.$route.params.bookingData){
+                this.booking_details.date_in = this.$route.params.bookingData.checkin
+                this.booking_details.date_out  = this.$route.params.bookingData.checkout
+                this.adultsNo = this.$route.params.bookingData.adults
+                this.childrenNo = this.$route.params.bookingData.children
+            }
+            
+        },
         methods: {
             next(){
                 // if (this.activeStep++ > 2) this.activeStep = 1;
@@ -199,40 +276,41 @@ import dayjs from 'dayjs'
                                     console.log('bird', this.guest.birth_date)
             },
             saveGuest(){
-                this.$refs['guest-details-form'].validate((valid) => {
-                    if(valid){
-                        this.loading = true
+                // this.$refs['guest-details-form'].validate((valid) => {
+                //     if(valid){
+                //         // this.loading = true
                         this.guest.birth_date = this.dayjs(this.guest.birth_date).format('YYYY-MM-DD')
                         console.log('bird', this.guest.birth_date)
-                        GuestServices.postGuest(this.guest).then((res) => {
-                            this.returnedGuest = res.data
-                            console.log('returnedGuest', this.returnedGuest)
-                            this.$notify.success({
-                                title: 'Success',
-                                message: 'Guest data were saved successfully'
-                            })
-                            this.activeStep ++
-                        })
-                        .catch((error) => {
-                            this.loading=false
-                            let errorMessage = error?.data?.message ||
-                            error?.message ||
-                            error?.response?.message ||
-                            error?.response?.data?.message
-                            if(!errorMessage && error?.data){
-                            errorMessage =  error.data
-                            }
-                            if(!errorMessage) errorMessage = 'Error_occurred'
-                            this.$notify.error({
-                                title: error?.status || error?.response?.status,
-                                message: errorMessage,
-                            });
-                        })
-                        .finally(() => {
-                            this.loading = false
-                        })
-                    }
-                })
+                         this.activeStep ++
+                        // GuestServices.postGuest(this.guest).then((res) => {
+                        //     this.returnedGuest = res.data
+                        //     console.log('returnedGuest', this.returnedGuest)
+                        //     this.$notify.success({
+                        //         title: 'Success',
+                        //         message: 'Guest data were saved successfully'
+                        //     })
+                        //     this.activeStep ++
+                        // })
+                        // .catch((error) => {
+                        //     this.loading=false
+                        //     let errorMessage = error?.data?.message ||
+                        //     error?.message ||
+                        //     error?.response?.message ||
+                        //     error?.response?.data?.message
+                        //     if(!errorMessage && error?.data){
+                        //     errorMessage =  error.data
+                        //     }
+                        //     if(!errorMessage) errorMessage = 'Error_occurred'
+                        //     this.$notify.error({
+                        //         title: error?.status || error?.response?.status,
+                        //         message: errorMessage,
+                        //     });
+                        // })
+                        // .finally(() => {
+                        //     this.loading = false
+                        // })
+            //         }
+            //     })
               
 
             }
@@ -241,5 +319,10 @@ import dayjs from 'dayjs'
 </script>
 
 <style lang="scss" scoped>
+.booking_data {
+    .form-data{
+        gap:0px;
+    }
+}
 
 </style>

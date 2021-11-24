@@ -2474,9 +2474,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['checkin', 'checkout', 'adults', 'children'],
   data: function data() {
     return {
-      loading: false
+      loading: false,
+      bookingData: null
     };
   },
   methods: {
@@ -2484,10 +2486,19 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'new-booking',
         params: {
-          bookingType: bookingType
+          bookingType: bookingType,
+          bookingData: this.bookingData
         }
       });
     }
+  },
+  beforeMount: function beforeMount() {
+    this.bookingData = {
+      checkin: this.checkin,
+      checkout: this.checkout,
+      adults: this.adults,
+      children: this.children
+    };
   }
 });
 

@@ -7,7 +7,9 @@
                     v-model="checkinDate"
                     type="date"
                     placeholder="Pick a date"
-                    :default-value="currentDay">
+                    :default-value="currentDay"
+                    @change="formatDate()"
+                    >
                 </el-date-picker>
             </div>
            
@@ -17,7 +19,8 @@
                     v-model="checkoutDate"
                     type="date"
                     placeholder="Pick a date"
-                    :default-value="dayAfterToday">
+                    :default-value="dayAfterToday"
+                    @change="formatDate()">
                 </el-date-picker>
             </div>
 
@@ -33,8 +36,7 @@
                         <el-input-number v-model="num_of_children" @change="handleChange" :min="0" :max="10"></el-input-number> 
                     </div>
                 </div>
-            </div>
-           
+            </div>   
         </div>
 
         <div class="rooms-section p-30">
@@ -49,14 +51,19 @@
                                 Price - $0.00
                             </span>
                         </div>
-                 
-                        <el-button  style="color:#ff7b50" @click="openBookingTypeModal()">Book</el-button>
+                        <el-button  style="color:#ff7b50" @click="openBookingTypeModal(room)">Book</el-button>
                     </div>
-                 here  {{dayAfterToday}}
                 </el-card>
             </div>
         </div>
-        <new-booking-type-modal v-if="showBookingTypeModal" @close="showBookingTypeModal = false"/>
+        <new-booking-type-modal v-if="showBookingTypeModal" 
+            @close="showBookingTypeModal = false" 
+            :checkin="checkinDate" 
+            :checkout="checkoutDate" 
+            :adults="num_of_adults" 
+            :children="num_of_children"
+            :selectedRooms="selectedRooms"
+        />
     </div>
 </template>
 
@@ -73,17 +80,23 @@ export default {
                 checkoutDate: null,
                 num_of_adults: 1,
                 num_of_children: 0,
+                selectedRooms:[]
+               
             }
         },
         methods: {
-            openBookingTypeModal(){
+            openBookingTypeModal(room){
+                this.selectedRooms.push(room)
                 this.showBookingTypeModal = true
             },
             handleChange(){
                 console.log('handleChange')
+            },
+            formatDate(){
+                this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD')
+                this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD')
             }
             
-
         },
         computed: {
             currentDay(){

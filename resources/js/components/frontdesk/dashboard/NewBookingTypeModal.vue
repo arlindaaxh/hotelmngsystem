@@ -23,9 +23,11 @@ import NormalPopup from '../../NormalPopup.vue';
         components: {
             NormalPopup
         },
+        props: ['checkin', 'checkout','adults','children'],
         data() {
             return {
-                loading: false
+                loading: false,
+                bookingData: null,
             }
         },
         methods: {
@@ -33,9 +35,18 @@ import NormalPopup from '../../NormalPopup.vue';
                 this.$router.push({
                     name: 'new-booking',
                     params: {
-                        bookingType: bookingType
+                        bookingType: bookingType,
+                        bookingData: this.bookingData
                     }
                 })
+            }
+        },
+        beforeMount(){
+            this.bookingData = {
+                checkin: this.checkin,
+                checkout: this.checkout,
+                adults: this.adults,
+                children: this.children
             }
         }
     }

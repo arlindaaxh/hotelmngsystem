@@ -154,9 +154,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['checkin', 'checkout', 'adults', 'children'],
   data: function data() {
     return {
-      loading: false
+      loading: false,
+      bookingData: null
     };
   },
   methods: {
@@ -164,10 +166,19 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'new-booking',
         params: {
-          bookingType: bookingType
+          bookingType: bookingType,
+          bookingData: this.bookingData
         }
       });
     }
+  },
+  beforeMount: function beforeMount() {
+    this.bookingData = {
+      checkin: this.checkin,
+      checkout: this.checkout,
+      adults: this.adults,
+      children: this.children
+    };
   }
 });
 
@@ -248,6 +259,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -261,15 +279,21 @@ __webpack_require__.r(__webpack_exports__);
       checkinDate: null,
       checkoutDate: null,
       num_of_adults: 1,
-      num_of_children: 0
+      num_of_children: 0,
+      selectedRooms: []
     };
   },
   methods: {
-    openBookingTypeModal: function openBookingTypeModal() {
+    openBookingTypeModal: function openBookingTypeModal(room) {
+      this.selectedRooms.push(room);
       this.showBookingTypeModal = true;
     },
     handleChange: function handleChange() {
       console.log('handleChange');
+    },
+    formatDate: function formatDate() {
+      this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD');
+      this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD');
     }
   },
   computed: {
@@ -846,6 +870,11 @@ var render = function() {
                   placeholder: "Pick a date",
                   "default-value": _vm.currentDay
                 },
+                on: {
+                  change: function($event) {
+                    return _vm.formatDate()
+                  }
+                },
                 model: {
                   value: _vm.checkinDate,
                   callback: function($$v) {
@@ -869,6 +898,11 @@ var render = function() {
                   type: "date",
                   placeholder: "Pick a date",
                   "default-value": _vm.dayAfterToday
+                },
+                on: {
+                  change: function($event) {
+                    return _vm.formatDate()
+                  }
                 },
                 model: {
                   value: _vm.checkoutDate,
@@ -980,7 +1014,7 @@ var render = function() {
                       staticStyle: { color: "#ff7b50" },
                       on: {
                         click: function($event) {
-                          return _vm.openBookingTypeModal()
+                          return _vm.openBookingTypeModal(_vm.room)
                         }
                       }
                     },
@@ -988,11 +1022,6 @@ var render = function() {
                   )
                 ],
                 1
-              ),
-              _vm._v(
-                "\n             here  " +
-                  _vm._s(_vm.dayAfterToday) +
-                  "\n            "
               )
             ])
           ],
@@ -1002,6 +1031,13 @@ var render = function() {
       _vm._v(" "),
       _vm.showBookingTypeModal
         ? _c("new-booking-type-modal", {
+            attrs: {
+              checkin: _vm.checkinDate,
+              checkout: _vm.checkoutDate,
+              adults: _vm.num_of_adults,
+              children: _vm.num_of_children,
+              selectedRooms: _vm.selectedRooms
+            },
             on: {
               close: function($event) {
                 _vm.showBookingTypeModal = false
