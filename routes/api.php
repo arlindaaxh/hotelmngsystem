@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HousekeepingController;
 use App\Http\Controllers\HousekeepingHistoryController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ReservationController;
 
 
 /*
@@ -58,3 +59,6 @@ Route::get('/housekeeping-history', [HousekeepingHistoryController::class, 'inde
 
 //GUESTS
 Route::post('/guests', [GuestController::class, 'store']);
+
+//RESERVATIONS
+Route::post('/reservations', [ReservationController::class, 'store']);

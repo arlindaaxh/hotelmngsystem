@@ -7,7 +7,7 @@
             </span>
             <div>
                 <el-button style="margin-top: 12px;" @click="previous()">Previous</el-button>
-                <el-button style="margin-top: 12px;" @click="next()">Next step</el-button>
+                <el-button style="margin-top: 12px;" @click="next()">{{activeStep === 3 ? 'Save' : 'Next Step'}}</el-button>
             </div>
             
         </div>
@@ -110,40 +110,43 @@
                                 <span>Room No.</span>
                             </div>
                         </div>
-                        <div style="align-content:start">
-                            <span class="label-no-height" style="padding:10px">Add-Ons</span>
-                            <div class="bordered mt-10 form-data w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start">
-                                <div>
-                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                        <el-checkbox>Premium Wi-Fi</el-checkbox>
-                                        <span>$20.00</span>  
-                                    </div>
-                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                        <el-checkbox>Parking</el-checkbox>
-                                        <span>$20.00</span>  
-                                    </div>
-                                    <div class="flexed justify-between p-10" style="margin-top:10px">
-                                        <el-checkbox>Room Service</el-checkbox>
-                                        <span>$50.00</span>  
-                                    </div> 
-                                </div>
-                                <div style="align-content:flex-start; align-items:start; height:100%">
-                                    <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                        <el-checkbox>SPA</el-checkbox>
-                                        <span>$20.00</span>  
-                                    </div>
-                                
-                                </div>
-                               
-
-                            </div> 
-                        </div>
+                      
                         
                     </div>
                     
                    
                 </el-form>
 
+            </div>
+            <div v-if="activeStep === 3" class="mt-30">
+                <div style="align-content:start">
+                    <span class="label-no-height" style="padding:10px">Add-Ons</span>
+                    <div class="bordered mt-10 form-data w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start">
+                        <div>
+                            <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                <el-checkbox>Premium Wi-Fi</el-checkbox>
+                                <span>$20.00</span>  
+                            </div>
+                            <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                <el-checkbox>Parking</el-checkbox>
+                                <span>$20.00</span>  
+                            </div>
+                            <div class="flexed justify-between p-10" style="margin-top:10px">
+                                <el-checkbox>Room Service</el-checkbox>
+                                <span>$50.00</span>  
+                            </div> 
+                        </div>
+                        <div style="align-content:flex-start; align-items:start; height:100%">
+                            <div class="flexed justify-between p-10" style="margin-top:10px;">
+                                <el-checkbox>SPA</el-checkbox>
+                                <span>$20.00</span>  
+                            </div>
+                        
+                        </div>
+                        
+
+                    </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -153,12 +156,13 @@
 import {ArrowLeftIcon} from 'vue-feather-icons'
 import GuestServices from '../../../services/guest.services'
 import dayjs from 'dayjs'
+import ReservationServices from '../../../services/reservation.services'
     export default {
         name: 'NewBooking',
         components: {
             ArrowLeftIcon
         },
-        props: ['checkin', 'checkout'],
+        props: ['checkin', 'checkout','selectedRooms'],
         data() {
             return {
                 activeStep: 1,
@@ -178,10 +182,13 @@ import dayjs from 'dayjs'
                 booking_details: {
                     date_in: null,
                     date_out: null,
+                    rooms: []
 
                 },
                 childrenNo: null,
                 adultsNo: null,
+                reservationData: null,
+            
                 rules: {
                     first_name: [
                         {
@@ -249,6 +256,11 @@ import dayjs from 'dayjs'
                 this.booking_details.date_out  = this.$route.params.bookingData.checkout
                 this.adultsNo = this.$route.params.bookingData.adults
                 this.childrenNo = this.$route.params.bookingData.children
+                this.booking_details.rooms = this.$route.params.selectedRooms
+                let rooms = this.$route.params.selectedRooms
+                rooms.forEach(room => {
+                    this.booking_details.rooms.push(room.id)
+                })
             }
             
         },
@@ -258,6 +270,8 @@ import dayjs from 'dayjs'
                 if(this.activeStep === 1){
                     this.saveGuest()
                 
+                }else if(this.activeStep === 2){
+                    this.saveReservationData()
                 }
             },
             previous(){
@@ -276,43 +290,78 @@ import dayjs from 'dayjs'
                                     console.log('bird', this.guest.birth_date)
             },
             saveGuest(){
-                // this.$refs['guest-details-form'].validate((valid) => {
-                //     if(valid){
-                //         // this.loading = true
+                this.$refs['guest-details-form'].validate((valid) => {
+                    if(valid){
+                        this.loading = true
                         this.guest.birth_date = this.dayjs(this.guest.birth_date).format('YYYY-MM-DD')
-                        console.log('bird', this.guest.birth_date)
-                         this.activeStep ++
-                        // GuestServices.postGuest(this.guest).then((res) => {
-                        //     this.returnedGuest = res.data
-                        //     console.log('returnedGuest', this.returnedGuest)
-                        //     this.$notify.success({
-                        //         title: 'Success',
-                        //         message: 'Guest data were saved successfully'
-                        //     })
-                        //     this.activeStep ++
-                        // })
-                        // .catch((error) => {
-                        //     this.loading=false
-                        //     let errorMessage = error?.data?.message ||
-                        //     error?.message ||
-                        //     error?.response?.message ||
-                        //     error?.response?.data?.message
-                        //     if(!errorMessage && error?.data){
-                        //     errorMessage =  error.data
-                        //     }
-                        //     if(!errorMessage) errorMessage = 'Error_occurred'
-                        //     this.$notify.error({
-                        //         title: error?.status || error?.response?.status,
-                        //         message: errorMessage,
-                        //     });
-                        // })
-                        // .finally(() => {
-                        //     this.loading = false
-                        // })
-            //         }
-            //     })
-              
-
+                    
+                        GuestServices.postGuest(this.guest).then((res) => {
+                            this.returnedGuest = res.data
+                            console.log('returnedGuest', this.returnedGuest)
+                            this.$notify.success({
+                                title: 'Success',
+                                message: 'Guest data were saved successfully'
+                            })
+                            this.activeStep ++
+                        })
+                        .catch((error) => {
+                            this.loading=false
+                            let errorMessage = error?.data?.message ||
+                            error?.message ||
+                            error?.response?.message ||
+                            error?.response?.data?.message
+                            if(!errorMessage && error?.data){
+                            errorMessage =  error.data
+                            }
+                            if(!errorMessage) errorMessage = 'Error_occurred'
+                            this.$notify.error({
+                                title: error?.status || error?.response?.status,
+                                message: errorMessage,
+                            });
+                        })
+                        .finally(() => {
+                            this.loading = false
+                        })
+                    }
+                })
+            },
+            saveReservationData(){
+                let payload = {
+                    guest_id: this.returnedGuest.id,
+                    made_by: 'Arlinda Xhemaili',
+                    date_in: this.booking_details.date_in,
+                    date_out: this.booking_details.date_out,
+                    rooms: this.booking_details.rooms,
+                    active: true, 
+                }
+                this.loading = true
+                ReservationServices.postReservation(payload).then((res) => {
+                    this.reservationData = res.data
+                    console.log('reservationReturnes', this.reservationData)
+                    this.$notify.success({
+                        title: 'Success',
+                        message: 'Guest data were saved successfully'
+                    })
+                    this.activeStep ++
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
             }
         }
     }

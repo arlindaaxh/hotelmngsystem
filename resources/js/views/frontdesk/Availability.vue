@@ -40,13 +40,15 @@
         </div>
 
         <div class="rooms-section p-30">
-            <div>
-                <el-card class="box-card">
+            <div class="flex-wrap" style="gap:30px">
+                <el-card class="box-card" v-for="(room,index) in rooms" :key="index">
                     <div class="flexed justify-between" style="align-items:end">
                         <div class="flexed-column" style="gap:20px">
+            
                             <span style="font-weight:550">
-                                Room Type
+                                {{room.type}}
                             </span>
+                            <span>{{room.code}} - {{room.number}}</span>
                             <span>
                                 Price - $0.00
                             </span>
@@ -70,6 +72,7 @@
 <script>
 import NewBookingTypeModal from '../../components/frontdesk/dashboard/NewBookingTypeModal.vue'
 import dayjs from 'dayjs'
+import RoomServices from '../../services/room.services'
 export default {
     components: { NewBookingTypeModal },
         data() {
@@ -80,13 +83,15 @@ export default {
                 checkoutDate: null,
                 num_of_adults: 1,
                 num_of_children: 0,
-                selectedRooms:[]
+                selectedRooms:[],
+                rooms:[]
                
             }
         },
         methods: {
             openBookingTypeModal(room){
                 this.selectedRooms.push(room)
+                console.log('selectedRooms', this.selectedRooms)
                 this.showBookingTypeModal = true
             },
             handleChange(){
@@ -95,7 +100,33 @@ export default {
             formatDate(){
                 this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD')
                 this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD')
-            }
+            },
+              getRooms(){
+                this.loading = true
+                RoomServices.getRooms().then((res) => {
+                    this.rooms = res.data
+        
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+
+            },
             
         },
         computed: {
@@ -111,6 +142,7 @@ export default {
         beforeMount(){
             this.checkinDate = this.currentDay
             this.checkoutDate = this.dayAfterToday
+            this.getRooms()
         }
     }
 </script>

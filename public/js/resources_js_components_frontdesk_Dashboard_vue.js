@@ -2474,7 +2474,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['checkin', 'checkout', 'adults', 'children'],
+  props: ['checkin', 'checkout', 'adults', 'children', 'selectedRooms'],
   data: function data() {
     return {
       loading: false,
@@ -2483,11 +2483,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     createNewBooking: function createNewBooking(bookingType) {
+      console.log('selectedRooms1', this.selectedRooms);
       this.$router.push({
         name: 'new-booking',
         params: {
           bookingType: bookingType,
-          bookingData: this.bookingData
+          bookingData: this.bookingData,
+          selectedRooms: this.selectedRooms
         }
       });
     }

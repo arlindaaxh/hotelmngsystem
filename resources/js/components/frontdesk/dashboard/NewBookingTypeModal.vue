@@ -23,7 +23,7 @@ import NormalPopup from '../../NormalPopup.vue';
         components: {
             NormalPopup
         },
-        props: ['checkin', 'checkout','adults','children'],
+        props: ['checkin', 'checkout','adults','children','selectedRooms'],
         data() {
             return {
                 loading: false,
@@ -32,11 +32,13 @@ import NormalPopup from '../../NormalPopup.vue';
         },
         methods: {
             createNewBooking(bookingType){
+                           console.log('selectedRooms1', this.selectedRooms)
                 this.$router.push({
                     name: 'new-booking',
                     params: {
                         bookingType: bookingType,
-                        bookingData: this.bookingData
+                        bookingData: this.bookingData,
+                        selectedRooms: this.selectedRooms
                     }
                 })
             }
@@ -46,7 +48,8 @@ import NormalPopup from '../../NormalPopup.vue';
                 checkin: this.checkin,
                 checkout: this.checkout,
                 adults: this.adults,
-                children: this.children
+                children: this.children,
+     
             }
         }
     }

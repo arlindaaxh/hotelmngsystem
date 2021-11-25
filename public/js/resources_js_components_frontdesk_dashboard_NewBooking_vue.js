@@ -2064,10 +2064,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/guest.services */ "./resources/js/services/guest.services.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 //
 //
 //
@@ -2219,15 +2220,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewBooking',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_2__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__.ArrowLeftIcon
   },
-  props: ['checkin', 'checkout'],
+  props: ['checkin', 'checkout', 'selectedRooms'],
   data: function data() {
     return {
       activeStep: 1,
@@ -2246,10 +2251,12 @@ __webpack_require__.r(__webpack_exports__);
       returnedGuest: null,
       booking_details: {
         date_in: null,
-        date_out: null
+        date_out: null,
+        rooms: []
       },
       childrenNo: null,
       adultsNo: null,
+      reservationData: null,
       rules: {
         first_name: [{
           required: true,
@@ -2296,6 +2303,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   beforeMount: function beforeMount() {
+    var _this = this;
+
     console.log('this', this.$route.params);
 
     if (this.$route.params.bookingData) {
@@ -2303,6 +2312,11 @@ __webpack_require__.r(__webpack_exports__);
       this.booking_details.date_out = this.$route.params.bookingData.checkout;
       this.adultsNo = this.$route.params.bookingData.adults;
       this.childrenNo = this.$route.params.bookingData.children;
+      this.booking_details.rooms = this.$route.params.selectedRooms;
+      var rooms = this.$route.params.selectedRooms;
+      rooms.forEach(function (room) {
+        _this.booking_details.rooms.push(room.id);
+      });
     }
   },
   methods: {
@@ -2310,6 +2324,8 @@ __webpack_require__.r(__webpack_exports__);
       // if (this.activeStep++ > 2) this.activeStep = 1;
       if (this.activeStep === 1) {
         this.saveGuest();
+      } else if (this.activeStep === 2) {
+        this.saveReservationData();
       }
     },
     previous: function previous() {
@@ -2327,40 +2343,85 @@ __webpack_require__.r(__webpack_exports__);
       console.log('bird', this.guest.birth_date);
     },
     saveGuest: function saveGuest() {
-      // this.$refs['guest-details-form'].validate((valid) => {
-      //     if(valid){
-      //         // this.loading = true
-      this.guest.birth_date = this.dayjs(this.guest.birth_date).format('YYYY-MM-DD');
-      console.log('bird', this.guest.birth_date);
-      this.activeStep++; // GuestServices.postGuest(this.guest).then((res) => {
-      //     this.returnedGuest = res.data
-      //     console.log('returnedGuest', this.returnedGuest)
-      //     this.$notify.success({
-      //         title: 'Success',
-      //         message: 'Guest data were saved successfully'
-      //     })
-      //     this.activeStep ++
-      // })
-      // .catch((error) => {
-      //     this.loading=false
-      //     let errorMessage = error?.data?.message ||
-      //     error?.message ||
-      //     error?.response?.message ||
-      //     error?.response?.data?.message
-      //     if(!errorMessage && error?.data){
-      //     errorMessage =  error.data
-      //     }
-      //     if(!errorMessage) errorMessage = 'Error_occurred'
-      //     this.$notify.error({
-      //         title: error?.status || error?.response?.status,
-      //         message: errorMessage,
-      //     });
-      // })
-      // .finally(() => {
-      //     this.loading = false
-      // })
-      //         }
-      //     })
+      var _this2 = this;
+
+      this.$refs['guest-details-form'].validate(function (valid) {
+        if (valid) {
+          _this2.loading = true;
+          _this2.guest.birth_date = _this2.dayjs(_this2.guest.birth_date).format('YYYY-MM-DD');
+          _services_guest_services__WEBPACK_IMPORTED_MODULE_0__["default"].postGuest(_this2.guest).then(function (res) {
+            _this2.returnedGuest = res.data;
+            console.log('returnedGuest', _this2.returnedGuest);
+
+            _this2.$notify.success({
+              title: 'Success',
+              message: 'Guest data were saved successfully'
+            });
+
+            _this2.activeStep++;
+          })["catch"](function (error) {
+            var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+            _this2.loading = false;
+            var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+            if (!errorMessage && error !== null && error !== void 0 && error.data) {
+              errorMessage = error.data;
+            }
+
+            if (!errorMessage) errorMessage = 'Error_occurred';
+
+            _this2.$notify.error({
+              title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+              message: errorMessage
+            });
+          })["finally"](function () {
+            _this2.loading = false;
+          });
+        }
+      });
+    },
+    saveReservationData: function saveReservationData() {
+      var _this3 = this;
+
+      var payload = {
+        guest_id: this.returnedGuest.id,
+        made_by: 'Arlinda Xhemaili',
+        date_in: this.booking_details.date_in,
+        date_out: this.booking_details.date_out,
+        rooms: this.booking_details.rooms,
+        active: true
+      };
+      this.loading = true;
+      _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__["default"].postReservation(payload).then(function (res) {
+        _this3.reservationData = res.data;
+        console.log('reservationReturnes', _this3.reservationData);
+
+        _this3.$notify.success({
+          title: 'Success',
+          message: 'Guest data were saved successfully'
+        });
+
+        _this3.activeStep++;
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this3.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this3.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this3.loading = false;
+      });
     }
   }
 });
@@ -2384,6 +2445,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   postGuest: function postGuest(payload) {
     var url = "http://127.0.0.1:8000/api/guests";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/reservation.services.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/services/reservation.services.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postReservation: function postReservation(payload) {
+    var url = "http://127.0.0.1:8000/api/reservations";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
   }
 });
@@ -17357,7 +17441,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("Next step")]
+                [_vm._v(_vm._s(_vm.activeStep === 3 ? "Save" : "Next Step"))]
               )
             ],
             1
@@ -17742,112 +17826,6 @@ var render = function() {
                                 [_c("span", [_vm._v("Room No.")])]
                               )
                             ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticStyle: { "align-content": "start" } },
-                            [
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "label-no-height",
-                                  staticStyle: { padding: "10px" }
-                                },
-                                [_vm._v("Add-Ons")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "bordered mt-10 form-data w-100",
-                                  staticStyle: {
-                                    border: "1px solid lightgrey",
-                                    "border-radius": "5px",
-                                    "align-content": "start"
-                                  }
-                                },
-                                [
-                                  _c("div", [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "flexed justify-between p-10",
-                                        staticStyle: { "margin-top": "10px" }
-                                      },
-                                      [
-                                        _c("el-checkbox", [
-                                          _vm._v("Premium Wi-Fi")
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("span", [_vm._v("$20.00")])
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "flexed justify-between p-10",
-                                        staticStyle: { "margin-top": "10px" }
-                                      },
-                                      [
-                                        _c("el-checkbox", [_vm._v("Parking")]),
-                                        _vm._v(" "),
-                                        _c("span", [_vm._v("$20.00")])
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "flexed justify-between p-10",
-                                        staticStyle: { "margin-top": "10px" }
-                                      },
-                                      [
-                                        _c("el-checkbox", [
-                                          _vm._v("Room Service")
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("span", [_vm._v("$50.00")])
-                                      ],
-                                      1
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticStyle: {
-                                        "align-content": "flex-start",
-                                        "align-items": "start",
-                                        height: "100%"
-                                      }
-                                    },
-                                    [
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass:
-                                            "flexed justify-between p-10",
-                                          staticStyle: { "margin-top": "10px" }
-                                        },
-                                        [
-                                          _c("el-checkbox", [_vm._v("SPA")]),
-                                          _vm._v(" "),
-                                          _c("span", [_vm._v("$20.00")])
-                                        ],
-                                        1
-                                      )
-                                    ]
-                                  )
-                                ]
-                              )
-                            ]
                           )
                         ]
                       )
@@ -17856,6 +17834,104 @@ var render = function() {
                 ],
                 1
               )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.activeStep === 3
+            ? _c("div", { staticClass: "mt-30" }, [
+                _c("div", { staticStyle: { "align-content": "start" } }, [
+                  _c(
+                    "span",
+                    {
+                      staticClass: "label-no-height",
+                      staticStyle: { padding: "10px" }
+                    },
+                    [_vm._v("Add-Ons")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "bordered mt-10 form-data w-100",
+                      staticStyle: {
+                        border: "1px solid lightgrey",
+                        "border-radius": "5px",
+                        "align-content": "start"
+                      }
+                    },
+                    [
+                      _c("div", [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "flexed justify-between p-10",
+                            staticStyle: { "margin-top": "10px" }
+                          },
+                          [
+                            _c("el-checkbox", [_vm._v("Premium Wi-Fi")]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("$20.00")])
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "flexed justify-between p-10",
+                            staticStyle: { "margin-top": "10px" }
+                          },
+                          [
+                            _c("el-checkbox", [_vm._v("Parking")]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("$20.00")])
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "flexed justify-between p-10",
+                            staticStyle: { "margin-top": "10px" }
+                          },
+                          [
+                            _c("el-checkbox", [_vm._v("Room Service")]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("$50.00")])
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "align-content": "flex-start",
+                            "align-items": "start",
+                            height: "100%"
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "flexed justify-between p-10",
+                              staticStyle: { "margin-top": "10px" }
+                            },
+                            [
+                              _c("el-checkbox", [_vm._v("SPA")]),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("$20.00")])
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              ])
             : _vm._e()
         ],
         1
