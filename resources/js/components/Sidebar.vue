@@ -47,7 +47,15 @@
             >
          
                 <b-icon icon="door-closed-fill" class="m-l-5" :style="[$route.name === 'rooms' ? {'color': 'white'} : {'color':'grey'}]"></b-icon>
-                <span :style="[$route.name === 'rooms' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Rooms</span>
+                <span :style="[$route.name === 'rooms' ? {'color': 'white', 'marginRight': '10px'} : {'color':'black','marginRight': '10px'}]" class="m-l-5"> Rooms</span>
+            </el-menu-item>
+            <el-menu-item
+                index="addons"
+                :route="{ name: 'addons' }"
+                v-bind:class="[$route.name === 'addons' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i  class="el-icon-s-goods" :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'grey'}]"></i>
+                <span :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Addons</span>
             </el-menu-item>
           
           

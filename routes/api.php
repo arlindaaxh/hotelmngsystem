@@ -9,6 +9,7 @@ use App\Http\Controllers\HousekeepingController;
 use App\Http\Controllers\HousekeepingHistoryController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\AddonController;
 
 
 /*
@@ -62,3 +63,10 @@ Route::post('/guests', [GuestController::class, 'store']);
 
 //RESERVATIONS
 Route::post('/reservations', [ReservationController::class, 'store']);
+
+
+//ADDONS
+Route::get('/addons', [AddonController::class, 'index']);
+Route::post('/addons', [AddonController::class, 'store']);
+Route::put('/addons/{id}', [AddonController::class, 'update']);
+Route::delete('/addons/{id}', [AddonController::class, 'delete']);

@@ -49,7 +49,6 @@ class EmployeeController extends Controller
     //edit employee
     public function update(Request $request, $id)
     {
-
         $employee = Employee::find($id);
 
         $employee->update($request->all());

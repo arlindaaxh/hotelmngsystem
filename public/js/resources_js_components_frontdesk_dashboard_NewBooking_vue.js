@@ -2064,11 +2064,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/guest.services */ "./resources/js/services/guest.services.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/reservation.services */ "./resources/js/services/reservation.services.js");
+/* harmony import */ var _services_addon_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/addon.services */ "./resources/js/services/addon.services.js");
 //
 //
 //
@@ -2223,6 +2224,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
 
 
 
@@ -2230,7 +2234,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewBooking',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__.ArrowLeftIcon
   },
   props: ['checkin', 'checkout', 'selectedRooms'],
   data: function data() {
@@ -2257,6 +2261,12 @@ __webpack_require__.r(__webpack_exports__);
       childrenNo: null,
       adultsNo: null,
       reservationData: null,
+      discount: null,
+      buttonType: "default",
+      custom_discount: null,
+      discountType: "default",
+      discount_value: null,
+      addons: [],
       rules: {
         first_name: [{
           required: true,
@@ -2318,15 +2328,18 @@ __webpack_require__.r(__webpack_exports__);
         _this.booking_details.rooms.push(room.id);
       });
     }
+
+    this.getAddons();
   },
   methods: {
     next: function next() {
       // if (this.activeStep++ > 2) this.activeStep = 1;
-      if (this.activeStep === 1) {
-        this.saveGuest();
-      } else if (this.activeStep === 2) {
-        this.saveReservationData();
-      }
+      // if(this.activeStep === 1){
+      //     this.saveGuest()
+      // }else if(this.activeStep === 2){
+      //     this.saveReservationData()
+      // }
+      this.activeStep++;
     },
     previous: function previous() {
       if (this.activeStep-- === 1) this.activeStep = 1;
@@ -2422,7 +2435,79 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this3.loading = false;
       });
+    },
+    changeDiscountType: function changeDiscountType(fromCustom) {
+      if (this.discountType === 'default' && fromCustom) {
+        this.discountType = "custom";
+        this.discount_value = this.custom_discount;
+        this.discount = null;
+      } else {
+        this.discountType = "default";
+        this.discount_value = this.discount;
+        this.custom_discount = null;
+      }
+    },
+    getAddons: function getAddons() {
+      var _this4 = this;
+
+      this.loading = true;
+      _services_addon_services__WEBPACK_IMPORTED_MODULE_3__["default"].getAddons().then(function (res) {
+        _this4.addons = res.data;
+      })["catch"](function (error) {
+        var _error$data3, _error$response7, _error$response8, _error$response8$data, _error$response9;
+
+        _this4.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data3 = error.data) === null || _error$data3 === void 0 ? void 0 : _error$data3.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response7 = error.response) === null || _error$response7 === void 0 ? void 0 : _error$response7.message) || (error === null || error === void 0 ? void 0 : (_error$response8 = error.response) === null || _error$response8 === void 0 ? void 0 : (_error$response8$data = _error$response8.data) === null || _error$response8$data === void 0 ? void 0 : _error$response8$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this4.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response9 = error.response) === null || _error$response9 === void 0 ? void 0 : _error$response9.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this4.loading = false;
+      });
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/addon.services.js":
+/*!*************************************************!*\
+  !*** ./resources/js/services/addon.services.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  getAddons: function getAddons() {
+    var url = "http://127.0.0.1:8000/api/addons";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  postAddon: function postAddon(payload) {
+    var url = "http://127.0.0.1:8000/api/addons";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putAddon: function putAddon(payload, id) {
+    var url = "http://127.0.0.1:8000/api/addons/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteAddon: function deleteAddon(id) {
+    var url = "http://127.0.0.1:8000/api/addons/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
 
@@ -17858,8 +17943,8 @@ var render = function() {
                         "align-content": "start"
                       }
                     },
-                    [
-                      _c("div", [
+                    _vm._l(_vm.addons, function(addon, index) {
+                      return _c("div", { key: index }, [
                         _c(
                           "div",
                           {
@@ -17867,66 +17952,113 @@ var render = function() {
                             staticStyle: { "margin-top": "10px" }
                           },
                           [
-                            _c("el-checkbox", [_vm._v("Premium Wi-Fi")]),
+                            _c("el-checkbox", [_vm._v(_vm._s(addon.name))]),
                             _vm._v(" "),
-                            _c("span", [_vm._v("$20.00")])
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "flexed justify-between p-10",
-                            staticStyle: { "margin-top": "10px" }
-                          },
-                          [
-                            _c("el-checkbox", [_vm._v("Parking")]),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("$20.00")])
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "flexed justify-between p-10",
-                            staticStyle: { "margin-top": "10px" }
-                          },
-                          [
-                            _c("el-checkbox", [_vm._v("Room Service")]),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("$50.00")])
+                            _c("span", [_vm._v(_vm._s(addon.price) + "$")])
                           ],
                           1
                         )
-                      ]),
+                      ])
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "bordered flexed-column mt-30 w-100",
+                      staticStyle: {
+                        border: "1px solid lightgrey",
+                        "border-radius": "5px",
+                        "align-content": "start",
+                        padding: "10px"
+                      }
+                    },
+                    [
+                      _vm._m(0),
                       _vm._v(" "),
                       _c(
                         "div",
-                        {
-                          staticStyle: {
-                            "align-content": "flex-start",
-                            "align-items": "start",
-                            height: "100%"
-                          }
-                        },
+                        { staticClass: "flexed", staticStyle: { gap: "20px" } },
                         [
                           _c(
-                            "div",
+                            "el-radio-group",
                             {
-                              staticClass: "flexed justify-between p-10",
-                              staticStyle: { "margin-top": "10px" }
+                              on: {
+                                change: function($event) {
+                                  return _vm.changeDiscountType()
+                                }
+                              },
+                              model: {
+                                value: _vm.discount,
+                                callback: function($$v) {
+                                  _vm.discount = $$v
+                                },
+                                expression: "discount"
+                              }
                             },
                             [
-                              _c("el-checkbox", [_vm._v("SPA")]),
+                              _c("el-radio-button", {
+                                attrs: { label: "10%" }
+                              }),
                               _vm._v(" "),
-                              _c("span", [_vm._v("$20.00")])
+                              _c("el-radio-button", {
+                                attrs: { label: "20%" }
+                              }),
+                              _vm._v(" "),
+                              _c("el-radio-button", { attrs: { label: "50%" } })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            [
+                              _c(
+                                "el-button",
+                                {
+                                  staticStyle: { "align-self": "start" },
+                                  attrs: {
+                                    type:
+                                      _vm.discountType === "custom"
+                                        ? "primary"
+                                        : "default"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.changeDiscountType($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Custom")]
+                              ),
+                              _vm._v(" "),
+                              _vm.discountType === "custom"
+                                ? _c(
+                                    "el-input",
+                                    {
+                                      staticStyle: { width: "70%" },
+                                      model: {
+                                        value: _vm.custom_discount,
+                                        callback: function($$v) {
+                                          _vm.custom_discount = $$v
+                                        },
+                                        expression: "custom_discount"
+                                      }
+                                    },
+                                    [
+                                      _c("template", { slot: "append" }, [
+                                        _vm._v("%")
+                                      ])
+                                    ],
+                                    2
+                                  )
+                                : _vm._e()
                             ],
                             1
                           )
-                        ]
+                        ],
+                        1
                       )
                     ]
                   )
@@ -17939,7 +18071,17 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "label-no-height mb-10" }, [
+      _c("i", { staticClass: "el-icon-discount" }),
+      _vm._v(" How much discount to offer?")
+    ])
+  }
+]
 render._withStripped = true
 
 

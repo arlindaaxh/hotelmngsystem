@@ -122,30 +122,32 @@
                 <div style="align-content:start">
                     <span class="label-no-height" style="padding:10px">Add-Ons</span>
                     <div class="bordered mt-10 form-data w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start">
-                        <div>
+                        <div v-for="(addon,index) in addons" :key="index">
                             <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                <el-checkbox>Premium Wi-Fi</el-checkbox>
-                                <span>$20.00</span>  
-                            </div>
-                            <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                <el-checkbox>Parking</el-checkbox>
-                                <span>$20.00</span>  
-                            </div>
-                            <div class="flexed justify-between p-10" style="margin-top:10px">
-                                <el-checkbox>Room Service</el-checkbox>
-                                <span>$50.00</span>  
-                            </div> 
-                        </div>
-                        <div style="align-content:flex-start; align-items:start; height:100%">
-                            <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                <el-checkbox>SPA</el-checkbox>
-                                <span>$20.00</span>  
+                                <el-checkbox>{{addon.name}}</el-checkbox>
+                                <span>{{addon.price}}$</span>  
                             </div>
                         
                         </div>
                         
-
                     </div> 
+                   <div class="bordered flexed-column mt-30 w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start; padding: 10px;">
+                        <span class="label-no-height mb-10"><i class="el-icon-discount"></i> How much discount to offer?</span>
+                        <div class="flexed"  style="gap: 20px;">
+                            <el-radio-group v-model="discount" @change="changeDiscountType()">
+                                <el-radio-button label="10%"></el-radio-button>
+                                <el-radio-button label="20%"></el-radio-button>
+                                <el-radio-button label="50%"></el-radio-button>
+                            </el-radio-group>
+                            <div>
+                               <el-button style="align-self:start" :type="discountType === 'custom' ? 'primary' : 'default'" @click="changeDiscountType($event)">Custom</el-button>
+                                <el-input v-if="discountType === 'custom'" v-model="custom_discount" style="width:70%">
+                                    <template slot="append">%</template>
+                                </el-input> 
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -157,6 +159,7 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
 import GuestServices from '../../../services/guest.services'
 import dayjs from 'dayjs'
 import ReservationServices from '../../../services/reservation.services'
+import AddonServices from '../../../services/addon.services'
     export default {
         name: 'NewBooking',
         components: {
@@ -188,6 +191,12 @@ import ReservationServices from '../../../services/reservation.services'
                 childrenNo: null,
                 adultsNo: null,
                 reservationData: null,
+                discount: null,
+                buttonType: "default",
+                custom_discount: null,
+                discountType: "default",
+                discount_value: null,
+                addons: [],
             
                 rules: {
                     first_name: [
@@ -262,17 +271,20 @@ import ReservationServices from '../../../services/reservation.services'
                     this.booking_details.rooms.push(room.id)
                 })
             }
+
+            this.getAddons()
             
         },
         methods: {
             next(){
                 // if (this.activeStep++ > 2) this.activeStep = 1;
-                if(this.activeStep === 1){
-                    this.saveGuest()
+                // if(this.activeStep === 1){
+                //     this.saveGuest()
                 
-                }else if(this.activeStep === 2){
-                    this.saveReservationData()
-                }
+                // }else if(this.activeStep === 2){
+                //     this.saveReservationData()
+                // }
+                this.activeStep++
             },
             previous(){
                 if(this.activeStep-- === 1) this.activeStep = 1
@@ -362,7 +374,45 @@ import ReservationServices from '../../../services/reservation.services'
                 .finally(() => {
                     this.loading = false
                 })
-            }
+            },
+            changeDiscountType(fromCustom){
+                if(this.discountType === 'default' && fromCustom){
+                    this.discountType = "custom"
+                    this.discount_value = this.custom_discount
+
+                    this.discount = null
+                }
+                else {
+                    this.discountType = "default" 
+                    this.discount_value = this.discount
+
+                    this.custom_discount = null
+                }
+            },
+            getAddons(){
+                this.loading = true
+                AddonServices.getAddons().then((res) => {
+                    this.addons = res.data
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
         }
     }
 </script>
