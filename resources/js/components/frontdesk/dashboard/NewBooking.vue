@@ -124,7 +124,7 @@
                     <div class="bordered mt-10 form-data w-100" style="border:1px solid lightgrey; border-radius:5px; align-content:start">
                         <div v-for="(addon,index) in addons" :key="index">
                             <div class="flexed justify-between p-10" style="margin-top:10px;">
-                                <el-checkbox>{{addon.name}}</el-checkbox>
+                                <el-checkbox @change="checkAddon(addon)">{{addon.name}}</el-checkbox>
                                 <span>{{addon.price}}$</span>  
                             </div>
                         
@@ -196,6 +196,12 @@ import AddonServices from '../../../services/addon.services'
                 custom_discount: null,
                 discountType: "default",
                 discount_value: null,
+                charge: {
+                    reservation_id: null,
+                    room_price: 0,
+                    addons: [],
+                    total: 0
+                },
                 addons: [],
             
                 rules: {
@@ -273,6 +279,9 @@ import AddonServices from '../../../services/addon.services'
             }
 
             this.getAddons()
+            this.addons.forEach(addon => {
+                addon.setAttribute('checked', false)
+            })
             
         },
         methods: {
@@ -284,7 +293,13 @@ import AddonServices from '../../../services/addon.services'
                 // }else if(this.activeStep === 2){
                 //     this.saveReservationData()
                 // }
-                this.activeStep++
+                if(this.activeStep === 3){
+                    this.saveCharges()
+                }
+                else{
+                    this.activeStep++
+                }
+                // this.activeStep++
             },
             previous(){
                 if(this.activeStep-- === 1) this.activeStep = 1
@@ -413,6 +428,33 @@ import AddonServices from '../../../services/addon.services'
                     this.loading = false
                 })
             },
+            checkAddon(addon){
+                let foundAddon = this.addons.find(a => a.id === addon.id)
+            
+                foundAddon.checked = !foundAddon.checked
+                console.log('foundAddon', foundAddon)
+            },
+            saveCharges(){
+                this.addons.forEach(addon => {
+                    if(addon.checked){
+                        this.charge.addons.push(addon)
+                    }
+                })
+                this.total = 100
+                if(this.custom_discount || this.discount){
+                    console.log('dis', this.custom_discount)
+                    console.log('ss', this.discount)
+                    let result = this.discount.indexOf("%");
+                    
+                    this.discount = this.discount.slice(result)
+                    console.log('discount', this.discount)
+                    this.total = (this.discount / 100)
+
+                    console.log('totali', this.total)
+                }
+                // this.loading = true
+            }
+
         }
     }
 </script>

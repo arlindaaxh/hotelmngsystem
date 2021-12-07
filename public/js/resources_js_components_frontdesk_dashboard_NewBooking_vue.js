@@ -2266,6 +2266,12 @@ __webpack_require__.r(__webpack_exports__);
       custom_discount: null,
       discountType: "default",
       discount_value: null,
+      charge: {
+        reservation_id: null,
+        room_price: 0,
+        addons: [],
+        total: 0
+      },
       addons: [],
       rules: {
         first_name: [{
@@ -2330,6 +2336,9 @@ __webpack_require__.r(__webpack_exports__);
     }
 
     this.getAddons();
+    this.addons.forEach(function (addon) {
+      addon.setAttribute('checked', false);
+    });
   },
   methods: {
     next: function next() {
@@ -2339,7 +2348,12 @@ __webpack_require__.r(__webpack_exports__);
       // }else if(this.activeStep === 2){
       //     this.saveReservationData()
       // }
-      this.activeStep++;
+      if (this.activeStep === 3) {
+        this.saveCharges();
+      } else {
+        this.activeStep++;
+      } // this.activeStep++
+
     },
     previous: function previous() {
       if (this.activeStep-- === 1) this.activeStep = 1;
@@ -2472,6 +2486,34 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this4.loading = false;
       });
+    },
+    checkAddon: function checkAddon(addon) {
+      var foundAddon = this.addons.find(function (a) {
+        return a.id === addon.id;
+      });
+      foundAddon.checked = !foundAddon.checked;
+      console.log('foundAddon', foundAddon);
+    },
+    saveCharges: function saveCharges() {
+      var _this5 = this;
+
+      this.addons.forEach(function (addon) {
+        if (addon.checked) {
+          _this5.charge.addons.push(addon);
+        }
+      });
+      this.total = 100;
+
+      if (this.custom_discount || this.discount) {
+        console.log('dis', this.custom_discount);
+        console.log('ss', this.discount);
+        var result = this.discount.indexOf("%");
+        this.discount = this.discount.slice(result);
+        console.log('discount', this.discount);
+        this.total = this.discount / 100;
+        console.log('totali', this.total);
+      } // this.loading = true
+
     }
   }
 });
@@ -17952,7 +17994,17 @@ var render = function() {
                             staticStyle: { "margin-top": "10px" }
                           },
                           [
-                            _c("el-checkbox", [_vm._v(_vm._s(addon.name))]),
+                            _c(
+                              "el-checkbox",
+                              {
+                                on: {
+                                  change: function($event) {
+                                    return _vm.checkAddon(addon)
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(addon.name))]
+                            ),
                             _vm._v(" "),
                             _c("span", [_vm._v(_vm._s(addon.price) + "$")])
                           ],

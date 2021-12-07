@@ -10,6 +10,8 @@ use App\Http\Controllers\HousekeepingHistoryController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AddonController;
+use App\Http\Controllers\ChargeController;
+
 
 
 /*
@@ -70,3 +72,10 @@ Route::get('/addons', [AddonController::class, 'index']);
 Route::post('/addons', [AddonController::class, 'store']);
 Route::put('/addons/{id}', [AddonController::class, 'update']);
 Route::delete('/addons/{id}', [AddonController::class, 'delete']);
+
+
+//CHARGES
+Route::get('/charges', [ChargeController::class, 'index']);
+Route::post('/charges', [ChargeController::class, 'store']);
+Route::put('/charges/{id}', [ChargeController::class, 'update']);
+Route::delete('/charges/{id}', [ChargeController::class, 'delete']);
