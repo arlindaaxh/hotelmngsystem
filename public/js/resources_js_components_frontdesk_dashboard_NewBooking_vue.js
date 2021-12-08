@@ -2064,12 +2064,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/guest.services */ "./resources/js/services/guest.services.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 /* harmony import */ var _services_addon_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/addon.services */ "./resources/js/services/addon.services.js");
+/* harmony import */ var _services_charge_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/charge.services */ "./resources/js/services/charge.services.js");
 //
 //
 //
@@ -2226,6 +2227,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -2234,7 +2236,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewBooking',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_5__.ArrowLeftIcon
   },
   props: ['checkin', 'checkout', 'selectedRooms'],
   data: function data() {
@@ -2268,7 +2270,7 @@ __webpack_require__.r(__webpack_exports__);
       discount_value: null,
       charge: {
         reservation_id: null,
-        room_price: 0,
+        room_price: 100,
         addons: [],
         total: 0
       },
@@ -2343,12 +2345,11 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     next: function next() {
       // if (this.activeStep++ > 2) this.activeStep = 1;
-      // if(this.activeStep === 1){
-      //     this.saveGuest()
-      // }else if(this.activeStep === 2){
-      //     this.saveReservationData()
-      // }
-      if (this.activeStep === 3) {
+      if (this.activeStep === 1) {
+        this.saveGuest();
+      } else if (this.activeStep === 2) {
+        this.saveReservationData();
+      } else if (this.activeStep === 3) {
         this.saveCharges();
       } else {
         this.activeStep++;
@@ -2492,28 +2493,62 @@ __webpack_require__.r(__webpack_exports__);
         return a.id === addon.id;
       });
       foundAddon.checked = !foundAddon.checked;
-      console.log('foundAddon', foundAddon);
     },
     saveCharges: function saveCharges() {
-      var _this5 = this;
+      var _this5 = this,
+          _this$charge$addons;
 
       this.addons.forEach(function (addon) {
         if (addon.checked) {
           _this5.charge.addons.push(addon);
         }
       });
-      this.total = 100;
+      (_this$charge$addons = this.charge.addons) === null || _this$charge$addons === void 0 ? void 0 : _this$charge$addons.forEach(function (addon) {
+        _this5.charge.total += addon.price;
+      });
+      this.charge.total += this.charge.room_price;
 
       if (this.custom_discount || this.discount) {
-        console.log('dis', this.custom_discount);
-        console.log('ss', this.discount);
-        var result = this.discount.indexOf("%");
-        this.discount = this.discount.slice(result);
-        console.log('discount', this.discount);
-        this.total = this.discount / 100;
-        console.log('totali', this.total);
-      } // this.loading = true
+        if (this.discount) {
+          this.discount = this.discount.replace('%', '');
+          this.custom_discount = null;
+        } else if (this.custom_discount) {
+          this.custom_discount = this.custom_discount.replace('%', '');
+          this.discount = null;
+        }
 
+        this.charge.total = this.custom_discount ? this.charge.total - this.charge.total * (this.custom_discount / 100) : this.charge.total - this.charge.total * (this.discount / 100);
+        this.charge.reservation_id = this.reservationData.id;
+      }
+
+      this.loading = true;
+      _services_charge_services__WEBPACK_IMPORTED_MODULE_4__["default"].postCharge(this.charge).then(function () {
+        _this5.$notify.success({
+          title: 'Success',
+          message: 'Charges were saved successfully'
+        });
+
+        _this5.goBack(); // change to go to reservations
+
+      })["catch"](function (error) {
+        var _error$data4, _error$response10, _error$response11, _error$response11$dat, _error$response12;
+
+        _this5.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data4 = error.data) === null || _error$data4 === void 0 ? void 0 : _error$data4.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response10 = error.response) === null || _error$response10 === void 0 ? void 0 : _error$response10.message) || (error === null || error === void 0 ? void 0 : (_error$response11 = error.response) === null || _error$response11 === void 0 ? void 0 : (_error$response11$dat = _error$response11.data) === null || _error$response11$dat === void 0 ? void 0 : _error$response11$dat.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this5.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response12 = error.response) === null || _error$response12 === void 0 ? void 0 : _error$response12.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this5.loading = false;
+      });
     }
   }
 });
@@ -2549,6 +2584,41 @@ __webpack_require__.r(__webpack_exports__);
   },
   deleteAddon: function deleteAddon(id) {
     var url = "http://127.0.0.1:8000/api/addons/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/charge.services.js":
+/*!**************************************************!*\
+  !*** ./resources/js/services/charge.services.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  getCharges: function getCharges() {
+    var url = "http://127.0.0.1:8000/api/charges";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  postCharge: function postCharge(payload) {
+    var url = "http://127.0.0.1:8000/api/charges";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putCharge: function putCharge(payload, id) {
+    var url = "http://127.0.0.1:8000/api/charges/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteCharges: function deleteCharges(id) {
+    var url = "http://127.0.0.1:8000/api/charges/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
@@ -2596,6 +2666,10 @@ __webpack_require__.r(__webpack_exports__);
   postReservation: function postReservation(payload) {
     var url = "http://127.0.0.1:8000/api/reservations";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getReservations: function getReservations() {
+    var url = "http://127.0.0.1:8000/api/reservations";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   }
 });
 

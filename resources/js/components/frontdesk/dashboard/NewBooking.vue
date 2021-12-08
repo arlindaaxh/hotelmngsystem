@@ -160,6 +160,7 @@ import GuestServices from '../../../services/guest.services'
 import dayjs from 'dayjs'
 import ReservationServices from '../../../services/reservation.services'
 import AddonServices from '../../../services/addon.services'
+import ChargeServices from '../../../services/charge.services'
     export default {
         name: 'NewBooking',
         components: {
@@ -198,7 +199,7 @@ import AddonServices from '../../../services/addon.services'
                 discount_value: null,
                 charge: {
                     reservation_id: null,
-                    room_price: 0,
+                    room_price: 100,
                     addons: [],
                     total: 0
                 },
@@ -287,13 +288,13 @@ import AddonServices from '../../../services/addon.services'
         methods: {
             next(){
                 // if (this.activeStep++ > 2) this.activeStep = 1;
-                // if(this.activeStep === 1){
-                //     this.saveGuest()
+                if(this.activeStep === 1){
+                    this.saveGuest()
                 
-                // }else if(this.activeStep === 2){
-                //     this.saveReservationData()
-                // }
-                if(this.activeStep === 3){
+                }else if(this.activeStep === 2){
+                    this.saveReservationData()
+                }
+                else if(this.activeStep === 3){
                     this.saveCharges()
                 }
                 else{
@@ -430,9 +431,7 @@ import AddonServices from '../../../services/addon.services'
             },
             checkAddon(addon){
                 let foundAddon = this.addons.find(a => a.id === addon.id)
-            
                 foundAddon.checked = !foundAddon.checked
-                console.log('foundAddon', foundAddon)
             },
             saveCharges(){
                 this.addons.forEach(addon => {
@@ -440,19 +439,50 @@ import AddonServices from '../../../services/addon.services'
                         this.charge.addons.push(addon)
                     }
                 })
-                this.total = 100
-                if(this.custom_discount || this.discount){
-                    console.log('dis', this.custom_discount)
-                    console.log('ss', this.discount)
-                    let result = this.discount.indexOf("%");
-                    
-                    this.discount = this.discount.slice(result)
-                    console.log('discount', this.discount)
-                    this.total = (this.discount / 100)
 
-                    console.log('totali', this.total)
+                this.charge.addons?.forEach(addon => {
+                    this.charge.total += addon.price
+                })
+                this.charge.total += this.charge.room_price
+                if(this.custom_discount || this.discount){
+                    if(this.discount){
+                        this.discount = this.discount.replace('%', '')
+                        this.custom_discount = null
+                    }
+                    else if(this.custom_discount){
+                        this.custom_discount = this.custom_discount.replace('%', '')
+                        this.discount = null
+                    }
+                    this.charge.total = this.custom_discount ? this.charge.total - this.charge.total * (this.custom_discount / 100) : this.charge.total - this.charge.total * (this.discount / 100)
+                    this.charge.reservation_id = this.reservationData.id
                 }
-                // this.loading = true
+                this.loading = true
+                ChargeServices.postCharge(this.charge).then(() => {
+                    this.$notify.success({
+                        title: 'Success',
+                        message: 'Charges were saved successfully'
+                    })
+                    this.goBack()// change to go to reservations
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+
             }
 
         }

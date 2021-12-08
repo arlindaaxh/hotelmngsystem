@@ -2255,6 +2255,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
+/* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 //
 //
 //
@@ -2326,6 +2327,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 
@@ -2342,7 +2345,8 @@ __webpack_require__.r(__webpack_exports__);
       num_of_adults: 1,
       num_of_children: 0,
       selectedRooms: [],
-      rooms: []
+      rooms: [],
+      bookings: []
     };
   },
   methods: {
@@ -2383,6 +2387,33 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this.loading = false;
       });
+    },
+    getReservations: function getReservations() {
+      var _this2 = this;
+
+      this.loading = true;
+      _services_reservation_services__WEBPACK_IMPORTED_MODULE_3__["default"].getReservations().then(function (res) {
+        _this2.bookings = res.data;
+        console.log('bookings', _this2.bookings);
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
     }
   },
   computed: {
@@ -2393,12 +2424,54 @@ __webpack_require__.r(__webpack_exports__);
       var currentDate = dayjs__WEBPACK_IMPORTED_MODULE_1___default()(this.checkinDate).date();
       var tomorrow = dayjs__WEBPACK_IMPORTED_MODULE_1___default()().set('date', currentDate + 1).format('YYYY-MM-DD');
       return tomorrow;
+    },
+    availableRooms: function availableRooms() {
+      var _this3 = this;
+
+      var availableRooms = [];
+      availableRooms = this.rooms.filter(function (room) {
+        return _this3.bookings.some(function (b) {
+          return b.rooms.find(function (r) {
+            return room.id !== r.id || b.active === 0;
+          });
+        });
+      });
+      console.log('availableRooms');
+      return availableRooms;
     }
   },
   beforeMount: function beforeMount() {
     this.checkinDate = this.currentDay;
     this.checkoutDate = this.dayAfterToday;
     this.getRooms();
+    this.getReservations();
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/reservation.services.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/services/reservation.services.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postReservation: function postReservation(payload) {
+    var url = "http://127.0.0.1:8000/api/reservations";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getReservations: function getReservations() {
+    var url = "http://127.0.0.1:8000/api/reservations";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   }
 });
 
@@ -3122,7 +3195,7 @@ var render = function() {
         _c(
           "div",
           { staticClass: "flex-wrap", staticStyle: { gap: "30px" } },
-          _vm._l(_vm.rooms, function(room, index) {
+          _vm._l(_vm.availableRooms, function(room, index) {
             return _c("el-card", { key: index, staticClass: "box-card" }, [
               _c(
                 "div",
@@ -3178,7 +3251,7 @@ var render = function() {
           1
         )
       ]),
-      _vm._v(" "),
+      _vm._v("\n    " + _vm._s(_vm.availableRooms.length) + "\n    "),
       _vm.showBookingTypeModal
         ? _c("new-booking-type-modal", {
             attrs: {

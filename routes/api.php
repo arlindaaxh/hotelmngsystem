@@ -65,7 +65,7 @@ Route::post('/guests', [GuestController::class, 'store']);
 
 //RESERVATIONS
 Route::post('/reservations', [ReservationController::class, 'store']);
-
+Route::get('/reservations', [ReservationController::class, 'index']);
 
 //ADDONS
 Route::get('/addons', [AddonController::class, 'index']);
