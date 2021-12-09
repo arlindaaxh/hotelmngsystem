@@ -110,7 +110,13 @@ export default {
                     path: '/availability',
                     component: () => import('./views/frontdesk/Availability'),
                     name: 'availability'
-                }
+                },
+                {
+                    path: '/reservations-list',
+                    component: () => import('./views/frontdesk/ReservationsList'),
+                    name: 'reservations-list'
+                },
+
             ]
         }
 

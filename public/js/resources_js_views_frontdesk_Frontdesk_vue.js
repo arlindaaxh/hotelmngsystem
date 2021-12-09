@@ -64,6 +64,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FrontdeskSidebar',
@@ -15550,6 +15559,36 @@ var render = function() {
                   ]
                 },
                 [_vm._v("Availability")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "reservations-list"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: {
+                index: "reservations-list",
+                route: { name: "reservations-list" }
+              }
+            },
+            [
+              _c("i", { staticClass: "el-icon-notebook-1" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  style: [
+                    _vm.$route.name === "reservations-list"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Reservations")]
               )
             ]
           ),

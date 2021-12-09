@@ -39,6 +39,14 @@
                 <span :style="[$route.name === 'availability' ? {'color': 'white'} : {'color':'black'}]">Availability</span>
             </el-menu-item>
             <el-menu-item 
+                index="reservations-list" 
+                :route="{name: 'reservations-list'}" 
+                v-bind:class="[$route.name === 'reservations-list' ? 'el-menu-item is-active' : 'el-menu-item']"  
+            >
+                <i class="el-icon-notebook-1"></i>
+                <span :style="[$route.name === 'reservations-list' ? {'color': 'white'} : {'color':'black'}]">Reservations</span>
+            </el-menu-item>
+            <el-menu-item 
                 index="housekeeping" 
                 :route="{name: 'housekeeping'}" 
                 v-bind:class="[$route.name === 'housekeeping' ? 'el-menu-item is-active' : 'el-menu-item']"  
@@ -46,6 +54,7 @@
                 <i class="el-icon-s-open"></i>
                 <span :style="[$route.name === 'housekeeping' ? {'color': 'white'} : {'color':'black'}]">Housekeeping</span>
             </el-menu-item>
+          
         </el-menu>
     </div>
 </template>

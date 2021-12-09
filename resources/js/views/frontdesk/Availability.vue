@@ -168,10 +168,20 @@ export default {
             },
             availableRooms(){
                 let availableRooms = []
-                availableRooms = this.rooms.filter(room => this.bookings.some(b => b.rooms.find(r => room.id !== r.id || b.active === 0)))
-                console.log('availableRooms')
-                return availableRooms
+                availableRooms = this.rooms.filter(room => this.bookings.some(b => b.rooms.find(r => room.id === r.id && b.active === 0)))
+                let array = []
 
+                this.rooms.forEach(room => {
+                    this.bookings.forEach(booking => {
+                        if(booking.rooms.some(item => item.id === room.id)){
+                            array.push(room)
+                        }
+                    })
+                })
+
+                let nonReservedRooms = []
+                nonReservedRooms = this.rooms.filter(room => !array.includes(room))
+                return availableRooms.concat(nonReservedRooms)
             }
         },
         beforeMount(){

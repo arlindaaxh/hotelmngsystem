@@ -2432,12 +2432,25 @@ __webpack_require__.r(__webpack_exports__);
       availableRooms = this.rooms.filter(function (room) {
         return _this3.bookings.some(function (b) {
           return b.rooms.find(function (r) {
-            return room.id !== r.id || b.active === 0;
+            return room.id === r.id && b.active === 0;
           });
         });
       });
-      console.log('availableRooms');
-      return availableRooms;
+      var array = [];
+      this.rooms.forEach(function (room) {
+        _this3.bookings.forEach(function (booking) {
+          if (booking.rooms.some(function (item) {
+            return item.id === room.id;
+          })) {
+            array.push(room);
+          }
+        });
+      });
+      var nonReservedRooms = [];
+      nonReservedRooms = this.rooms.filter(function (room) {
+        return !array.includes(room);
+      });
+      return availableRooms.concat(nonReservedRooms);
     }
   },
   beforeMount: function beforeMount() {
