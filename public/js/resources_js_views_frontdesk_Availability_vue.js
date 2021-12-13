@@ -2485,6 +2485,12 @@ __webpack_require__.r(__webpack_exports__);
   getReservations: function getReservations() {
     var url = "http://127.0.0.1:8000/api/reservations";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  getReservationsByDate: function getReservationsByDate(params) {
+    var url = "http://127.0.0.1:8000/api/reservations-list?";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url, {
+      params: params
+    }); //DATE_FROM={}&DATE_TO={}
   }
 });
 

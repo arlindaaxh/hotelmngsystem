@@ -8,5 +8,10 @@ export default {
     getReservations(){
         const url = `http://127.0.0.1:8000/api/reservations`
         return axios.get(url)
+    },
+    getReservationsByDate(params){
+        const url = `http://127.0.0.1:8000/api/reservations-list?`
+        return axios.get(url, {params})
+        //DATE_FROM={}&DATE_TO={}
     }
 }

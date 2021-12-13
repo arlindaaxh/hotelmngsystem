@@ -16,8 +16,6 @@
                         v-model="checkinDate"
                         type="date"
                         placeholder="Pick a date"
-                        :default-value="currentDay"
-                        @change="formatDate()"
                         >
                     </el-date-picker>
                 </div>
@@ -28,8 +26,7 @@
                         v-model="checkoutDate"
                         type="date"
                         placeholder="Pick a date"
-                        :default-value="dayAfterToday"
-                        @change="formatDate()">
+                        @change="getReservationsByDate()">
                     </el-date-picker>
                 </div>
             </div>
@@ -58,11 +55,20 @@
 </template>
 
 <script>
+import ReservationServices from '../../services/reservation.services'
+import RoomServices from '../../services/room.services'
+import dayjs from 'dayjs'
     export default {
         data() {
             return {
                 loading: false,
-        
+                reservations: [],
+                rooms: [],
+                checkinDate: null,
+                checkoutDate: null,
+                sortField: "",
+                reservationsList: []
+
             }
         },
         methods:{
@@ -70,8 +76,107 @@
                 this.$router.push({
                     name: 'availability'
                 })
-            }
+            },
+            getReservationsByDate(){
+                this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD')
+                this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD')
+                let params = {
+                    'DATE_FROM': this.checkinDate,
+                    'DATE_TO': this.checkoutDate
+                }
+                this.loading = true
+                ReservationServices.getReservationsByDate(params).then((res) => {
+                    this.reservationsList = res.data
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
+            getOptionsData() {
+                this.loading = true;
+                let params = {
+                    'DATE_FROM': this.checkinDate,
+                    'DATE_TO': this.checkoutDate
+                }
+                Promise.all(
+                    [
+                        ReservationServices.getReservations(),
+                        RoomServices.getRooms(),
+                        ReservationServices.getReservationsByDate(params)
+                    ].map((p, index) =>
+                        p.then(
+                            (v) => ({
+                                data: v.data,
+                                status: "success",
+                                type:
+                                    index == 0 ? "reservations"
+                                    : index == 1 ? "rooms" : 
+                                    index == 2 ? "reservations-list" : "unknown"
+                            }),
+                            (e) => ({ e, status: "error" })
+                        )
+                    )
+                )
+                .then((results) => {
+                    if (results.length) {
+                    results
+                        .filter((r) => r.status == "success")
+                        .forEach((res) => {
+                            if (res.type == "reservations") {
+                                this.reservations = res.data;
+                                console.log('empl', this.reservations)
+                            }
+                            else if (res.type == "rooms") {
+                                this.rooms = res.data
+                                console.log('rooms', this.rooms)
+                            }
+                            else if(res.type == "reservations-list"){
+                                this.reservationsList = res.data
+                                console.log('res-Data', this.reservationsList)
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
+        },
+        beforeMount(){
+            console.log('here')
+            // this.getOptionsData() 
         }
+        
     }
 </script>
 

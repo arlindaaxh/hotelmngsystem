@@ -66,6 +66,8 @@ Route::post('/guests', [GuestController::class, 'store']);
 //RESERVATIONS
 Route::post('/reservations', [ReservationController::class, 'store']);
 Route::get('/reservations', [ReservationController::class, 'index']);
+Route::get('/reservations-list', [ReservationController::class, 'daily_report']);
+
 
 //ADDONS
 Route::get('/addons', [AddonController::class, 'index']);
@@ -79,3 +81,4 @@ Route::get('/charges', [ChargeController::class, 'index']);
 Route::post('/charges', [ChargeController::class, 'store']);
 Route::put('/charges/{id}', [ChargeController::class, 'update']);
 Route::delete('/charges/{id}', [ChargeController::class, 'delete']);
+
