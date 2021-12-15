@@ -2154,9 +2154,11 @@ __webpack_require__.r(__webpack_exports__);
         'DATE_FROM': this.checkinDate,
         'DATE_TO': this.checkoutDate
       };
+      console.log('checkin', this.checkinDate);
       this.loading = true;
       _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservationsByDate(params).then(function (res) {
         _this.reservationsList = res.data;
+        console.log('res', _this.reservationsList);
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 

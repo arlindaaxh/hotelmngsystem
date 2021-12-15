@@ -18,38 +18,26 @@ class ReservationController extends Controller
     
     public function daily_report(Request $request)
     {
-        // $start_date = Reservation::parse($request->date_in)
-        //                         ->toDateTimeString();
+       
+        $from = $request->DATE_FROM;
+        $to = $request->DATE_TO;
 
-        // $end_date = Reservation::parse($request->date_out)
-        //                         ->toDateTimeString();
+        // dd($from);
 
-        $from = $request->date_in;
-        $to = $request->date_out;
-
-        $reservations = Reservation::whereBetween('date_in', [$from, $to])->get();
-
+        // $reservations = Reservation::whereBetween('date_in', [$from, $to])->get();
+        $reservations = Reservation::where('date_in', $from)->where('date_out', $to)->get();
+        // where('Column', Value)->where('NewColumn', Value)->get();
+        // $reservations = Reservation::whereDate('created_at', '=', $from->toDateString());
+        // whereDate('created_at', '=', date('Y-m-d'));
         // $reservations = Reservation::where('date_in', $from)->get();
 
-        return response()->json($reservations);
-        // return $reservations;
+        // return response()->json($reservations);
+        return $reservations;
 
         // return Reservation::whereBetween('created_at', [
         //     $start_date, $end_date
         // ])->get();
     }
-
-    // public function getBookings(Request $request)
-    // {
-    //     $data = Reservation::where('name', 'LIKE','%'.$request->keyword.'%')->get();
-    //     return response()->json($data); 
-
-        
-    //     return Set::where('type', $type)
-    //         ->whereDate('date_in', '<=', date("Y-m-d"))
-    //         ->whereDate('date_out', '>=', date("Y-m-d"))
-    //         ->first();
-    // }
 
     public function store(Request $request)
     {

@@ -84,9 +84,12 @@ import dayjs from 'dayjs'
                     'DATE_FROM': this.checkinDate,
                     'DATE_TO': this.checkoutDate
                 }
+
+                console.log('checkin', this.checkinDate)
                 this.loading = true
                 ReservationServices.getReservationsByDate(params).then((res) => {
                     this.reservationsList = res.data
+                    console.log('res', this.reservationsList)
                 })
                 .catch((error) => {
                     this.loading=false
