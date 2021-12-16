@@ -62,6 +62,7 @@ Route::get('/housekeeping-history', [HousekeepingHistoryController::class, 'inde
 
 //GUESTS
 Route::post('/guests', [GuestController::class, 'store']);
+Route::get('/guests', [GuestController::class, 'index']);
 
 //RESERVATIONS
 Route::post('/reservations', [ReservationController::class, 'store']);

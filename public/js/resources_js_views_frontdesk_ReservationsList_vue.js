@@ -2066,8 +2066,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/guest.services */ "./resources/js/services/guest.services.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
@@ -2124,6 +2125,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 
@@ -2136,8 +2143,20 @@ __webpack_require__.r(__webpack_exports__);
       checkinDate: null,
       checkoutDate: null,
       sortField: "",
-      reservationsList: []
+      reservationsList: [],
+      guests: []
     };
+  },
+  computed: {
+    guestData: function guestData() {
+      var name;
+      var surname;
+      this.guests.forEach(function (guest) {
+        name = guest.first_name;
+        surname = guest.last_name;
+      });
+      return name + ' ' + surname;
+    }
   },
   methods: {
     createNewReservation: function createNewReservation() {
@@ -2154,7 +2173,6 @@ __webpack_require__.r(__webpack_exports__);
         'DATE_FROM': this.checkinDate,
         'DATE_TO': this.checkoutDate
       };
-      console.log('checkin', this.checkinDate);
       this.loading = true;
       _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservationsByDate(params).then(function (res) {
         _this.reservationsList = res.data;
@@ -2183,16 +2201,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.loading = true;
-      var params = {
-        'DATE_FROM': this.checkinDate,
-        'DATE_TO': this.checkoutDate
-      };
-      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms(), _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservationsByDate(params)].map(function (p, index) {
+      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_2__["default"].getGuests()].map(function (p, index) {
         return p.then(function (v) {
           return {
             data: v.data,
             status: "success",
-            type: index == 0 ? "reservations" : index == 1 ? "rooms" : index == 2 ? "reservations-list" : "unknown"
+            type: index == 0 ? "reservations" : index == 1 ? "rooms" : index == 2 ? "guests" : "unknown"
           };
         }, function (e) {
           return {
@@ -2211,9 +2225,8 @@ __webpack_require__.r(__webpack_exports__);
             } else if (res.type == "rooms") {
               _this2.rooms = res.data;
               console.log('rooms', _this2.rooms);
-            } else if (res.type == "reservations-list") {
-              _this2.reservationsList = res.data;
-              console.log('res-Data', _this2.reservationsList);
+            } else if (res.type == "guests") {
+              _this2.guests = res.data;
             }
           });
         }
@@ -2239,7 +2252,35 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   beforeMount: function beforeMount() {
-    console.log('here'); // this.getOptionsData() 
+    console.log('here');
+    this.getOptionsData();
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/guest.services.js":
+/*!*************************************************!*\
+  !*** ./resources/js/services/guest.services.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postGuest: function postGuest(payload) {
+    var url = "http://127.0.0.1:8000/api/guests";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getGuests: function getGuests() {
+    var url = "http://127.0.0.1:8000/api/guests";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   }
 });
 
@@ -2313,6 +2354,60 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-8a7b861e] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_style_index_0_id_8a7b861e_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_style_index_0_id_8a7b861e_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_style_index_0_id_8a7b861e_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./resources/js/views/frontdesk/ReservationsList.vue":
 /*!***********************************************************!*\
   !*** ./resources/js/views/frontdesk/ReservationsList.vue ***!
@@ -2326,15 +2421,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ReservationsList_vue_vue_type_template_id_8a7b861e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReservationsList.vue?vue&type=template&id=8a7b861e&scoped=true& */ "./resources/js/views/frontdesk/ReservationsList.vue?vue&type=template&id=8a7b861e&scoped=true&");
 /* harmony import */ var _ReservationsList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservationsList.vue?vue&type=script&lang=js& */ "./resources/js/views/frontdesk/ReservationsList.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _ReservationsList_vue_vue_type_style_index_0_id_8a7b861e_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& */ "./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _ReservationsList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _ReservationsList_vue_vue_type_template_id_8a7b861e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
   _ReservationsList_vue_vue_type_template_id_8a7b861e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -2365,6 +2462,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ReservationsList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&":
+/*!*********************************************************************************************************************!*\
+  !*** ./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& ***!
+  \*********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationsList_vue_vue_type_style_index_0_id_8a7b861e_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/frontdesk/ReservationsList.vue?vue&type=style&index=0&id=8a7b861e&lang=scss&scoped=true&");
+
 
 /***/ }),
 
@@ -2444,115 +2554,134 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "one-column-list" }, [
-            _c("div", { staticClass: "flexed justify-between m-b-20" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "flexed jutify-between",
-                  staticStyle: { gap: "10px" }
-                },
-                [
+          _c(
+            "div",
+            { staticClass: "one-column-list" },
+            [
+              _c("div", { staticClass: "flexed justify-between m-b-20" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed jutify-between",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flexed-column",
+                        staticStyle: { gap: "5px" }
+                      },
+                      [
+                        _c("span", [_vm._v("Check In")]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          attrs: { type: "date", placeholder: "Pick a date" },
+                          model: {
+                            value: _vm.checkinDate,
+                            callback: function($$v) {
+                              _vm.checkinDate = $$v
+                            },
+                            expression: "checkinDate"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "flexed-column",
+                        staticStyle: { gap: "5px" }
+                      },
+                      [
+                        _c("span", [_vm._v("Check Out")]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          attrs: { type: "date", placeholder: "Pick a date" },
+                          on: {
+                            change: function($event) {
+                              return _vm.getReservationsByDate()
+                            }
+                          },
+                          model: {
+                            value: _vm.checkoutDate,
+                            callback: function($$v) {
+                              _vm.checkoutDate = $$v
+                            },
+                            expression: "checkoutDate"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.reservationsList, function(reservation, index) {
+                return _c("div", { key: index, staticClass: "mt-30" }, [
                   _c(
                     "div",
                     {
-                      staticClass: "flexed-column",
-                      staticStyle: { gap: "5px" }
+                      staticClass: "card-items-container pointer flexed",
+                      on: {
+                        click: function($event) {
+                          return _vm.editEmployee(_vm.employee)
+                        }
+                      }
                     },
                     [
-                      _c("span", [_vm._v("Check In")]),
+                      _c(
+                        "strong",
+                        { staticClass: "flexed" },
+                        _vm._l(reservation.rooms, function(room, index) {
+                          return _c("span", { key: index }, [
+                            _vm._v(_vm._s(room.code) + ",")
+                          ])
+                        }),
+                        0
+                      ),
                       _vm._v(" "),
-                      _c("el-date-picker", {
-                        attrs: { type: "date", placeholder: "Pick a date" },
-                        model: {
-                          value: _vm.checkinDate,
-                          callback: function($$v) {
-                            _vm.checkinDate = $$v
-                          },
-                          expression: "checkinDate"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "flexed-column",
-                      staticStyle: { gap: "5px" }
-                    },
-                    [
-                      _c("span", [_vm._v("Check Out")]),
+                      _c("span", { staticClass: "info-name" }, [
+                        _vm._v(_vm._s(reservation.date_in))
+                      ]),
                       _vm._v(" "),
-                      _c("el-date-picker", {
-                        attrs: { type: "date", placeholder: "Pick a date" },
-                        on: {
-                          change: function($event) {
-                            return _vm.getReservationsByDate()
-                          }
-                        },
-                        model: {
-                          value: _vm.checkoutDate,
-                          callback: function($$v) {
-                            _vm.checkoutDate = $$v
-                          },
-                          expression: "checkoutDate"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pl-15 mt-30 table-sort" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "flexed align-center ",
-                  staticStyle: { gap: "10px" }
-                },
-                [
-                  _c("strong", [_vm._v("First Name")]),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    { staticClass: "sort-icon-asc-desc pointer flexed-column" },
-                    [
-                      _c("i", {
-                        staticClass: "el-icon-caret-top",
-                        class:
-                          _vm.sortField === "name" && _vm.sortOrder === "asc"
-                            ? "sorted-field-ascending"
-                            : "ascending",
-                        staticStyle: { height: "10px" },
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("name", "asc")
-                          }
-                        }
-                      }),
+                      _c("span", { staticStyle: {} }, [
+                        _vm._v(_vm._s(reservation.date_out))
+                      ]),
                       _vm._v(" "),
-                      _c("i", {
-                        staticClass: "el-icon-caret-bottom",
-                        class:
-                          _vm.sortField === "name" && _vm.sortOrder === "desc"
-                            ? "sorted-field-descending"
-                            : "descending",
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("name", "desc")
-                          }
-                        }
-                      })
+                      _c("span", { staticClass: "info-name" }, [
+                        _vm._v(_vm._s(_vm.guestData))
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "info-item" }, [
+                        _vm._v(
+                          _vm._s(
+                            reservation.active === 1 ? "ACTIVE" : "INACTIVE"
+                          )
+                        )
+                      ])
                     ]
                   )
-                ]
-              )
-            ])
-          ])
+                ])
+              }),
+              _vm._v(" "),
+              !_vm.loading && _vm.reservationsList.length === 0
+                ? _c("el-alert", {
+                    staticClass: "mt-30",
+                    attrs: {
+                      type: "info",
+                      closable: false,
+                      title: "No results found",
+                      "show-icon": ""
+                    }
+                  })
+                : _vm._e()
+            ],
+            2
+          )
         ]
       )
     : _vm._e()

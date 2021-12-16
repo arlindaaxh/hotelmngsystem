@@ -7,49 +7,54 @@
             </div>
         </div>
         <div class="one-column-list">
-        <div class="flexed justify-between m-b-20">
-        
-            <div class="flexed jutify-between" style="gap: 10px">
-                <div class="flexed-column" style="gap:5px">
-                    <span>Check In</span>
-                    <el-date-picker
-                        v-model="checkinDate"
-                        type="date"
-                        placeholder="Pick a date"
-                        >
-                    </el-date-picker>
+            <div class="flexed justify-between m-b-20">
+                <div class="flexed jutify-between" style="gap: 10px">
+                    <div class="flexed-column" style="gap:5px">
+                        <span>Check In</span>
+                        <el-date-picker
+                            v-model="checkinDate"
+                            type="date"
+                            placeholder="Pick a date"
+                            >
+                        </el-date-picker>
+                    </div>
+            
+                    <div class="flexed-column" style="gap:5px">
+                        <span >Check Out</span>
+                        <el-date-picker
+                            v-model="checkoutDate"
+                            type="date"
+                            placeholder="Pick a date"
+                            @change="getReservationsByDate()">
+                        </el-date-picker>
+                    </div>
                 </div>
-           
-                <div class="flexed-column" style="gap:5px">
-                    <span >Check Out</span>
-                    <el-date-picker
-                        v-model="checkoutDate"
-                        type="date"
-                        placeholder="Pick a date"
-                        @change="getReservationsByDate()">
-                    </el-date-picker>
+            </div> 
+            <div class="mt-30" v-for="(reservation,index) in reservationsList" :key="index">
+            
+                <div class="card-items-container pointer flexed" @click="editEmployee(employee)"> 
+                    <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
+                    <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
+                
+                    <span class="info-name">{{reservation.date_in}}</span>
+                    
+                    <span style="info-item">{{reservation.date_out}}</span>
+                    <span class="info-name">{{guestData}}</span>
+                
+                    <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>
+                
+                    
                 </div>
+                
             </div>
-           
-        </div>
-
-            <div class="pl-15 mt-30 table-sort">
-                <div class="flexed align-center " style="gap:10px">
-                    <strong>First Name</strong>
-                    <span class="sort-icon-asc-desc pointer flexed-column">
-                        <i
-                        class="el-icon-caret-top" style="height:10px"
-                        @click="sortBy('name', 'asc')"
-                        :class="sortField === 'name' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
-                        ></i>
-                        <i
-                        class="el-icon-caret-bottom" 
-                        :class="sortField === 'name' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                        @click="sortBy('name', 'desc')"
-                        ></i>
-                    </span>
-                </div>
-            </div>
+    
+            <el-alert  v-if="!loading && reservationsList.length === 0"
+                    type="info" 
+                    :closable="false" 
+                    class="mt-30"
+                    title="No results found" 
+                    show-icon
+                />
         </div>
     </div>
 </template>
@@ -57,6 +62,7 @@
 <script>
 import ReservationServices from '../../services/reservation.services'
 import RoomServices from '../../services/room.services'
+import GuestService from '../../services/guest.services'
 import dayjs from 'dayjs'
     export default {
         data() {
@@ -67,8 +73,21 @@ import dayjs from 'dayjs'
                 checkinDate: null,
                 checkoutDate: null,
                 sortField: "",
-                reservationsList: []
+                reservationsList: [],
+                guests: []
 
+            }
+        },
+        computed: {
+            guestData(){
+                let name;
+                let surname;
+                this.guests.forEach(guest => {
+                    name = guest.first_name
+                    surname = guest.last_name
+                })
+
+                return name + ' ' + surname
             }
         },
         methods:{
@@ -84,8 +103,6 @@ import dayjs from 'dayjs'
                     'DATE_FROM': this.checkinDate,
                     'DATE_TO': this.checkoutDate
                 }
-
-                console.log('checkin', this.checkinDate)
                 this.loading = true
                 ReservationServices.getReservationsByDate(params).then((res) => {
                     this.reservationsList = res.data
@@ -112,15 +129,12 @@ import dayjs from 'dayjs'
             },
             getOptionsData() {
                 this.loading = true;
-                let params = {
-                    'DATE_FROM': this.checkinDate,
-                    'DATE_TO': this.checkoutDate
-                }
+                
                 Promise.all(
                     [
                         ReservationServices.getReservations(),
                         RoomServices.getRooms(),
-                        ReservationServices.getReservationsByDate(params)
+                        GuestService.getGuests()
                     ].map((p, index) =>
                         p.then(
                             (v) => ({
@@ -129,7 +143,8 @@ import dayjs from 'dayjs'
                                 type:
                                     index == 0 ? "reservations"
                                     : index == 1 ? "rooms" : 
-                                    index == 2 ? "reservations-list" : "unknown"
+                                    index == 2 ? "guests" :
+                                    "unknown"
                             }),
                             (e) => ({ e, status: "error" })
                         )
@@ -147,11 +162,10 @@ import dayjs from 'dayjs'
                             else if (res.type == "rooms") {
                                 this.rooms = res.data
                                 console.log('rooms', this.rooms)
+                            }else if(res.type == "guests"){
+                                this.guests = res.data
                             }
-                            else if(res.type == "reservations-list"){
-                                this.reservationsList = res.data
-                                console.log('res-Data', this.reservationsList)
-                            }
+                            
                         });
                     }
                 })
@@ -177,12 +191,15 @@ import dayjs from 'dayjs'
         },
         beforeMount(){
             console.log('here')
-            // this.getOptionsData() 
+            this.getOptionsData() 
         }
         
     }
 </script>
 
 <style lang="scss" scoped>
-
+.card-items-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
 </style>

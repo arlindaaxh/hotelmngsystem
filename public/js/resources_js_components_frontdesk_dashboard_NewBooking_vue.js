@@ -2643,6 +2643,10 @@ __webpack_require__.r(__webpack_exports__);
   postGuest: function postGuest(payload) {
     var url = "http://127.0.0.1:8000/api/guests";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getGuests: function getGuests() {
+    var url = "http://127.0.0.1:8000/api/guests";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   }
 });
 
