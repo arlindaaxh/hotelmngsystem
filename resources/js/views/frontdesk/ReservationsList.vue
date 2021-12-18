@@ -32,7 +32,7 @@
             </div> 
             <div class="mt-30" v-for="(reservation,index) in reservationsList" :key="index">
             
-                <div class="card-items-container pointer flexed" @click="editEmployee(employee)"> 
+                <div class="card-items-container pointer flexed" @click="goToDetails(reservation)"> 
                     <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
                     <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
                 
@@ -57,6 +57,9 @@
                 />
         </div>
     </div>
+    <div v-else>
+        <router-view/>
+    </div>
 </template>
 
 <script>
@@ -64,6 +67,7 @@ import ReservationServices from '../../services/reservation.services'
 import RoomServices from '../../services/room.services'
 import GuestService from '../../services/guest.services'
 import dayjs from 'dayjs'
+import chargeServices from '../../services/charge.services'
     export default {
         data() {
             return {
@@ -74,7 +78,8 @@ import dayjs from 'dayjs'
                 checkoutDate: null,
                 sortField: "",
                 reservationsList: [],
-                guests: []
+                guests: [],
+                charges: []
 
             }
         },
@@ -94,6 +99,20 @@ import dayjs from 'dayjs'
             createNewReservation(){
                 this.$router.push({
                     name: 'availability'
+                })
+            },
+            goToDetails(reservation){
+                this.$router.push({
+                    name: 'reservation-details',
+                    params: {
+                        reservation: reservation,
+                        optionsData: {
+                            guests: this.guests,
+                            rooms: this.rooms,
+                            charges: this.charges
+                            
+                        }
+                    }
                 })
             },
             getReservationsByDate(){
@@ -134,7 +153,8 @@ import dayjs from 'dayjs'
                     [
                         ReservationServices.getReservations(),
                         RoomServices.getRooms(),
-                        GuestService.getGuests()
+                        GuestService.getGuests(),
+                        chargeServices.getCharges()
                     ].map((p, index) =>
                         p.then(
                             (v) => ({
@@ -144,6 +164,7 @@ import dayjs from 'dayjs'
                                     index == 0 ? "reservations"
                                     : index == 1 ? "rooms" : 
                                     index == 2 ? "guests" :
+                                    index == 3 ? "charges" :
                                     "unknown"
                             }),
                             (e) => ({ e, status: "error" })
@@ -164,6 +185,8 @@ import dayjs from 'dayjs'
                                 console.log('rooms', this.rooms)
                             }else if(res.type == "guests"){
                                 this.guests = res.data
+                            }else if(res.type == "charges"){
+                                this.charges = res.data
                             }
                             
                         });

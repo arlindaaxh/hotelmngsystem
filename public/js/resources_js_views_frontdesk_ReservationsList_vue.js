@@ -2069,6 +2069,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/guest.services */ "./resources/js/services/guest.services.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _services_charge_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/charge.services */ "./resources/js/services/charge.services.js");
 //
 //
 //
@@ -2130,6 +2131,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -2144,7 +2149,8 @@ __webpack_require__.r(__webpack_exports__);
       checkoutDate: null,
       sortField: "",
       reservationsList: [],
-      guests: []
+      guests: [],
+      charges: []
     };
   },
   computed: {
@@ -2162,6 +2168,19 @@ __webpack_require__.r(__webpack_exports__);
     createNewReservation: function createNewReservation() {
       this.$router.push({
         name: 'availability'
+      });
+    },
+    goToDetails: function goToDetails(reservation) {
+      this.$router.push({
+        name: 'reservation-details',
+        params: {
+          reservation: reservation,
+          optionsData: {
+            guests: this.guests,
+            rooms: this.rooms,
+            charges: this.charges
+          }
+        }
       });
     },
     getReservationsByDate: function getReservationsByDate() {
@@ -2201,12 +2220,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.loading = true;
-      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_2__["default"].getGuests()].map(function (p, index) {
+      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_2__["default"].getGuests(), _services_charge_services__WEBPACK_IMPORTED_MODULE_4__["default"].getCharges()].map(function (p, index) {
         return p.then(function (v) {
           return {
             data: v.data,
             status: "success",
-            type: index == 0 ? "reservations" : index == 1 ? "rooms" : index == 2 ? "guests" : "unknown"
+            type: index == 0 ? "reservations" : index == 1 ? "rooms" : index == 2 ? "guests" : index == 3 ? "charges" : "unknown"
           };
         }, function (e) {
           return {
@@ -2227,6 +2246,8 @@ __webpack_require__.r(__webpack_exports__);
               console.log('rooms', _this2.rooms);
             } else if (res.type == "guests") {
               _this2.guests = res.data;
+            } else if (res.type == "charges") {
+              _this2.charges = res.data;
             }
           });
         }
@@ -2254,6 +2275,41 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     console.log('here');
     this.getOptionsData();
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/charge.services.js":
+/*!**************************************************!*\
+  !*** ./resources/js/services/charge.services.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  getCharges: function getCharges() {
+    var url = "http://127.0.0.1:8000/api/charges";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  postCharge: function postCharge(payload) {
+    var url = "http://127.0.0.1:8000/api/charges";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  putCharge: function putCharge(payload, id) {
+    var url = "http://127.0.0.1:8000/api/charges/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  deleteCharges: function deleteCharges(id) {
+    var url = "http://127.0.0.1:8000/api/charges/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
   }
 });
 
@@ -2628,7 +2684,7 @@ var render = function() {
                       staticClass: "card-items-container pointer flexed",
                       on: {
                         click: function($event) {
-                          return _vm.editEmployee(_vm.employee)
+                          return _vm.goToDetails(reservation)
                         }
                       }
                     },
@@ -2684,7 +2740,7 @@ var render = function() {
           )
         ]
       )
-    : _vm._e()
+    : _c("div", [_c("router-view")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true

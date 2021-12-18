@@ -114,7 +114,17 @@ export default {
                 {
                     path: '/reservations-list',
                     component: () => import('./views/frontdesk/ReservationsList'),
-                    name: 'reservations-list'
+                    name: 'reservations-list',
+                    children: [
+                        {
+                            path: '/reservation-details',
+                            component: () => import('./components/frontdesk/reservations-list/ReservationDetails'),
+                            name: 'reservation-details',
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        }
+                    ]
                 },
 
             ]
