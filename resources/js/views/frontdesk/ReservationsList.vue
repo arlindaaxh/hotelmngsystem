@@ -30,23 +30,25 @@
                     </div>
                 </div>
             </div> 
-            <div class="mt-30" v-for="(reservation,index) in reservationsList" :key="index">
-            
-                <div class="card-items-container pointer flexed" @click="goToDetails(reservation)"> 
-                    <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
-                    <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
-                
-                    <span class="info-name">{{reservation.date_in}}</span>
+            <div class="mt-30">
+                <div  v-for="(reservation,index) in reservationsList" :key="index">
+                    <div class="card-items-container pointer flexed" @click="goToDetails(reservation)"> 
+                        <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
+                        <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
                     
-                    <span style="info-item">{{reservation.date_out}}</span>
-                    <span class="info-name">{{guestData}}</span>
-                
-                    <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>
-                
+                        <span class="info-name">{{reservation.date_in}}</span>
+                        
+                        <span style="info-item">{{reservation.date_out}}</span>
+                        <span class="info-name">{{guestData}}</span>
                     
-                </div>
-                
+                        <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>
+                    
+                        
+                    </div>
+                    
+                </div> 
             </div>
+        
     
             <el-alert  v-if="!loading && reservationsList.length === 0"
                     type="info" 
@@ -177,7 +179,7 @@ import chargeServices from '../../services/charge.services'
                         .filter((r) => r.status == "success")
                         .forEach((res) => {
                             if (res.type == "reservations") {
-                                this.reservations = res.data;
+                                this.reservationsList = res.data;
                                 console.log('empl', this.reservations)
                             }
                             else if (res.type == "rooms") {

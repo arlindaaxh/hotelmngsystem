@@ -2134,6 +2134,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -2239,7 +2241,7 @@ __webpack_require__.r(__webpack_exports__);
             return r.status == "success";
           }).forEach(function (res) {
             if (res.type == "reservations") {
-              _this2.reservations = res.data;
+              _this2.reservationsList = res.data;
               console.log('empl', _this2.reservations);
             } else if (res.type == "rooms") {
               _this2.rooms = res.data;
@@ -2676,53 +2678,58 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._l(_vm.reservationsList, function(reservation, index) {
-                return _c("div", { key: index, staticClass: "mt-30" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "card-items-container pointer flexed",
-                      on: {
-                        click: function($event) {
-                          return _vm.goToDetails(reservation)
+              _c(
+                "div",
+                { staticClass: "mt-30" },
+                _vm._l(_vm.reservationsList, function(reservation, index) {
+                  return _c("div", { key: index }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "card-items-container pointer flexed",
+                        on: {
+                          click: function($event) {
+                            return _vm.goToDetails(reservation)
+                          }
                         }
-                      }
-                    },
-                    [
-                      _c(
-                        "strong",
-                        { staticClass: "flexed" },
-                        _vm._l(reservation.rooms, function(room, index) {
-                          return _c("span", { key: index }, [
-                            _vm._v(_vm._s(room.code) + ",")
-                          ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name" }, [
-                        _vm._v(_vm._s(reservation.date_in))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticStyle: {} }, [
-                        _vm._v(_vm._s(reservation.date_out))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name" }, [
-                        _vm._v(_vm._s(_vm.guestData))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-item" }, [
-                        _vm._v(
-                          _vm._s(
-                            reservation.active === 1 ? "ACTIVE" : "INACTIVE"
+                      },
+                      [
+                        _c(
+                          "strong",
+                          { staticClass: "flexed" },
+                          _vm._l(reservation.rooms, function(room, index) {
+                            return _c("span", { key: index }, [
+                              _vm._v(_vm._s(room.code) + ",")
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-name" }, [
+                          _vm._v(_vm._s(reservation.date_in))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticStyle: {} }, [
+                          _vm._v(_vm._s(reservation.date_out))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-name" }, [
+                          _vm._v(_vm._s(_vm.guestData))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-item" }, [
+                          _vm._v(
+                            _vm._s(
+                              reservation.active === 1 ? "ACTIVE" : "INACTIVE"
+                            )
                           )
-                        )
-                      ])
-                    ]
-                  )
-                ])
-              }),
+                        ])
+                      ]
+                    )
+                  ])
+                }),
+                0
+              ),
               _vm._v(" "),
               !_vm.loading && _vm.reservationsList.length === 0
                 ? _c("el-alert", {
@@ -2736,7 +2743,7 @@ var render = function() {
                   })
                 : _vm._e()
             ],
-            2
+            1
           )
         ]
       )

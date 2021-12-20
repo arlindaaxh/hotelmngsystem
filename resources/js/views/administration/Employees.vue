@@ -177,8 +177,6 @@ export default {
                 )
                 }))
             )
-
-           
         }
     },
     methods: {

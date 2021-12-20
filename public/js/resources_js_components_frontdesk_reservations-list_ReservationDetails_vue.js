@@ -48,6 +48,67 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ReservationDetails',
@@ -58,7 +119,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       loading: false,
-      guest: null
+      guest: null,
+      room: null,
+      charges: null
     };
   },
   methods: {
@@ -73,11 +136,18 @@ __webpack_require__.r(__webpack_exports__);
       return this.optionsData.guests.find(function (g) {
         return g.id === _this.reservation.guest_id;
       });
+    },
+    getCharges: function getCharges() {
+      var _this2 = this;
+
+      return this.optionsData.charges.find(function (ch) {
+        return ch.reservation_id === _this2.reservation.id;
+      });
     }
   },
   beforeMount: function beforeMount() {
     this.guest = this.getGuest();
-    console.log('g', this.guest);
+    this.charges = this.getCharges();
   }
 });
 
@@ -14950,15 +15020,93 @@ var render = function() {
           "div",
           { staticClass: "flexed-column", staticStyle: { gap: "20px" } },
           [
-            _c("div", [
-              _c("span", [_vm._v("Guest Details")]),
-              _vm._v(" "),
+            _c(
+              "el-card",
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "clearfix",
+                    attrs: { slot: "header" },
+                    slot: "header"
+                  },
+                  [
+                    _c("span", { staticClass: "label-no-height" }, [
+                      _vm._v("Stay")
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.reservation.rooms, function(room, index) {
+                  return _c("div", { key: index, staticClass: "form-data" }, [
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("From: ")]),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(_vm.reservation.date_in))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("To: ")]),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(_vm.reservation.date_out))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("Room Code: ")]),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(room.code))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("Room Number: ")]),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(room.number))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("Room Type: ")]),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(room.type))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flexed justify-between" }, [
+                      _c("span", [_vm._v("Room Status: ")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          class:
+                            _vm.cleaning_status === 1
+                              ? "text-green"
+                              : "text-primary"
+                        },
+                        [_vm._v(_vm._s(room.cleaning_status))]
+                      )
+                    ])
+                  ])
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c("el-card", [
               _c(
                 "div",
                 {
-                  staticClass: "form-data",
-                  staticStyle: { width: "100%", "margin-top": "20px" }
+                  staticClass: "clearfix",
+                  attrs: { slot: "header" },
+                  slot: "header"
                 },
+                [
+                  _c("span", { staticClass: "label-no-height" }, [
+                    _vm._v("Guest Details")
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-data", staticStyle: { width: "100%" } },
                 [
                   _c("div", { staticClass: "flexed justify-between" }, [
                     _c("span", [_vm._v("First Name")]),
@@ -14970,34 +15118,71 @@ var render = function() {
                     _c("span", [_vm._v("Last Name")]),
                     _vm._v(" "),
                     _c("strong", [_vm._v(_vm._s(_vm.guest.first_name))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flexed justify-between" }, [
+                    _c("span", [_vm._v("Date of Birth")]),
+                    _vm._v(" "),
+                    _c("strong", [_vm._v(_vm._s(_vm.guest.birth_date))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flexed justify-between" }, [
+                    _c("span", [_vm._v("Sex")]),
+                    _vm._v(" "),
+                    _c("strong", [_vm._v(_vm._s(_vm.guest.sex))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flexed justify-between" }, [
+                    _c("span", [_vm._v("Citizenship")]),
+                    _vm._v(" "),
+                    _c("strong", [_vm._v(_vm._s(_vm.guest.citizenship))])
                   ])
                 ]
               )
             ]),
             _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1)
-          ]
+            _vm.charges
+              ? _c("el-card", [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "clearfix",
+                      attrs: { slot: "header" },
+                      slot: "header"
+                    },
+                    [
+                      _c("span", { staticClass: "label-no-height" }, [
+                        _vm._v("Charges")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flexed justify-between" }, [
+                        _c("span", [_vm._v("Room Price")]),
+                        _vm._v(" "),
+                        _c("strong", [_vm._v(_vm._s(_vm.charges.room_price))])
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.charges.addons, function(addon, index) {
+                        return _c("div", { key: index }, [
+                          _c("div", { staticClass: "flexed justify-between" }, [
+                            _c("span", [_vm._v(_vm._s(addon.name))]),
+                            _vm._v(" "),
+                            _c("span", [_vm._v(_vm._s(addon.price))])
+                          ])
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              : _vm._e()
+          ],
+          1
         )
       ])
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("span", [_vm._v("Charges")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("span", [_vm._v("Room")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
