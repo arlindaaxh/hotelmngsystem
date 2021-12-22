@@ -2188,6 +2188,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_department_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/department.services */ "./resources/js/services/department.services.js");
 /* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
 /* harmony import */ var _frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../frontdesk/dashboard/NewBookingTypeModal.vue */ "./resources/js/components/frontdesk/dashboard/NewBookingTypeModal.vue");
+/* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 //
 //
 //
@@ -2271,6 +2272,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -2287,7 +2292,8 @@ __webpack_require__.r(__webpack_exports__);
       departments: [],
       rooms: [],
       schedules: [],
-      showNewBookingTypeModal: false
+      showNewBookingTypeModal: false,
+      reservations: []
     };
   },
   beforeMount: function beforeMount() {
@@ -2369,6 +2375,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
       return rooms;
+    },
+    inHouse: function inHouse() {
+      return this.reservations.filter(function (reservation) {
+        return reservation.is_completed === 1 && reservation.active === 1;
+      });
     }
   },
   methods: {
@@ -2376,12 +2387,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       this.loading = true;
-      Promise.all([_services_employee_services__WEBPACK_IMPORTED_MODULE_3__["default"].getEmployees(), _services_department_services__WEBPACK_IMPORTED_MODULE_2__["default"].getDepartments(), _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms(), _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_1__["default"].getHousekeepingSchedules()].map(function (p, index) {
+      Promise.all([_services_employee_services__WEBPACK_IMPORTED_MODULE_3__["default"].getEmployees(), _services_department_services__WEBPACK_IMPORTED_MODULE_2__["default"].getDepartments(), _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].getRooms(), _services_housekeeping_services__WEBPACK_IMPORTED_MODULE_1__["default"].getHousekeepingSchedules(), _services_reservation_services__WEBPACK_IMPORTED_MODULE_5__["default"].getReservations()].map(function (p, index) {
         return p.then(function (v) {
           return {
             data: v.data,
             status: "success",
-            type: index == 0 ? "employees" : index == 1 ? "departments" : index == 2 ? "rooms" : index == 3 ? "schedules" : "unknown"
+            type: index == 0 ? "employees" : index == 1 ? "departments" : index == 2 ? "rooms" : index == 3 ? "schedules" : index === 4 ? "reservations" : "unknown"
           };
         }, function (e) {
           return {
@@ -2411,6 +2422,9 @@ __webpack_require__.r(__webpack_exports__);
             } else if (res.type == "schedules") {
               _this3.schedules = res.data;
               console.log('scj', _this3.schedules);
+            } else if (res.type == "reservations") {
+              _this3.reservations = res.data;
+              console.log('scj', _this3.schedules);
             }
           });
         }
@@ -2422,11 +2436,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     goToView: function goToView(routeName, selectedFilter) {
-      console.log('routeName', routeName);
       this.$router.push({
         name: routeName,
-        params: {
-          selectedFilter: selectedFilter
+        "if": function _if(selectedFilter) {
+          params: {
+            selectedFilter: selectedFilter;
+          }
         }
       });
     },
@@ -2606,6 +2621,39 @@ __webpack_require__.r(__webpack_exports__);
   deleteHousekeepingSchedule: function deleteHousekeepingSchedule(id) {
     var url = "http://127.0.0.1:8000/api/housekeeping/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/reservation.services.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/services/reservation.services.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postReservation: function postReservation(payload) {
+    var url = "http://127.0.0.1:8000/api/reservations";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getReservations: function getReservations() {
+    var url = "http://127.0.0.1:8000/api/reservations";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  getReservationsByDate: function getReservationsByDate(params) {
+    var url = "http://127.0.0.1:8000/api/reservations-list?";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url, {
+      params: params
+    }); //DATE_FROM={}&DATE_TO={}
   }
 });
 
@@ -3134,11 +3182,31 @@ var render = function() {
                   [
                     _c(
                       "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
+                      {
+                        staticClass: "card-box",
+                        attrs: { shadow: "never" },
+                        nativeOn: {
+                          click: function($event) {
+                            return _vm.goToView("in-house")
+                          }
+                        }
+                      },
                       [
-                        _vm._v(
-                          "\n                        In House\n                    "
-                        )
+                        _c("div", { staticClass: "flexed-column" }, [
+                          _c("strong", [_vm._v("In House")]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "pt-20",
+                              staticStyle: {
+                                "font-size": "25px",
+                                "font-weight": "500"
+                              }
+                            },
+                            [_vm._v(_vm._s(_vm.inHouse.length))]
+                          )
+                        ])
                       ]
                     ),
                     _vm._v(" "),

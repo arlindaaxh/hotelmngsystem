@@ -58,7 +58,6 @@
                 </el-card>
             </div>
         </div>
-        {{availableRooms.length}}
         <new-booking-type-modal v-if="showBookingTypeModal" 
             @close="showBookingTypeModal = false" 
             :checkin="checkinDate" 

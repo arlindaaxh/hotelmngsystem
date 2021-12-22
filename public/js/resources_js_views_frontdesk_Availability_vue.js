@@ -2327,7 +2327,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -3270,7 +3269,7 @@ var render = function() {
           1
         )
       ]),
-      _vm._v("\n    " + _vm._s(_vm.availableRooms.length) + "\n    "),
+      _vm._v(" "),
       _vm.showBookingTypeModal
         ? _c("new-booking-type-modal", {
             attrs: {

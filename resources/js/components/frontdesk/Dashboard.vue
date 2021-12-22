@@ -5,8 +5,11 @@
                 <span>House</span>
                 <div style="width:400px;">
                     <div class="form-data pointer">
-                        <el-card shadow="never" class="card-box">
-                            In House
+                        <el-card shadow="never" class="card-box" @click.native="goToView('in-house')">
+                            <div class="flexed-column">
+                                <strong>In House</strong>
+                                <span class="pt-20" style="font-size:25px; font-weight:500">{{inHouse.length}}</span>
+                            </div>
                         </el-card>
                         <el-card shadow="never" class="card-box">
                             Departures
@@ -87,6 +90,7 @@ import HousekeepingServices from '../../services/housekeeping.services'
 import DepartmentServices from '../../services/department.services'
 import EmployeeServices from '../../services/employee.services'
 import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
+import reservationServices from '../../services/reservation.services'
     export default {
         components: {
             NewBookingTypeModal
@@ -99,6 +103,7 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                 rooms: [],
                 schedules: [],
                 showNewBookingTypeModal: false,
+                reservations: []
             }
         },
         beforeMount(){
@@ -173,7 +178,9 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                 })
                 return rooms
             },
-       
+            inHouse(){
+                return this.reservations.filter(reservation => reservation.is_completed === 1 && reservation.active === 1)
+            }       
         },
         methods: {
             getOptionsData() {
@@ -184,6 +191,7 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                         DepartmentServices.getDepartments(),
                         RoomServices.getRooms(),
                         HousekeepingServices.getHousekeepingSchedules(),
+                        reservationServices.getReservations(),
                     ].map((p, index) =>
                         p.then(
                             (v) => ({
@@ -193,7 +201,8 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                                     index == 0 ? "employees"
                                     : index == 1 ? "departments"
                                     : index == 2 ? "rooms"
-                                    : index == 3 ? "schedules"  : "unknown"
+                                    : index == 3 ? "schedules" :
+                                    index === 4 ? "reservations"  : "unknown"
                             }),
                             (e) => ({ e, status: "error" })
                         )
@@ -219,6 +228,9 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                             }else if(res.type == "schedules"){
                                 this.schedules = res.data
                                 console.log('scj',this.schedules)
+                            }else if(res.type == "reservations"){
+                                this.reservations = res.data
+                                console.log('scj',this.schedules)
                             }
                         });
                     }
@@ -232,12 +244,14 @@ import NewBookingTypeModal from '../frontdesk/dashboard/NewBookingTypeModal.vue'
                 });
             },
             goToView(routeName, selectedFilter){
-                console.log('routeName', routeName)
                 this.$router.push({
                     name: routeName,
-                    params: {
-                        selectedFilter: selectedFilter 
+                    if(selectedFilter){
+                        params: {
+                            selectedFilter: selectedFilter 
+                        }
                     }
+                   
                    
                 })
             },
