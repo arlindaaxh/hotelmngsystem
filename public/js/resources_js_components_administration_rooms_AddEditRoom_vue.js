@@ -2152,6 +2152,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2170,7 +2174,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         status: true,
         facilities: [],
         cleaning_status: null,
-        id: null
+        id: null,
+        room_price_per_night: null
       },
       facility_items: [],
       roomTypes: [{
@@ -17544,6 +17549,29 @@ var render = function() {
                     }),
                     1
                   )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                {
+                  attrs: {
+                    prop: "room_price_per_night",
+                    label: "Price Per Night"
+                  }
+                },
+                [
+                  _c("el-input", {
+                    attrs: { name: "room_price_per_night", size: "big" },
+                    model: {
+                      value: _vm.room.room_price_per_night,
+                      callback: function($$v) {
+                        _vm.$set(_vm.room, "room_price_per_night", $$v)
+                      },
+                      expression: "room.room_price_per_night"
+                    }
+                  })
                 ],
                 1
               )

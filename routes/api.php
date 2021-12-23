@@ -68,6 +68,7 @@ Route::get('/guests', [GuestController::class, 'index']);
 Route::post('/reservations', [ReservationController::class, 'store']);
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/reservations-list', [ReservationController::class, 'daily_report']);
+Route::put('/edit-reservation/{id}', [ReservationController::class, 'update']);
 
 
 //ADDONS

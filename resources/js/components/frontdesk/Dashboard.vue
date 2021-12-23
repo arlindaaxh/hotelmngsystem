@@ -215,22 +215,22 @@ import reservationServices from '../../services/reservation.services'
                         .forEach((res) => {
                             if (res.type == "employees") {
                                 this.employees = res.data;
-                                console.log('empl', this.employees)
+            
                             } else if (res.type == "departments") {
                                 this.departments = res.data;
-                                console.log('depts', this.departments)
+                              
                             } else if (res.type == "rooms") {
                                 this.rooms = res.data
                                 this.rooms.forEach(room => {
                                     this.$set(room, 'checked', false)
                                 })
-                                console.log('rooms', this.rooms)
+                               
                             }else if(res.type == "schedules"){
                                 this.schedules = res.data
-                                console.log('scj',this.schedules)
+                              
                             }else if(res.type == "reservations"){
                                 this.reservations = res.data
-                                console.log('scj',this.schedules)
+            
                             }
                         });
                     }

@@ -361,6 +361,7 @@ import ChargeServices from '../../../services/charge.services'
                     date_out: this.booking_details.date_out,
                     rooms: this.booking_details.rooms,
                     active: true, 
+                    is_completed: 1
                 }
                 this.loading = true
                 ReservationServices.postReservation(payload).then((res) => {
@@ -433,6 +434,14 @@ import ChargeServices from '../../../services/charge.services'
                 let foundAddon = this.addons.find(a => a.id === addon.id)
                 foundAddon.checked = !foundAddon.checked
             },
+            getNights(){
+                let dateOut = dayjs(this.reservationData.date_out).date()
+                console.log('dateOut',dateOut)
+                let dateIn = dayjs(this.reservationData.date_in).date()
+                console.log('dateIN',dateIn)
+                
+                return dateOut - dateIn
+            },
             saveCharges(){
                 this.addons.forEach(addon => {
                     if(addon.checked){
@@ -443,6 +452,10 @@ import ChargeServices from '../../../services/charge.services'
                 this.charge.addons?.forEach(addon => {
                     this.charge.total += addon.price
                 })
+
+                let nights = this.getNights()
+                console.log('nights', nights)
+                this.charge.room_price = nights * this.reservationData.rooms[0].room_price_per_night
                 this.charge.total += this.charge.room_price
                 if(this.custom_discount || this.discount){
                     if(this.discount){

@@ -2418,7 +2418,8 @@ __webpack_require__.r(__webpack_exports__);
         date_in: this.booking_details.date_in,
         date_out: this.booking_details.date_out,
         rooms: this.booking_details.rooms,
-        active: true
+        active: true,
+        is_completed: 1
       };
       this.loading = true;
       _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__["default"].postReservation(payload).then(function (res) {
@@ -2494,6 +2495,13 @@ __webpack_require__.r(__webpack_exports__);
       });
       foundAddon.checked = !foundAddon.checked;
     },
+    getNights: function getNights() {
+      var dateOut = dayjs__WEBPACK_IMPORTED_MODULE_1___default()(this.reservationData.date_out).date();
+      console.log('dateOut', dateOut);
+      var dateIn = dayjs__WEBPACK_IMPORTED_MODULE_1___default()(this.reservationData.date_in).date();
+      console.log('dateIN', dateIn);
+      return dateOut - dateIn;
+    },
     saveCharges: function saveCharges() {
       var _this5 = this,
           _this$charge$addons;
@@ -2506,6 +2514,9 @@ __webpack_require__.r(__webpack_exports__);
       (_this$charge$addons = this.charge.addons) === null || _this$charge$addons === void 0 ? void 0 : _this$charge$addons.forEach(function (addon) {
         _this5.charge.total += addon.price;
       });
+      var nights = this.getNights();
+      console.log('nights', nights);
+      this.charge.room_price = nights * this.reservationData.rooms[0].room_price_per_night;
       this.charge.total += this.charge.room_price;
 
       if (this.custom_discount || this.discount) {
@@ -2680,6 +2691,10 @@ __webpack_require__.r(__webpack_exports__);
     return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url, {
       params: params
     }); //DATE_FROM={}&DATE_TO={}
+  },
+  putReservation: function putReservation(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-reservation/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 

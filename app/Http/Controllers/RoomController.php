@@ -21,6 +21,7 @@ class RoomController extends Controller
         $status = $request->input('status');
         $facilities = $request->input('facilities');
         $cleaning_status = $request->input('cleaning_status');
+        $room_price_per_night =  $request->input('room_price_per_night');
 
         $room = new Room();
         $room ->type = $type;
@@ -29,6 +30,7 @@ class RoomController extends Controller
         $room ->status = $status;
         $room ->facilities = $facilities;
         $room->cleaning_status = $cleaning_status;
+        $room->room_price_per_night = $room_price_per_night;
  
         if($room->save()){
             return "success";

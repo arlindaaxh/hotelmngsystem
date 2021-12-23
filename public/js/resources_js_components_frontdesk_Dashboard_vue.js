@@ -2407,24 +2407,18 @@ __webpack_require__.r(__webpack_exports__);
           }).forEach(function (res) {
             if (res.type == "employees") {
               _this3.employees = res.data;
-              console.log('empl', _this3.employees);
             } else if (res.type == "departments") {
               _this3.departments = res.data;
-              console.log('depts', _this3.departments);
             } else if (res.type == "rooms") {
               _this3.rooms = res.data;
 
               _this3.rooms.forEach(function (room) {
                 _this3.$set(room, 'checked', false);
               });
-
-              console.log('rooms', _this3.rooms);
             } else if (res.type == "schedules") {
               _this3.schedules = res.data;
-              console.log('scj', _this3.schedules);
             } else if (res.type == "reservations") {
               _this3.reservations = res.data;
-              console.log('scj', _this3.schedules);
             }
           });
         }
@@ -2654,6 +2648,10 @@ __webpack_require__.r(__webpack_exports__);
     return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url, {
       params: params
     }); //DATE_FROM={}&DATE_TO={}
+  },
+  putReservation: function putReservation(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-reservation/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 

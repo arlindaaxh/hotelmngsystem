@@ -47,6 +47,7 @@ class ReservationController extends Controller
         $date_out = $request->input('date_out');
         $rooms = $request->input('rooms');
         $active = $request->input('active');
+        $is_completed = $request->input('is_completed');
      
         $reservation = new Reservation();
         $reservation ->guest_id = $guest_id;
@@ -55,6 +56,7 @@ class ReservationController extends Controller
         $reservation ->date_out = $date_out;
         $reservation ->rooms = $rooms;
         $reservation ->active = $active;
+        $reservation ->is_completed = $is_completed;
        
         if($reservation->save()){
             // return "success";
@@ -62,6 +64,14 @@ class ReservationController extends Controller
         }else{
             return "error";
         } 
+    }
+
+    public function update(Request $request, $id)
+    {   
+        $reservation = Reservation::find($id);
+        $reservation->update($request->all());
+
+        return response()->json($reservation, 200);
     }
 
 }

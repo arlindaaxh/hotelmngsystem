@@ -22,7 +22,7 @@
                         </div>
                         <div class="flexed justify-between">
                             <span>To: </span>
-                            <span>{{reservation.date_out}}</span> 
+                            <el-button type="default" @click="showCheckoutModal = true">{{reservation.date_out}}</el-button> 
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Code: </span>
@@ -38,7 +38,12 @@
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Status: </span>
-                            <span :class="cleaning_status === 1 ? 'text-green' : 'text-primary'">{{room.cleaning_status}}</span> 
+                            <span :class="room.cleaning_status === 1 ? 'text-green' : 'text-primary'">{{room.cleaning_status}}</span> 
+                        </div>
+
+                        <div class="flexed justify-between">
+                            <span>Nights: </span>
+                            <span>{{stayDays}}</span> 
                         </div>
                     </div>
                 </el-card>
@@ -75,31 +80,39 @@
                 >
                     <div slot="header" class="clearfix">
                         <span class="label-no-height">Charges</span>
-                        <div class="flexed justify-between">
-                            <span>Room Price</span>
-                            <strong>{{charges.room_price}}</strong>
-                        </div>
-                        <div v-for="(addon,index) in charges.addons" :key="index">
-                            <div class="flexed justify-between">
-                                <span>{{addon.name}}</span>
-                                <span>{{addon.price}}</span>
-                            </div>
-                           
-                        </div>
                     </div>
+                    <div class="flexed justify-between">
+                        <span>Room Price</span>
+                        <strong>{{charges.room_price}}</strong>
+                    </div>
+                    <div v-for="(addon,index) in charges.addons" :key="index">
+                        <div class="flexed justify-between">
+                            <span>{{addon.name}}</span>
+                            <span>{{addon.price}}</span>
+                        </div>
+                        
+                    </div>
+                
                 </el-card>
 
+
+                <div class="flexed justify-end">
+                    <el-button size="big" type="primary" style="height:55px;width: 250px;">Check Out</el-button>
+                </div>
+
             </div>
-            
         </div>
+        <checkout-modal v-if="showCheckoutModal" @close="showCheckoutModal = false" :reservation="reservation" :optionsData="optionsData"/>
     </div>
 </template>
 
 <script>
 import {ArrowLeftIcon} from 'vue-feather-icons'
+import CheckoutModal from './CheckoutModal.vue'
+import dayjs from 'dayjs'
     export default {
         name: 'ReservationDetails',
-        components: {ArrowLeftIcon},
+        components: {ArrowLeftIcon, CheckoutModal},
         props: ['reservation', 'optionsData'],
         data(){
             return{
@@ -107,7 +120,22 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                 guest: null,
                 room: null,
                 charges: null,
+                showCheckoutModal: false
                 
+            }
+        },
+        computed: {
+            stayDays(){
+            
+       
+                let dateOut = dayjs(this.reservation.date_out).date()
+                console.log('dateOut',dateOut)
+                let dateIn = dayjs(this.reservation.date_in).date()
+                console.log('dateIN',dateIn)
+                
+                return dateOut - dateIn
+
+         
             }
         },
         methods: {
@@ -120,13 +148,17 @@ import {ArrowLeftIcon} from 'vue-feather-icons'
                 return this.optionsData.guests.find(g => g.id === this.reservation.guest_id)
             },
             getCharges(){
+                console.log('ipt', this.optionsData)
+                console.log('reser', this.reservation)
                 return this.optionsData.charges.find(ch => ch.reservation_id === this.reservation.id)
-            }
+            },
+         
           
         },
         beforeMount(){
             this.guest = this.getGuest()
             this.charges = this.getCharges()
+            console.log('charges', this.charges)
         
         }
         

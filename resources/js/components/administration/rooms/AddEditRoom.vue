@@ -72,6 +72,10 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+
+                <el-form-item prop="room_price_per_night" label="Price Per Night">
+                    <el-input  name="room_price_per_night" v-model="room.room_price_per_night" size="big"></el-input>
+                </el-form-item>
                
             </el-form>
         </div>
@@ -99,6 +103,7 @@ import RoomServices from '../../../services/room.services'
                     facilities: [],
                     cleaning_status: null,
                     id: null,
+                    room_price_per_night: null,
                 },
                 facility_items: [],
                 roomTypes: [
