@@ -2136,6 +2136,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2152,7 +2155,8 @@ __webpack_require__.r(__webpack_exports__);
       sortField: "",
       reservationsList: [],
       guests: [],
-      charges: []
+      charges: [],
+      fromDashboard: false
     };
   },
   computed: {
@@ -2164,6 +2168,12 @@ __webpack_require__.r(__webpack_exports__);
         surname = guest.last_name;
       });
       return name + ' ' + surname;
+    },
+    bookedToday: function bookedToday() {
+      var currentDate = this.dayjs().format('YYYY-MM-DD');
+      return this.fromDashboard ? this.reservationsList.filter(function (res) {
+        return res.created_at === currentDate;
+      }) : this.reservationsList;
     }
   },
   methods: {
@@ -2185,17 +2195,12 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    getReservationsByDate: function getReservationsByDate() {
+    refresh: function refresh() {
       var _this = this;
 
-      this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD');
-      this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD');
-      var params = {
-        'DATE_FROM': this.checkinDate,
-        'DATE_TO': this.checkoutDate
-      };
       this.loading = true;
-      _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservationsByDate(params).then(function (res) {
+      _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations().then(function (res) {
+        _this.fromDashboard = false;
         _this.reservationsList = res.data;
         console.log('res', _this.reservationsList);
       })["catch"](function (error) {
@@ -2218,8 +2223,41 @@ __webpack_require__.r(__webpack_exports__);
         _this.loading = false;
       });
     },
-    getOptionsData: function getOptionsData() {
+    getReservationsByDate: function getReservationsByDate() {
       var _this2 = this;
+
+      this.checkinDate = this.dayjs(this.checkinDate).format('YYYY-MM-DD');
+      this.checkoutDate = this.dayjs(this.checkoutDate).format('YYYY-MM-DD');
+      var params = {
+        'DATE_FROM': this.checkinDate,
+        'DATE_TO': this.checkoutDate
+      };
+      this.loading = true;
+      _services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservationsByDate(params).then(function (res) {
+        _this2.reservationsList = res.data;
+        console.log('res', _this2.reservationsList);
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this2.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this2.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this2.loading = false;
+      });
+    },
+    getOptionsData: function getOptionsData() {
+      var _this3 = this;
 
       this.loading = true;
       Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_0__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_2__["default"].getGuests(), _services_charge_services__WEBPACK_IMPORTED_MODULE_4__["default"].getCharges()].map(function (p, index) {
@@ -2241,23 +2279,27 @@ __webpack_require__.r(__webpack_exports__);
             return r.status == "success";
           }).forEach(function (res) {
             if (res.type == "reservations") {
-              _this2.reservationsList = res.data;
-              console.log('empl', _this2.reservations);
+              _this3.reservationsList = res.data;
+
+              _this3.reservations.forEach(function (res) {
+                res.created_at = res.created_at.split('T');
+                res.created_at = res.created_at[0];
+              });
             } else if (res.type == "rooms") {
-              _this2.rooms = res.data;
-              console.log('rooms', _this2.rooms);
+              _this3.rooms = res.data;
+              console.log('rooms', _this3.rooms);
             } else if (res.type == "guests") {
-              _this2.guests = res.data;
+              _this3.guests = res.data;
             } else if (res.type == "charges") {
-              _this2.charges = res.data;
+              _this3.charges = res.data;
             }
           });
         }
       })["catch"](function (error) {
-        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+        var _error$data3, _error$response7, _error$response8, _error$response8$data, _error$response9;
 
-        _this2.loading = false;
-        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+        _this3.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data3 = error.data) === null || _error$data3 === void 0 ? void 0 : _error$data3.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response7 = error.response) === null || _error$response7 === void 0 ? void 0 : _error$response7.message) || (error === null || error === void 0 ? void 0 : (_error$response8 = error.response) === null || _error$response8 === void 0 ? void 0 : (_error$response8$data = _error$response8.data) === null || _error$response8$data === void 0 ? void 0 : _error$response8$data.message);
 
         if (!errorMessage && error !== null && error !== void 0 && error.data) {
           errorMessage = error.data;
@@ -2265,18 +2307,33 @@ __webpack_require__.r(__webpack_exports__);
 
         if (!errorMessage) errorMessage = 'Error_occurred';
 
-        _this2.$notify.error({
-          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+        _this3.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response9 = error.response) === null || _error$response9 === void 0 ? void 0 : _error$response9.status),
           message: errorMessage
         });
       })["finally"](function () {
-        _this2.loading = false;
+        _this3.loading = false;
       });
     }
   },
   beforeMount: function beforeMount() {
     console.log('here');
     this.getOptionsData();
+  },
+  // beforeRouteEnter(to, from, next){
+  //     console.log('hsjss', from.name)
+  //     if(from.name === 'frontdesk-dashboard' || from.name === 'dashboard'){
+  //         console.log('hsh')
+  //         // this.reservationsList = this.reservationsList.filter(res => res.created_at ==)
+  //     }
+  // },
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (vm) {
+      // access to component instance via `vm`
+      if (from.name === 'frontdesk-dashboard' || from.name === 'dashboard') {
+        vm.fromDashboard = true; // vm.reservationsList = vm.reservationsList.filter(res => res.created_at ==)
+      }
+    });
   }
 });
 
@@ -2625,7 +2682,7 @@ var render = function() {
                   "div",
                   {
                     staticClass: "flexed jutify-between",
-                    staticStyle: { gap: "10px" }
+                    staticStyle: { gap: "10px", "align-items": "end" }
                   },
                   [
                     _c(
@@ -2677,7 +2734,20 @@ var render = function() {
                         })
                       ],
                       1
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("i", {
+                      staticClass: "el-icon-refresh-right text-primary pointer",
+                      staticStyle: {
+                        "font-size": "25px",
+                        "margin-bottom": "10px"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.refresh()
+                        }
+                      }
+                    })
                   ]
                 )
               ]),
@@ -2685,7 +2755,7 @@ var render = function() {
               _c(
                 "div",
                 { staticClass: "mt-30" },
-                _vm._l(_vm.reservationsList, function(reservation, index) {
+                _vm._l(_vm.bookedToday, function(reservation, index) {
                   return _c("div", { key: index }, [
                     _c(
                       "div",
@@ -2735,7 +2805,7 @@ var render = function() {
                 0
               ),
               _vm._v(" "),
-              !_vm.loading && _vm.reservationsList.length === 0
+              !_vm.loading && _vm.bookedToday.length === 0
                 ? _c("el-alert", {
                     staticClass: "mt-30",
                     attrs: {

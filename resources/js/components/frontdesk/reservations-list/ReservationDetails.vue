@@ -97,22 +97,25 @@
 
 
                 <div class="flexed justify-end">
-                    <el-button size="big" type="primary" style="height:55px;width: 250px;">Check Out</el-button>
+                    <el-button size="big" type="primary" style="height:55px;width: 250px;" @click="open()">Check Out</el-button>
                 </div>
 
             </div>
         </div>
         <checkout-modal v-if="showCheckoutModal" @close="showCheckoutModal = false" :reservation="reservation" :optionsData="optionsData"/>
+        <checkout v-if="checkout" @close="checkout = false" :optionsData="optionsData"/>
     </div>
 </template>
 
 <script>
 import {ArrowLeftIcon} from 'vue-feather-icons'
 import CheckoutModal from './CheckoutModal.vue'
+import Checkout from './Checkout.vue'
 import dayjs from 'dayjs'
+import reservationServices from '../../../services/reservation.services'
     export default {
         name: 'ReservationDetails',
-        components: {ArrowLeftIcon, CheckoutModal},
+        components: {ArrowLeftIcon, CheckoutModal, Checkout},
         props: ['reservation', 'optionsData'],
         data(){
             return{
@@ -120,7 +123,8 @@ import dayjs from 'dayjs'
                 guest: null,
                 room: null,
                 charges: null,
-                showCheckoutModal: false
+                showCheckoutModal: false,
+                checkout: false
                 
             }
         },
@@ -152,6 +156,54 @@ import dayjs from 'dayjs'
                 console.log('reser', this.reservation)
                 return this.optionsData.charges.find(ch => ch.reservation_id === this.reservation.id)
             },
+            open() {
+                this.$confirm('Are you sure you want to complete the check out?', 'Warning', {
+                confirmButtonText: 'Confirm',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    this.confirmCheckout()
+                this.$message({
+                    type: 'success',
+                    message: 'Check Out completed'
+                });
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Check out canceled'
+                });
+                });
+            },
+            confirmCheckout(){
+                this.loading = true
+
+                this.reservation.active = false
+                reservationServices.putReservation(this.reservation, this.reservation.id).then(() => {
+                    console.log('res')
+                    this.$router.push({
+                        name: 'in-house'
+                    })
+                })
+                .catch((error) => {
+                     this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            } 
          
           
         },

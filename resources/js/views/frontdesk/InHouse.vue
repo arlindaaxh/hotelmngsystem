@@ -184,8 +184,7 @@ import chargeServices from '../../services/charge.services'
                 })
             },
             getGuestName(res){
-                let guest  = this.guests.find(g => g.id === res.guest_id)
-                console.log('guest', guest)
+                return this.guests.find(g => g.id === res.guest_id).first_name
             },
             getGuestSurname(res){
                 return this.guests.find(g => g.id === res.guest_id).last_name

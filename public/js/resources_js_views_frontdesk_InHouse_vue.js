@@ -2243,10 +2243,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getGuestName: function getGuestName(res) {
-      var guest = this.guests.find(function (g) {
+      return this.guests.find(function (g) {
         return g.id === res.guest_id;
-      });
-      console.log('guest', guest);
+      }).first_name;
     },
     getGuestSurname: function getGuestSurname(res) {
       return this.guests.find(function (g) {

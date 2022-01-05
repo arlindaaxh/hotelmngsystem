@@ -8,7 +8,7 @@
         </div>
         <div class="one-column-list">
             <div class="flexed justify-between m-b-20">
-                <div class="flexed jutify-between" style="gap: 10px">
+                <div class="flexed jutify-between" style="gap: 10px; align-items:end">
                     <div class="flexed-column" style="gap:5px">
                         <span>Check In</span>
                         <el-date-picker
@@ -28,10 +28,13 @@
                             @change="getReservationsByDate()">
                         </el-date-picker>
                     </div>
+
+                    <i class="el-icon-refresh-right text-primary pointer" style="font-size:25px; margin-bottom: 10px" @click="refresh()"></i>
+                
                 </div>
             </div> 
             <div class="mt-30">
-                <div  v-for="(reservation,index) in reservationsList" :key="index">
+                <div  v-for="(reservation,index) in bookedToday" :key="index">
                     <div class="card-items-container pointer flexed" @click="goToDetails(reservation)"> 
                         <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
                         <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
@@ -50,7 +53,7 @@
             </div>
         
     
-            <el-alert  v-if="!loading && reservationsList.length === 0"
+            <el-alert  v-if="!loading && bookedToday.length === 0"
                     type="info" 
                     :closable="false" 
                     class="mt-30"
@@ -81,7 +84,8 @@ import chargeServices from '../../services/charge.services'
                 sortField: "",
                 reservationsList: [],
                 guests: [],
-                charges: []
+                charges: [],
+                fromDashboard: false,
 
             }
         },
@@ -95,6 +99,11 @@ import chargeServices from '../../services/charge.services'
                 })
 
                 return name + ' ' + surname
+            },
+            
+            bookedToday(){
+                let currentDate =  this.dayjs().format('YYYY-MM-DD')
+                return this.fromDashboard ? this.reservationsList.filter(res => res.created_at === currentDate) : this.reservationsList
             }
         },
         methods:{
@@ -115,6 +124,34 @@ import chargeServices from '../../services/charge.services'
                             
                         }
                     }
+                })
+            },
+            refresh(){
+                this.loading = true
+                ReservationServices.getReservations().then((res) => {
+                    this.fromDashboard = false
+                    this.reservationsList = res.data
+                    
+                    console.log('res', this.reservationsList)
+                
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
                 })
             },
             getReservationsByDate(){
@@ -180,7 +217,10 @@ import chargeServices from '../../services/charge.services'
                         .forEach((res) => {
                             if (res.type == "reservations") {
                                 this.reservationsList = res.data;
-                                console.log('empl', this.reservations)
+                                this.reservations.forEach(res => {
+                                    res.created_at = res.created_at.split('T')
+                                    res.created_at = res.created_at[0]
+                                })
                             }
                             else if (res.type == "rooms") {
                                 this.rooms = res.data
@@ -217,6 +257,25 @@ import chargeServices from '../../services/charge.services'
         beforeMount(){
             console.log('here')
             this.getOptionsData() 
+        },
+        // beforeRouteEnter(to, from, next){
+        //     console.log('hsjss', from.name)
+        //     if(from.name === 'frontdesk-dashboard' || from.name === 'dashboard'){
+        //         console.log('hsh')
+               
+        //         // this.reservationsList = this.reservationsList.filter(res => res.created_at ==)
+        //     }
+
+        // },
+        beforeRouteEnter (to, from, next) {
+            next(vm => {
+                // access to component instance via `vm`
+                if(from.name === 'frontdesk-dashboard' || from.name === 'dashboard'){
+                    vm.fromDashboard = true
+               
+                // vm.reservationsList = vm.reservationsList.filter(res => res.created_at ==)
+                }
+            })
         }
         
     }

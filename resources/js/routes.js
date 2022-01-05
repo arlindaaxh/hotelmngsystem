@@ -86,7 +86,7 @@ export default {
             children: [
                 {
                     path: '/frontdesk-dashboard',
-                    component: () => import('./components/frontdesk/Dashboard'),
+                    component: () => import('./views/frontdesk/Dashboard'),
                     name: 'frontdesk-dashboard',
                     children: [
                         {
@@ -105,6 +105,11 @@ export default {
                     path: '/in-house',
                     component: () => import('./views/frontdesk/InHouse'),
                     name: 'in-house'
+                },
+                {
+                    path: '/departures',
+                    component: () => import('./views/frontdesk/Departures'),
+                    name: 'departures'
                 },
                 {
                     path: '/availability',

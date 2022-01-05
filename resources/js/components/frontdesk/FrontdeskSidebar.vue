@@ -30,12 +30,20 @@
                 <span :style="[$route.name === 'in-house' ? {'color': 'white'} : {'color':'black'}]">In House</span>
             </el-menu-item>
             <el-menu-item 
+                index="departures" 
+                :route="{name: 'departures'}" 
+                v-bind:class="[$route.name === 'departures' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i class="el-icon-finished"></i>
+                <span :style="[$route.name === 'departures' ? {'color': 'white'} : {'color':'black'}]">Departures</span>
+            </el-menu-item>
+            <el-menu-item 
                 index="availability" 
                 :route="{name: 'availability'}" 
                 v-bind:class="[$route.name === 'availability' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
-                <!-- <i class="el-icon-house"></i> -->
-                <img src="../../../css/assets/bed-svg.svg"/>
+                <i class="el-icon-date"></i>
+                <!-- <img src="../../../css/assets/bed-svg.svg"/> -->
                 <span :style="[$route.name === 'availability' ? {'color': 'white'} : {'color':'black'}]">Availability</span>
             </el-menu-item>
             <el-menu-item 
