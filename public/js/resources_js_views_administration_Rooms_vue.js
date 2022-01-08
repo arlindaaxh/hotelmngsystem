@@ -2365,6 +2365,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2380,7 +2390,8 @@ __webpack_require__.r(__webpack_exports__);
       sortOrder: 'asc',
       rooms: [],
       showDeleteRoomModal: false,
-      roomProp: null
+      roomProp: null,
+      selectButton: false
     };
   },
   computed: {
@@ -2458,6 +2469,11 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       _services_room_services__WEBPACK_IMPORTED_MODULE_1__["default"].getRooms().then(function (res) {
         _this2.rooms = res.data;
+
+        _this2.rooms.forEach(function (element) {
+          _this2.$set(element, 'checked', false);
+        });
+
         console.log('rooms', _this2.rooms);
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
@@ -2487,6 +2503,9 @@ __webpack_require__.r(__webpack_exports__);
     showHideDeleteRoomModal: function showHideDeleteRoomModal() {
       this.showDeleteRoomModal = false;
       this.getRooms();
+    },
+    selectAction: function selectAction() {
+      this.selectButton = !this.selectButton;
     }
   },
   beforeMount: function beforeMount() {
@@ -2579,7 +2598,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-467d33e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-467d33e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-467d33e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-467d33e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}\n.pl-45[data-v-467d33e6] {\n  padding-left: 45px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3120,253 +3139,227 @@ var render = function() {
             "div",
             { staticClass: "one-column-list" },
             [
-              _c(
-                "div",
-                { staticClass: "flexed justify-between m-b-20" },
-                [
-                  _c(
-                    "el-input",
-                    {
-                      staticClass: "search-input",
-                      style: "max-width:450px",
-                      attrs: {
-                        size: "big",
-                        placeholder: "Search departments by name or code"
-                      },
-                      model: {
-                        value: _vm.query,
-                        callback: function($$v) {
-                          _vm.query = $$v
-                        },
-                        expression: "query"
-                      }
-                    },
-                    [
-                      _c("i", {
-                        staticClass: "el-icon-search el-input__icon",
-                        attrs: { slot: "suffix" },
-                        slot: "suffix"
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    [
-                      _c(
-                        "el-button",
-                        {
-                          staticStyle: {
-                            "background-color": "#ff7b50",
-                            "border-radius": "15px",
-                            color: "white"
-                          },
-                          attrs: { size: "big" },
-                          on: {
-                            click: function($event) {
-                              return _vm.addNewRoom()
-                            }
-                          }
-                        },
-                        [_vm._v("New")]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "pl-15 mt-50 table-sort" }, [
+              _c("div", { staticClass: "flexed justify-between m-b-20" }, [
                 _c(
                   "div",
                   {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
+                    staticClass: "flexed",
+                    staticStyle: { flex: "2", gap: "20px" }
                   },
                   [
-                    _c("strong", [_vm._v("Type")]),
-                    _vm._v(" "),
                     _c(
-                      "span",
+                      "el-input",
                       {
-                        staticClass: "sort-icon-asc-desc pointer flexed-column"
+                        staticClass: "search-input",
+                        style: "max-width:450px",
+                        attrs: {
+                          size: "big",
+                          placeholder: "Search departments by name or code"
+                        },
+                        model: {
+                          value: _vm.query,
+                          callback: function($$v) {
+                            _vm.query = $$v
+                          },
+                          expression: "query"
+                        }
                       },
                       [
                         _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "type" && _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("type", "asc")
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "type" && _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("type", "desc")
-                            }
-                          }
+                          staticClass: "el-icon-search el-input__icon",
+                          attrs: { slot: "suffix" },
+                          slot: "suffix"
                         })
                       ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectAction()
+                          }
+                        }
+                      },
+                      [
+                        !_vm.selectButton
+                          ? _c("span", [
+                              _vm._v(
+                                "\n                      Select\n                  "
+                              )
+                            ])
+                          : _c("span", [_vm._v("Cancel")])
+                      ]
                     )
-                  ]
+                  ],
+                  1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
-                  {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
-                  },
                   [
-                    _c("strong", [_vm._v("Code")]),
-                    _vm._v(" "),
                     _c(
-                      "span",
-                      { staticClass: "sort-icon-asc-desc flexed-column" },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "code" && _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("code", "asc")
-                            }
+                      "el-button",
+                      {
+                        staticStyle: {
+                          "background-color": "#ff7b50",
+                          "border-radius": "15px",
+                          color: "white"
+                        },
+                        attrs: { size: "big" },
+                        on: {
+                          click: function($event) {
+                            return _vm.addNewRoom()
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "code" && _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("code", "desc")
-                            }
-                          }
-                        })
-                      ]
+                        }
+                      },
+                      [_vm._v("New")]
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
-                  },
-                  [
-                    _c("strong", [_vm._v("Status")]),
-                    _vm._v(" "),
-                    _c(
-                      "span",
-                      { staticClass: "sort-icon-asc-desc flexed-column" },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "1" && _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("status", "asc")
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "1" && _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("status", "desc")
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]
+                  ],
+                  1
                 )
               ]),
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "mt-10" },
-                _vm._l(_vm.filteredRooms, function(room, index) {
-                  return _c(
+                {
+                  class: !_vm.selectButton
+                    ? "pl-15 mt-50 table-sort"
+                    : "pl-45 mt-50 table-sort"
+                },
+                [
+                  _c(
                     "div",
                     {
-                      key: index,
-                      staticClass: "card-items-container pointer flexed",
-                      on: {
-                        click: function($event) {
-                          return _vm.editRoom(room)
-                        }
-                      }
+                      staticClass: "flexed align-center ",
+                      staticStyle: { gap: "10px" }
                     },
                     [
-                      _c("span", { staticClass: "info-name text" }, [
-                        _vm._v(_vm._s(room.type))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name" }, [
-                        _vm._v(_vm._s(room.code))
-                      ]),
+                      _c("strong", [_vm._v("Type")]),
                       _vm._v(" "),
                       _c(
                         "span",
                         {
-                          staticClass: "info-name",
-                          class:
-                            room.status === 1 ? "text-success" : "text-danger"
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(room.status === 1 ? "AVAILABLE" : "BOOKED")
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "flexed justify-end",
-                          staticStyle: { "font-size": "26px", gap: "5px" }
+                          staticClass:
+                            "sort-icon-asc-desc pointer flexed-column"
                         },
                         [
                           _c("i", {
-                            staticClass: "el-icon-delete",
-                            staticStyle: {
-                              "font-size": "20px",
-                              color: "#f56565"
-                            },
+                            staticClass: "el-icon-caret-top",
+                            class:
+                              _vm.sortField === "type" &&
+                              _vm.sortOrder === "asc"
+                                ? "sorted-field-ascending"
+                                : "ascending",
+                            staticStyle: { height: "10px" },
                             on: {
                               click: function($event) {
-                                return _vm.deleteRoom(room, $event)
+                                return _vm.sortBy("type", "asc")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", {
+                            staticClass: "el-icon-caret-bottom",
+                            class:
+                              _vm.sortField === "type" &&
+                              _vm.sortOrder === "desc"
+                                ? "sorted-field-descending"
+                                : "descending",
+                            on: {
+                              click: function($event) {
+                                return _vm.sortBy("type", "desc")
+                              }
+                            }
+                          })
+                        ]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flexed align-center ",
+                      staticStyle: { gap: "10px" }
+                    },
+                    [
+                      _c("strong", [_vm._v("Code")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        { staticClass: "sort-icon-asc-desc flexed-column" },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-caret-top",
+                            class:
+                              _vm.sortField === "code" &&
+                              _vm.sortOrder === "asc"
+                                ? "sorted-field-ascending"
+                                : "ascending",
+                            staticStyle: { height: "10px" },
+                            on: {
+                              click: function($event) {
+                                return _vm.sortBy("code", "asc")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", {
+                            staticClass: "el-icon-caret-bottom",
+                            class:
+                              _vm.sortField === "code" &&
+                              _vm.sortOrder === "desc"
+                                ? "sorted-field-descending"
+                                : "descending",
+                            on: {
+                              click: function($event) {
+                                return _vm.sortBy("code", "desc")
+                              }
+                            }
+                          })
+                        ]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "flexed align-center ",
+                      staticStyle: { gap: "10px" }
+                    },
+                    [
+                      _c("strong", [_vm._v("Status")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        { staticClass: "sort-icon-asc-desc flexed-column" },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-caret-top",
+                            class:
+                              _vm.sortField === "1" && _vm.sortOrder === "asc"
+                                ? "sorted-field-ascending"
+                                : "ascending",
+                            staticStyle: { height: "10px" },
+                            on: {
+                              click: function($event) {
+                                return _vm.sortBy("status", "asc")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", {
+                            staticClass: "el-icon-caret-bottom",
+                            class:
+                              _vm.sortField === "1" && _vm.sortOrder === "desc"
+                                ? "sorted-field-descending"
+                                : "descending",
+                            on: {
+                              click: function($event) {
+                                return _vm.sortBy("status", "desc")
                               }
                             }
                           })
@@ -3374,9 +3367,92 @@ var render = function() {
                       )
                     ]
                   )
-                }),
-                0
+                ]
               ),
+              _vm._v(" "),
+              _vm._l(_vm.filteredRooms, function(room, index) {
+                return _c(
+                  "div",
+                  {
+                    key: index,
+                    staticClass: "mt-10 flexed align-center",
+                    staticStyle: { gap: "20px", "margin-bottom": "10px" }
+                  },
+                  [
+                    _vm.selectButton
+                      ? _c("el-checkbox", {
+                          staticStyle: { flex: "0" },
+                          model: {
+                            value: room.checked,
+                            callback: function($$v) {
+                              _vm.$set(room, "checked", $$v)
+                            },
+                            expression: "room.checked"
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "card-items-container pointer flexed",
+                        staticStyle: { flex: "4", "margin-bottom": "0px" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editRoom(room)
+                          }
+                        }
+                      },
+                      [
+                        _c("span", { staticClass: "info-name text" }, [
+                          _vm._v(_vm._s(room.type))
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "info-name" }, [
+                          _vm._v(_vm._s(room.code))
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          {
+                            staticClass: "info-name",
+                            class:
+                              room.status === 1 ? "text-success" : "text-danger"
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(room.status === 1 ? "AVAILABLE" : "BOOKED")
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "flexed justify-end",
+                            staticStyle: { "font-size": "26px", gap: "5px" }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "el-icon-delete",
+                              staticStyle: {
+                                "font-size": "20px",
+                                color: "#f56565"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteRoom(room, $event)
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              }),
               _vm._v(" "),
               !_vm.loading &&
               _vm.filteredRooms &&
@@ -3403,7 +3479,7 @@ var render = function() {
                   })
                 : _vm._e()
             ],
-            1
+            2
           )
         ]
       )

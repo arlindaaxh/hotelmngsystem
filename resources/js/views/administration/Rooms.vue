@@ -4,15 +4,25 @@
       <h4>Rooms</h4>
     </div>
     <div class="one-column-list">
-      <div class="flexed justify-between m-b-20">
-        <el-input class="search-input" size="big" placeholder="Search departments by name or code" v-model="query" :style="'max-width:450px'">
-          <i class="el-icon-search el-input__icon" slot="suffix"></i>
-        </el-input>
-        <div>
-          <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewRoom()">New</el-button>
+        <div class="flexed justify-between m-b-20">
+            <div class="flexed" style="flex:2;gap:20px;">
+                <el-input class="search-input" size="big" placeholder="Search departments by name or code" v-model="query" :style="'max-width:450px'">
+                    <i class="el-icon-search el-input__icon" slot="suffix"></i>
+                </el-input>
+                <el-button @click="selectAction()">
+                    <span v-if="!selectButton">
+                        Select
+                    </span>
+                    <span v-else>Cancel</span>
+                </el-button>
+            </div>
+        
+            <div>
+            <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" @click="addNewRoom()">New</el-button>
+            </div>
         </div>
-      </div>
-       <div class="pl-15 mt-50 table-sort">
+        
+        <div :class="!selectButton ? 'pl-15 mt-50 table-sort' : 'pl-45 mt-50 table-sort'">
             <div class="flexed align-center " style="gap:10px">
                 <strong>Type</strong>
                 <span class="sort-icon-asc-desc pointer flexed-column">
@@ -60,9 +70,9 @@
             </div>
        </div>
     
-        <div class="mt-10">
-           
-            <div class="card-items-container pointer flexed" v-for="(room,index) in filteredRooms" :key="index" @click="editRoom(room)"> 
+        <div class="mt-10 flexed align-center" style="gap:20px; margin-bottom:10px"  v-for="(room,index) in filteredRooms" :key="index">
+            <el-checkbox v-if="selectButton" v-model="room.checked" style="flex:0"></el-checkbox>
+            <div class="card-items-container pointer flexed"  @click="editRoom(room)" style="flex:4; margin-bottom:0px"> 
                 <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
                 <span class="info-name text">{{room.type}}</span>
                 <span class="info-name">{{room.code}}</span>
@@ -113,6 +123,7 @@ import RoomServices from '../../services/room.services'
                 rooms: [],
                 showDeleteRoomModal: false,
                 roomProp: null,
+                selectButton: false
             }
         
         },
@@ -189,6 +200,9 @@ import RoomServices from '../../services/room.services'
                 this.loading = true
                 RoomServices.getRooms().then((res) => {
                     this.rooms = res.data
+                    this.rooms.forEach(element => {
+                        this.$set(element,'checked', false)
+                    });
                      console.log('rooms', this.rooms)
                 })
                 .catch((error) => {
@@ -219,6 +233,9 @@ import RoomServices from '../../services/room.services'
             showHideDeleteRoomModal(){
                 this.showDeleteRoomModal = false
                 this.getRooms()
+            },
+            selectAction(){
+                this.selectButton = !this.selectButton
             }
             
         },
@@ -255,5 +272,9 @@ import RoomServices from '../../services/room.services'
     padding-left: 15px;
     padding-right: 15px ;
     font-family: 'Mulish', sans-serif;
+}
+
+.pl-45 {
+    padding-left: 45px;
 }
 </style>

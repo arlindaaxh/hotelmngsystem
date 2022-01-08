@@ -34,27 +34,7 @@
             </div>
 
             <div>
-                <span>Bookings</span>
-                <div style="width:400px;">
-                    <div class="form-data">
-                        <el-card shadow="never" class="card-box">
-                            Arrivals
-                        </el-card>
-                        <el-card shadow="never" class="card-box">
-                            No Show
-                        </el-card>
-                        <el-card shadow="never" class="card-box">
-                            Booked Today
-                        </el-card>
-                        <el-card shadow="never" class="card-box">
-                            Groups
-                        </el-card>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <span>Availability</span>
+                <span>Availability and Bookings</span>
                 <div style="width:400px;">
                     <div class="form-data pointer">
                         <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'All')">

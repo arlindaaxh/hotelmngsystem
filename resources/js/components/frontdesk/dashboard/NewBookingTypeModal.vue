@@ -34,7 +34,7 @@ import NormalPopup from '../../NormalPopup.vue';
             createNewBooking(bookingType){
                            console.log('selectedRooms1', this.selectedRooms)
                 this.$router.push({
-                    name: 'new-booking',
+                    name: 'availability',
                     params: {
                         bookingType: bookingType,
                         bookingData: this.bookingData,

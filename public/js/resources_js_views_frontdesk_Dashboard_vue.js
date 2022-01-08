@@ -2219,7 +2219,7 @@ __webpack_require__.r(__webpack_exports__);
     createNewBooking: function createNewBooking(bookingType) {
       console.log('selectedRooms1', this.selectedRooms);
       this.$router.push({
-        name: 'new-booking',
+        name: 'availability',
         params: {
           bookingType: bookingType,
           bookingData: this.bookingData,
@@ -2259,26 +2259,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_6__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3455,60 +3435,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", [
-              _c("span", [_vm._v("Bookings")]),
-              _vm._v(" "),
-              _c("div", { staticStyle: { width: "400px" } }, [
-                _c(
-                  "div",
-                  { staticClass: "form-data" },
-                  [
-                    _c(
-                      "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
-                      [
-                        _vm._v(
-                          "\n                        Arrivals\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
-                      [
-                        _vm._v(
-                          "\n                        No Show\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
-                      [
-                        _vm._v(
-                          "\n                        Booked Today\n                    "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
-                      [
-                        _vm._v(
-                          "\n                        Groups\n                    "
-                        )
-                      ]
-                    )
-                  ],
-                  1
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", [
-              _c("span", [_vm._v("Availability")]),
+              _c("span", [_vm._v("Availability and Bookings")]),
               _vm._v(" "),
               _c("div", { staticStyle: { width: "400px" } }, [
                 _c(
