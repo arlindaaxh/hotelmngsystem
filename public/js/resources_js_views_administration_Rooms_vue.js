@@ -2375,6 +2375,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2391,7 +2408,9 @@ __webpack_require__.r(__webpack_exports__);
       rooms: [],
       showDeleteRoomModal: false,
       roomProp: null,
-      selectButton: false
+      selectButton: false,
+      selectAllChecked: false,
+      selectedRoomIds: []
     };
   },
   computed: {
@@ -2505,7 +2524,46 @@ __webpack_require__.r(__webpack_exports__);
       this.getRooms();
     },
     selectAction: function selectAction() {
+      //  this.rooms.forEach(room => {
+      //     room.checked = this.selectButton ? true : false
+      // })
       this.selectButton = !this.selectButton;
+      this.selectAllChecked = false;
+      this.rooms.forEach(function (room) {
+        room.checked = false;
+      });
+    },
+    selectAll: function selectAll() {
+      var _this3 = this;
+
+      this.selectAllChecked = !this.selectAllChecked;
+      this.rooms.forEach(function (room) {
+        room.checked = _this3.selectAllChecked ? true : false;
+
+        if (room.checked) {
+          _this3.selectedRoomIds.push(room);
+        } else {
+          _this3.selectedRoomIds = _this3.selectedRoomIds.filter(function (r) {
+            return r.id !== room.id;
+          });
+        }
+      });
+    },
+    selectRoom: function selectRoom(room) {
+      var found = this.selectedRoomIds.find(function (sr) {
+        return sr.id === room.id;
+      });
+
+      if (!found && room.checked) {
+        this.selectedRoomIds.push(room);
+      } else {
+        this.selectedRoomIds = this.selectedRoomIds.filter(function (r) {
+          return r.id !== room.id;
+        });
+      }
+    },
+    unselectRooms: function unselectRooms() {
+      this.selectedRoomIds = [];
     }
   },
   beforeMount: function beforeMount() {
@@ -2598,7 +2656,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-467d33e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-467d33e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}\n.pl-45[data-v-467d33e6] {\n  padding-left: 45px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-467d33e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-467d33e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}\n.pl-35[data-v-467d33e6] {\n  padding-left: 35px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3189,8 +3247,60 @@ var render = function() {
                                 "\n                      Select\n                  "
                               )
                             ])
-                          : _c("span", [_vm._v("Cancel")])
+                          : _c(
+                              "span",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.unselectRooms()
+                                  }
+                                }
+                              },
+                              [_vm._v("Cancel")]
+                            )
                       ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-dropdown",
+                      {
+                        attrs: {
+                          trigger: "click",
+                          disabled: !_vm.selectedRoomIds.length
+                        }
+                      },
+                      [
+                        _c("el-button", { staticClass: "el-dropdown-link" }, [
+                          _vm._v("\n                      Actions"),
+                          _c("i", {
+                            staticClass: "el-icon-arrow-down el-icon--right"
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "el-dropdown-menu",
+                          { attrs: { slot: "dropdown" }, slot: "dropdown" },
+                          [
+                            _c("el-dropdown-item", [
+                              _c(
+                                "span",
+                                { staticStyle: { "padding-left": "12px" } },
+                                [_vm._v("Discount")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("el-dropdown-item", [
+                              _c(
+                                "span",
+                                { staticStyle: { "padding-left": "12px" } },
+                                [_vm._v("Rise")]
+                              )
+                            ])
+                          ],
+                          1
+                        )
+                      ],
+                      1
                     )
                   ],
                   1
@@ -3224,150 +3334,174 @@ var render = function() {
               _c(
                 "div",
                 {
-                  class: !_vm.selectButton
-                    ? "pl-15 mt-50 table-sort"
-                    : "pl-45 mt-50 table-sort"
+                  staticClass: "flexed justify-between",
+                  staticStyle: { "align-items": "end" }
                 },
                 [
+                  _vm.selectButton
+                    ? _c("el-checkbox", {
+                        staticStyle: { flex: "0", "margin-bottom": "15px" },
+                        on: {
+                          change: function($event) {
+                            return _vm.selectAll()
+                          }
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c(
                     "div",
                     {
-                      staticClass: "flexed align-center ",
-                      staticStyle: { gap: "10px" }
+                      class: !_vm.selectButton
+                        ? "pl-15 mt-50 table-sort"
+                        : "pl-35 mt-50 table-sort",
+                      staticStyle: { flex: "4" }
                     },
                     [
-                      _c("strong", [_vm._v("Type")]),
-                      _vm._v(" "),
                       _c(
-                        "span",
+                        "div",
                         {
-                          staticClass:
-                            "sort-icon-asc-desc pointer flexed-column"
+                          staticClass: "flexed align-center ",
+                          staticStyle: { gap: "10px" }
                         },
                         [
-                          _c("i", {
-                            staticClass: "el-icon-caret-top",
-                            class:
-                              _vm.sortField === "type" &&
-                              _vm.sortOrder === "asc"
-                                ? "sorted-field-ascending"
-                                : "ascending",
-                            staticStyle: { height: "10px" },
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("type", "asc")
-                              }
-                            }
-                          }),
+                          _c("strong", [_vm._v("Type")]),
                           _vm._v(" "),
-                          _c("i", {
-                            staticClass: "el-icon-caret-bottom",
-                            class:
-                              _vm.sortField === "type" &&
-                              _vm.sortOrder === "desc"
-                                ? "sorted-field-descending"
-                                : "descending",
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("type", "desc")
-                              }
-                            }
-                          })
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "sort-icon-asc-desc pointer flexed-column"
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "el-icon-caret-top",
+                                class:
+                                  _vm.sortField === "type" &&
+                                  _vm.sortOrder === "asc"
+                                    ? "sorted-field-ascending"
+                                    : "ascending",
+                                staticStyle: { height: "10px" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("type", "asc")
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("i", {
+                                staticClass: "el-icon-caret-bottom",
+                                class:
+                                  _vm.sortField === "type" &&
+                                  _vm.sortOrder === "desc"
+                                    ? "sorted-field-descending"
+                                    : "descending",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("type", "desc")
+                                  }
+                                }
+                              })
+                            ]
+                          )
                         ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "flexed align-center ",
-                      staticStyle: { gap: "10px" }
-                    },
-                    [
-                      _c("strong", [_vm._v("Code")]),
+                      ),
                       _vm._v(" "),
                       _c(
-                        "span",
-                        { staticClass: "sort-icon-asc-desc flexed-column" },
+                        "div",
+                        {
+                          staticClass: "flexed align-center ",
+                          staticStyle: { gap: "10px" }
+                        },
                         [
-                          _c("i", {
-                            staticClass: "el-icon-caret-top",
-                            class:
-                              _vm.sortField === "code" &&
-                              _vm.sortOrder === "asc"
-                                ? "sorted-field-ascending"
-                                : "ascending",
-                            staticStyle: { height: "10px" },
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("code", "asc")
-                              }
-                            }
-                          }),
+                          _c("strong", [_vm._v("Code")]),
                           _vm._v(" "),
-                          _c("i", {
-                            staticClass: "el-icon-caret-bottom",
-                            class:
-                              _vm.sortField === "code" &&
-                              _vm.sortOrder === "desc"
-                                ? "sorted-field-descending"
-                                : "descending",
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("code", "desc")
-                              }
-                            }
-                          })
+                          _c(
+                            "span",
+                            { staticClass: "sort-icon-asc-desc flexed-column" },
+                            [
+                              _c("i", {
+                                staticClass: "el-icon-caret-top",
+                                class:
+                                  _vm.sortField === "code" &&
+                                  _vm.sortOrder === "asc"
+                                    ? "sorted-field-ascending"
+                                    : "ascending",
+                                staticStyle: { height: "10px" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("code", "asc")
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("i", {
+                                staticClass: "el-icon-caret-bottom",
+                                class:
+                                  _vm.sortField === "code" &&
+                                  _vm.sortOrder === "desc"
+                                    ? "sorted-field-descending"
+                                    : "descending",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("code", "desc")
+                                  }
+                                }
+                              })
+                            ]
+                          )
                         ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "flexed align-center ",
-                      staticStyle: { gap: "10px" }
-                    },
-                    [
-                      _c("strong", [_vm._v("Status")]),
+                      ),
                       _vm._v(" "),
                       _c(
-                        "span",
-                        { staticClass: "sort-icon-asc-desc flexed-column" },
+                        "div",
+                        {
+                          staticClass: "flexed align-center ",
+                          staticStyle: { gap: "10px" }
+                        },
                         [
-                          _c("i", {
-                            staticClass: "el-icon-caret-top",
-                            class:
-                              _vm.sortField === "1" && _vm.sortOrder === "asc"
-                                ? "sorted-field-ascending"
-                                : "ascending",
-                            staticStyle: { height: "10px" },
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("status", "asc")
-                              }
-                            }
-                          }),
+                          _c("strong", [_vm._v("Status")]),
                           _vm._v(" "),
-                          _c("i", {
-                            staticClass: "el-icon-caret-bottom",
-                            class:
-                              _vm.sortField === "1" && _vm.sortOrder === "desc"
-                                ? "sorted-field-descending"
-                                : "descending",
-                            on: {
-                              click: function($event) {
-                                return _vm.sortBy("status", "desc")
-                              }
-                            }
-                          })
+                          _c(
+                            "span",
+                            { staticClass: "sort-icon-asc-desc flexed-column" },
+                            [
+                              _c("i", {
+                                staticClass: "el-icon-caret-top",
+                                class:
+                                  _vm.sortField === "1" &&
+                                  _vm.sortOrder === "asc"
+                                    ? "sorted-field-ascending"
+                                    : "ascending",
+                                staticStyle: { height: "10px" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("status", "asc")
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("i", {
+                                staticClass: "el-icon-caret-bottom",
+                                class:
+                                  _vm.sortField === "1" &&
+                                  _vm.sortOrder === "desc"
+                                    ? "sorted-field-descending"
+                                    : "descending",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sortBy("status", "desc")
+                                  }
+                                }
+                              })
+                            ]
+                          )
                         ]
                       )
                     ]
                   )
-                ]
+                ],
+                1
               ),
               _vm._v(" "),
               _vm._l(_vm.filteredRooms, function(room, index) {
@@ -3382,6 +3516,11 @@ var render = function() {
                     _vm.selectButton
                       ? _c("el-checkbox", {
                           staticStyle: { flex: "0" },
+                          on: {
+                            change: function($event) {
+                              return _vm.selectRoom(room)
+                            }
+                          },
                           model: {
                             value: room.checked,
                             callback: function($$v) {

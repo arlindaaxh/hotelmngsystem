@@ -13,8 +13,21 @@
                     <span v-if="!selectButton">
                         Select
                     </span>
-                    <span v-else>Cancel</span>
+                    <span v-else @click="unselectRooms()">Cancel</span>
                 </el-button>
+                <!-- <el-dropdown :disabled="!selectedRoomIds.length">
+                    Discount
+                </el-dropdown> -->
+                <el-dropdown trigger="click" :disabled="!selectedRoomIds.length">
+                    <el-button class="el-dropdown-link">
+                        Actions<i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><span style="padding-left:12px;">Discount</span></el-dropdown-item>
+                        <el-dropdown-item><span style="padding-left:12px;">Rise</span></el-dropdown-item>
+                      
+                    </el-dropdown-menu>
+                </el-dropdown>
             </div>
         
             <div>
@@ -22,56 +35,60 @@
             </div>
         </div>
         
-        <div :class="!selectButton ? 'pl-15 mt-50 table-sort' : 'pl-45 mt-50 table-sort'">
-            <div class="flexed align-center " style="gap:10px">
-                <strong>Type</strong>
-                <span class="sort-icon-asc-desc pointer flexed-column">
-                    <i
-                    class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('type', 'asc')"
-                    :class="sortField === 'type' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
-                    ></i>
-                    <i
-                    class="el-icon-caret-bottom" 
-                    :class="sortField === 'type' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('type', 'desc')"
-                    ></i>
-                </span>
-            </div>
-             <div class="flexed align-center " style="gap:10px">
-                <strong>Code</strong>
-                <span class="sort-icon-asc-desc flexed-column">
-                    <i
-                    class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('code', 'asc')"
-                    :class="sortField === 'code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
-                    ></i>
-                    <i
-                    class="el-icon-caret-bottom" 
-                    :class="sortField === 'code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('code', 'desc')"
-                    ></i>
-                </span>
-            </div>
-             <div class="flexed align-center " style="gap:10px">
-                <strong>Status</strong>
-                <span class="sort-icon-asc-desc flexed-column">
-                    <i
-                    class="el-icon-caret-top" style="height:10px"
-                    @click="sortBy('status', 'asc')"
-                    :class="sortField === '1' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
-                    ></i>
-                    <i
-                    class="el-icon-caret-bottom" 
-                    :class="sortField === '1' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                    @click="sortBy('status', 'desc')"
-                    ></i>
-                </span>
-            </div>
-       </div>
+        <div class="flexed justify-between" style="align-items:end">
+            <el-checkbox v-if="selectButton"  @change="selectAll()" style="flex:0; margin-bottom:15px"></el-checkbox>
+            <div :class="!selectButton ? 'pl-15 mt-50 table-sort' : 'pl-35 mt-50 table-sort'" style="flex:4">
+                <div class="flexed align-center " style="gap:10px">
+                    <strong>Type</strong>
+                    <span class="sort-icon-asc-desc pointer flexed-column">
+                        <i
+                        class="el-icon-caret-top" style="height:10px"
+                        @click="sortBy('type', 'asc')"
+                        :class="sortField === 'type' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                        ></i>
+                        <i
+                        class="el-icon-caret-bottom" 
+                        :class="sortField === 'type' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                        @click="sortBy('type', 'desc')"
+                        ></i>
+                    </span>
+                </div>
+                <div class="flexed align-center " style="gap:10px">
+                    <strong>Code</strong>
+                    <span class="sort-icon-asc-desc flexed-column">
+                        <i
+                        class="el-icon-caret-top" style="height:10px"
+                        @click="sortBy('code', 'asc')"
+                        :class="sortField === 'code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                        ></i>
+                        <i
+                        class="el-icon-caret-bottom" 
+                        :class="sortField === 'code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                        @click="sortBy('code', 'desc')"
+                        ></i>
+                    </span>
+                </div>
+                <div class="flexed align-center " style="gap:10px">
+                    <strong>Status</strong>
+                    <span class="sort-icon-asc-desc flexed-column">
+                        <i
+                        class="el-icon-caret-top" style="height:10px"
+                        @click="sortBy('status', 'asc')"
+                        :class="sortField === '1' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                        ></i>
+                        <i
+                        class="el-icon-caret-bottom" 
+                        :class="sortField === '1' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                        @click="sortBy('status', 'desc')"
+                        ></i>
+                    </span>
+                </div>
+        </div>   
+        </div>
+
     
         <div class="mt-10 flexed align-center" style="gap:20px; margin-bottom:10px"  v-for="(room,index) in filteredRooms" :key="index">
-            <el-checkbox v-if="selectButton" v-model="room.checked" style="flex:0"></el-checkbox>
+            <el-checkbox v-if="selectButton" v-model="room.checked" @change="selectRoom(room)" style="flex:0"></el-checkbox>
             <div class="card-items-container pointer flexed"  @click="editRoom(room)" style="flex:4; margin-bottom:0px"> 
                 <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
                 <span class="info-name text">{{room.type}}</span>
@@ -123,7 +140,9 @@ import RoomServices from '../../services/room.services'
                 rooms: [],
                 showDeleteRoomModal: false,
                 roomProp: null,
-                selectButton: false
+                selectButton: false,
+                selectAllChecked: false,
+                selectedRoomIds: []
             }
         
         },
@@ -235,7 +254,40 @@ import RoomServices from '../../services/room.services'
                 this.getRooms()
             },
             selectAction(){
+                //  this.rooms.forEach(room => {
+                //     room.checked = this.selectButton ? true : false
+                // })
                 this.selectButton = !this.selectButton
+                this.selectAllChecked  = false
+                this.rooms.forEach(room => {
+                    room.checked = false
+                })
+               
+            },
+            selectAll(){
+                this.selectAllChecked = !this.selectAllChecked
+                this.rooms.forEach(room => {
+                    room.checked = this.selectAllChecked ? true : false
+                    if(room.checked){
+                        this.selectedRoomIds.push(room)
+                    }
+                    else{
+                        this.selectedRoomIds = this.selectedRoomIds.filter(r => r.id !== room.id)
+                    }
+                })
+               
+            },
+            selectRoom(room){
+                let found = this.selectedRoomIds.find(sr => sr.id === room.id)
+                if(!found && room.checked){
+                    this.selectedRoomIds.push(room)
+                }
+                else {
+                    this.selectedRoomIds = this.selectedRoomIds.filter(r => r.id !== room.id)
+                }
+            },
+            unselectRooms(){
+                this.selectedRoomIds = []
             }
             
         },
@@ -274,7 +326,8 @@ import RoomServices from '../../services/room.services'
     font-family: 'Mulish', sans-serif;
 }
 
-.pl-45 {
-    padding-left: 45px;
+.pl-35 {
+    padding-left: 35px;
 }
+
 </style>
