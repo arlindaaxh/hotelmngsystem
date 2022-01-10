@@ -18,13 +18,13 @@
                 <!-- <el-dropdown :disabled="!selectedRoomIds.length">
                     Discount
                 </el-dropdown> -->
-                <el-dropdown trigger="click" :disabled="!selectedRoomIds.length">
+                <el-dropdown trigger="click" :disabled="!selectedRoomIds.length" @command="actionChosen">
                     <el-button class="el-dropdown-link">
                         Actions<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item><span style="padding-left:12px;">Discount</span></el-dropdown-item>
-                        <el-dropdown-item><span style="padding-left:12px;">Rise</span></el-dropdown-item>
+                        <el-dropdown-item command="discount"><span style="padding-left:12px;">Discount</span></el-dropdown-item>
+                        <el-dropdown-item command="rise"><span style="padding-left:12px;">Rise</span></el-dropdown-item>
                       
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -115,6 +115,8 @@
         />
 
         <delete-room-modal v-if="showDeleteRoomModal" :roomProp="roomProp" @close="showHideDeleteRoomModal()"/>
+        <discount v-if="selectedAction === 'discount'" @close="selectedAction = null" :selectedRooms="selectedRoomIds"/>
+        <discount v-if="selectedAction === 'rise'" @close="selectedAction = null" :selectedRooms="selectedRoomIds"/>
     </div>
    
   </div>
@@ -126,9 +128,10 @@
 
 <script>
 import DeleteRoomModal from '../../components/administration/rooms/DeleteRoomModal.vue'
+import Discount from '../../components/administration/rooms/Discount.vue'
 import RoomServices from '../../services/room.services'
     export default {
-  components: { DeleteRoomModal },
+  components: { DeleteRoomModal, Discount },
         name: 'AddEditRoom',
         data(){
             
@@ -142,7 +145,8 @@ import RoomServices from '../../services/room.services'
                 roomProp: null,
                 selectButton: false,
                 selectAllChecked: false,
-                selectedRoomIds: []
+                selectedRoomIds: [],
+                selectedAction: null
             }
         
         },
@@ -178,6 +182,10 @@ import RoomServices from '../../services/room.services'
                     }
                     
                 })  
+            },
+            actionChosen(command){
+                this.selectedAction = command
+                console.log('selectedAction', this.selectedAction)
             },
             sortBy(field, order) {            
                 this.sortField = field;
