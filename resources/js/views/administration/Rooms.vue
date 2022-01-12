@@ -185,7 +185,6 @@ import RoomServices from '../../services/room.services'
             },
             actionChosen(command){
                 this.selectedAction = command
-                console.log('selectedAction', this.selectedAction)
             },
             sortBy(field, order) {            
                 this.sortField = field;
