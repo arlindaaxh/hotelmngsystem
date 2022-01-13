@@ -31,7 +31,7 @@
                         <el-table-column
                             prop="code"
                             label="Code"
-                            width="100">
+                            width="85">
                         </el-table-column>
                         <el-table-column
                             prop="room_price_per_night"
@@ -47,7 +47,7 @@
                             <template slot-scope="scope" >
                                 <el-input v-model="scope.row.discount" type="small" style="width:100px" @input="calculateFinalPrice(scope.row)">
                                     <template slot="append">
-                                        <span v-if="discountType === 'percent'" @click="changeDiscountType(scope.row)"  class="pointer" >%</span>
+                                        <span v-if="scope.row.discountType === 'percent'" @click="changeDiscountType(scope.row)"  class="pointer" >%</span>
                                         <span v-else @click="changeDiscountType(scope.row)"  class="pointer">USD</span>
                                     </template>
                                 </el-input>
@@ -90,30 +90,31 @@ import NormalPopup from '../../NormalPopup.vue'
         },
         methods: {
             changeDiscountType(room){
-                if(this.discountType === 'percent'){
-                    this.discountType = 'amount'
+                if(room.discountType === 'percent'){
+                    room.discountType = 'amount'
                     room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0
                 }else {
-                    this.discountType = 'percent'
+                    room.discountType = 'percent'
                     room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))) ? 
                     (room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))).toFixed(2) : 0
                 }
             },
             calculateFinalPrice(room){
-                if(this.discountType === 'percent'){
+                if(room.discountType === 'percent'){
                     room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))) ? 
                     (room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))).toFixed(2) : 0
                 }else {
                     room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0
                 }
             }
+        },
+        beforeMount(){
+            this.selectedRooms.forEach(element => {
+                this.$set(element, 'discount',  0)
+                this.$set(element, 'newRoomPrice',  element.room_price_per_night.toFixed(2))
+                this.$set(element, 'discountType',  'percent')
+            });
         }
-        // beforeMount(){
-        //     this.selectedRooms.forEach(element => {
-        //         this.$set(element, 'discount',  0)
-        //         this.$set(element, 'newRoomPrice',  0)
-        //     });
-        // }
     }
 </script>
 

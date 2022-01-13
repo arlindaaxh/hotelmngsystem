@@ -2356,28 +2356,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     changeDiscountType: function changeDiscountType(room) {
-      if (this.discountType === 'percent') {
-        this.discountType = 'amount';
+      if (room.discountType === 'percent') {
+        room.discountType = 'amount';
         room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0;
       } else {
-        this.discountType = 'percent';
+        room.discountType = 'percent';
         room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount / 100)).toFixed(2) : 0;
       }
     },
     calculateFinalPrice: function calculateFinalPrice(room) {
-      if (this.discountType === 'percent') {
+      if (room.discountType === 'percent') {
         room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount / 100)).toFixed(2) : 0;
       } else {
         room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0;
       }
     }
-  } // beforeMount(){
-  //     this.selectedRooms.forEach(element => {
-  //         this.$set(element, 'discount',  0)
-  //         this.$set(element, 'newRoomPrice',  0)
-  //     });
-  // }
+  },
+  beforeMount: function beforeMount() {
+    var _this = this;
 
+    this.selectedRooms.forEach(function (element) {
+      _this.$set(element, 'discount', 0);
+
+      _this.$set(element, 'newRoomPrice', element.room_price_per_night.toFixed(2));
+
+      _this.$set(element, 'discountType', 'percent');
+    });
+  }
 });
 
 /***/ }),
@@ -3527,7 +3532,7 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
-                      attrs: { prop: "code", label: "Code", width: "100" }
+                      attrs: { prop: "code", label: "Code", width: "85" }
                     }),
                     _vm._v(" "),
                     _c("el-table-column", {
@@ -3570,7 +3575,7 @@ var render = function() {
                                 },
                                 [
                                   _c("template", { slot: "append" }, [
-                                    _vm.discountType === "percent"
+                                    scope.row.discountType === "percent"
                                       ? _c(
                                           "span",
                                           {
