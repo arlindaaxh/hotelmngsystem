@@ -70,7 +70,7 @@
         </div>
 
 
-        <new-booking-type-modal v-if="showNewBookingTypeModal" @close="showNewBookingTypeModal = false"/>
+        <new-booking-type-modal v-if="showNewBookingTypeModal" @close="showNewBookingTypeModal = false" :fromDashboard="true"/>
       
     </div>
     <div v-else>

@@ -23,7 +23,7 @@ import NormalPopup from '../../NormalPopup.vue';
         components: {
             NormalPopup
         },
-        props: ['checkin', 'checkout','adults','children','selectedRooms'],
+        props: ['checkin', 'checkout','adults','children','selectedRooms','fromDashboard'],
         data() {
             return {
                 loading: false,
@@ -33,8 +33,9 @@ import NormalPopup from '../../NormalPopup.vue';
         methods: {
             createNewBooking(bookingType){
                            console.log('selectedRooms1', this.selectedRooms)
+                
                 this.$router.push({
-                    name: 'availability',
+                    name: this.fromDashboard ? 'availability' : 'new-booking',
                     params: {
                         bookingType: bookingType,
                         bookingData: this.bookingData,

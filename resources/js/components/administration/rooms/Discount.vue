@@ -93,19 +93,19 @@ import NormalPopup from '../../NormalPopup.vue'
             changeDiscountType(room){
                 if(room.discountType === 'percent'){
                     room.discountType = 'amount'
-                    room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0
+                    room.newRoomPrice = isFinite(room.room_price_per_night - room.discount* 1) ? (room.room_price_per_night - room.discount* 1).toFixed(2) : 0
                 }else {
                     room.discountType = 'percent'
-                    room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))) ? 
-                    (room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))).toFixed(2) : 0
+                    room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount* 1 / 100))) ? 
+                    (room.room_price_per_night - (room.room_price_per_night * (room.discount* 1 / 100))).toFixed(2) : 0
                 }
             },
             calculateFinalPrice(room){
                 if(room.discountType === 'percent'){
-                    room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))) ? 
-                    (room.room_price_per_night - (room.room_price_per_night * (room.discount / 100))).toFixed(2) : 0
+                    room.newRoomPrice = isFinite(room.room_price_per_night - (room.room_price_per_night * (room.discount* 1 / 100))) ? 
+                    (room.room_price_per_night - (room.room_price_per_night * (room.discount* 1 / 100))).toFixed(2) : 0
                 }else {
-                    room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0
+                    room.newRoomPrice = isFinite(room.room_price_per_night - room.discount* 1) ? (room.room_price_per_night - room.discount* 1).toFixed(2) : 0
                 }
             },
             save(){
@@ -114,17 +114,22 @@ import NormalPopup from '../../NormalPopup.vue'
                 this.selectedRooms.forEach(room => {
                     room.room_price_per_night = room.newRoomPrice
                 })
+
+                let obj = {
+                    rooms: this.selectedRooms
+                }
+
                  console.log('rooms', this.selectedRooms)
            
                 this.loading = true
                 
-                roomServices.updateRooms(this.selectedRooms).then(() => {
+                roomServices.updateRooms(obj).then(() => {
                       this.$notify.success({
                         title:'Success',
                         type: 'success',
                         message: 'Room were updated successfully'
                     })
-                    this.$emit('close')
+                    this.$emit('close', true)
                 })
                   .catch((error) => {
                      this.loading=false

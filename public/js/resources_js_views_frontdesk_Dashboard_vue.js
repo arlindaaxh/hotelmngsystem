@@ -2208,7 +2208,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['checkin', 'checkout', 'adults', 'children', 'selectedRooms'],
+  props: ['checkin', 'checkout', 'adults', 'children', 'selectedRooms', 'fromDashboard'],
   data: function data() {
     return {
       loading: false,
@@ -2219,7 +2219,7 @@ __webpack_require__.r(__webpack_exports__);
     createNewBooking: function createNewBooking(bookingType) {
       console.log('selectedRooms1', this.selectedRooms);
       this.$router.push({
-        name: 'availability',
+        name: this.fromDashboard ? 'availability' : 'new-booking',
         params: {
           bookingType: bookingType,
           bookingData: this.bookingData,
@@ -3572,6 +3572,7 @@ var render = function() {
           _vm._v(" "),
           _vm.showNewBookingTypeModal
             ? _c("new-booking-type-modal", {
+                attrs: { fromDashboard: true },
                 on: {
                   close: function($event) {
                     _vm.showNewBookingTypeModal = false

@@ -2360,17 +2360,17 @@ __webpack_require__.r(__webpack_exports__);
     changeDiscountType: function changeDiscountType(room) {
       if (room.discountType === 'percent') {
         room.discountType = 'amount';
-        room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0;
+        room.newRoomPrice = isFinite(room.room_price_per_night - room.discount * 1) ? (room.room_price_per_night - room.discount * 1).toFixed(2) : 0;
       } else {
         room.discountType = 'percent';
-        room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount / 100)).toFixed(2) : 0;
+        room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount * 1 / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount * 1 / 100)).toFixed(2) : 0;
       }
     },
     calculateFinalPrice: function calculateFinalPrice(room) {
       if (room.discountType === 'percent') {
-        room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount / 100)).toFixed(2) : 0;
+        room.newRoomPrice = isFinite(room.room_price_per_night - room.room_price_per_night * (room.discount * 1 / 100)) ? (room.room_price_per_night - room.room_price_per_night * (room.discount * 1 / 100)).toFixed(2) : 0;
       } else {
-        room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0;
+        room.newRoomPrice = isFinite(room.room_price_per_night - room.discount * 1) ? (room.room_price_per_night - room.discount * 1).toFixed(2) : 0;
       }
     },
     save: function save() {
@@ -2379,16 +2379,19 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedRooms.forEach(function (room) {
         room.room_price_per_night = room.newRoomPrice;
       });
+      var obj = {
+        rooms: this.selectedRooms
+      };
       console.log('rooms', this.selectedRooms);
       this.loading = true;
-      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].updateRooms(this.selectedRooms).then(function () {
+      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].updateRooms(obj).then(function () {
         _this.$notify.success({
           title: 'Success',
           type: 'success',
           message: 'Room were updated successfully'
         });
 
-        _this.$emit('close');
+        _this.$emit('close', true);
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
@@ -2425,6 +2428,191 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/room.services */ "./resources/js/services/room.services.js");
+/* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'Rise',
+  components: {
+    NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  props: ['selectedRooms'],
+  data: function data() {
+    return {
+      loading: false,
+      discountType: 'percent'
+    };
+  },
+  methods: {
+    changeRiseType: function changeRiseType(room) {
+      if (room.discountType === 'percent') {
+        var _ref;
+
+        room.discountType = 'amount';
+        room.newRoomPrice = isFinite(room.room_price_per_night + room.rise * 1) ? (_ref = room.room_price_per_night + room.rise * 1 * 1) === null || _ref === void 0 ? void 0 : _ref.toFixed(2) : 0;
+      } else {
+        var _ref2;
+
+        room.discountType = 'percent';
+        room.newRoomPrice = isFinite(room.room_price_per_night + room.room_price_per_night * (room.rise * 1 / 100)) ? (_ref2 = room.room_price_per_night + room.room_price_per_night * (room.rise * 1 / 100)) === null || _ref2 === void 0 ? void 0 : _ref2.toFixed(2) : 0;
+      }
+    },
+    calculateFinalPrice: function calculateFinalPrice(room) {
+      if (room.discountType === 'percent') {
+        var _ref3;
+
+        room.newRoomPrice = isFinite(room.room_price_per_night + room.room_price_per_night * (room.rise * 1 / 100)) ? (_ref3 = room.room_price_per_night + room.room_price_per_night * (room.rise * 1 / 100)) === null || _ref3 === void 0 ? void 0 : _ref3.toFixed(2) : 0;
+      } else {
+        var _ref4;
+
+        room.newRoomPrice = isFinite(room.room_price_per_night + room.rise * 1) ? (_ref4 = room.room_price_per_night + room.rise * 1) === null || _ref4 === void 0 ? void 0 : _ref4.toFixed(2) : 0;
+      }
+    },
+    save: function save() {
+      var _this = this;
+
+      this.selectedRooms.forEach(function (room) {
+        room.room_price_per_night = room.newRoomPrice;
+      });
+      var obj = {
+        rooms: this.selectedRooms
+      };
+      console.log('rooms', this.selectedRooms);
+      this.loading = true;
+      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].updateRooms(obj).then(function () {
+        _this.$notify.success({
+          title: 'Success',
+          type: 'success',
+          message: 'Room were updated successfully'
+        });
+
+        _this.$emit('close', true);
+      })["catch"](function (error) {
+        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+        _this.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this.loading = false;
+      });
+    }
+  },
+  beforeMount: function beforeMount() {
+    var _this2 = this;
+
+    this.selectedRooms.forEach(function (element) {
+      var _element$room_price_p;
+
+      _this2.$set(element, 'rise', 0);
+
+      _this2.$set(element, 'newRoomPrice', (_element$room_price_p = element.room_price_per_night) === null || _element$room_price_p === void 0 ? void 0 : _element$room_price_p.toFixed(2));
+
+      _this2.$set(element, 'discountType', 'percent');
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=script&lang=js& ***!
@@ -2439,6 +2627,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_administration_rooms_DeleteRoomModal_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/administration/rooms/DeleteRoomModal.vue */ "./resources/js/components/administration/rooms/DeleteRoomModal.vue");
 /* harmony import */ var _components_administration_rooms_Discount_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/administration/rooms/Discount.vue */ "./resources/js/components/administration/rooms/Discount.vue");
 /* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/room.services */ "./resources/js/services/room.services.js");
+/* harmony import */ var _components_administration_rooms_Rise_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/administration/rooms/Rise.vue */ "./resources/js/components/administration/rooms/Rise.vue");
 //
 //
 //
@@ -2567,13 +2756,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     DeleteRoomModal: _components_administration_rooms_DeleteRoomModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Discount: _components_administration_rooms_Discount_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Discount: _components_administration_rooms_Discount_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Rise: _components_administration_rooms_Rise_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   name: 'AddEditRoom',
   data: function data() {
@@ -2601,6 +2792,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    closeAndRefresh: function closeAndRefresh(fromSave) {
+      this.selectedAction = null;
+
+      if (fromSave) {
+        this.getRooms();
+        this.selectButton = false;
+        this.selectAll();
+      }
+    },
     addNewRoom: function addNewRoom() {
       this.$router.push({
         name: 'add-room',
@@ -2848,6 +3048,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, "[data-v-ac3b14a4] .el-input-group__app
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-1373d9b6] .el-input-group__append {\n  padding-left: 12px;\n  padding-right: 12px;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=style&index=0&id=467d33e6&lang=scss&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=style&index=0&id=467d33e6&lang=scss&scoped=true& ***!
@@ -2929,6 +3153,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Discount_vue_vue_type_style_index_0_id_ac3b14a4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_style_index_0_id_1373d9b6_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_style_index_0_id_1373d9b6_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_style_index_0_id_1373d9b6_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -3083,6 +3337,47 @@ component.options.__file = "resources/js/components/administration/rooms/Discoun
 
 /***/ }),
 
+/***/ "./resources/js/components/administration/rooms/Rise.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/administration/rooms/Rise.vue ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Rise.vue?vue&type=template&id=1373d9b6&scoped=true& */ "./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true&");
+/* harmony import */ var _Rise_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Rise.vue?vue&type=script&lang=js& */ "./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js&");
+/* harmony import */ var _Rise_vue_vue_type_style_index_0_id_1373d9b6_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& */ "./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Rise_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "1373d9b6",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/administration/rooms/Rise.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/views/administration/Rooms.vue":
 /*!*****************************************************!*\
   !*** ./resources/js/views/administration/Rooms.vue ***!
@@ -3172,6 +3467,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Rise.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/views/administration/Rooms.vue?vue&type=script&lang=js&":
 /*!******************************************************************************!*\
   !*** ./resources/js/views/administration/Rooms.vue?vue&type=script&lang=js& ***!
@@ -3210,6 +3521,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Discount_vue_vue_type_style_index_0_id_ac3b14a4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Discount.vue?vue&type=style&index=0&id=ac3b14a4&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Discount.vue?vue&type=style&index=0&id=ac3b14a4&lang=scss&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_style_index_0_id_1373d9b6_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=style&index=0&id=1373d9b6&lang=scss&scoped=true&");
 
 
 /***/ }),
@@ -3274,6 +3598,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Discount_vue_vue_type_template_id_ac3b14a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Discount_vue_vue_type_template_id_ac3b14a4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Discount.vue?vue&type=template&id=ac3b14a4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Discount.vue?vue&type=template&id=ac3b14a4&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true&":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true& ***!
+  \**********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Rise_vue_vue_type_template_id_1373d9b6_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Rise.vue?vue&type=template&id=1373d9b6&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true&");
 
 
 /***/ }),
@@ -3702,6 +4043,218 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/administration/rooms/Rise.vue?vue&type=template&id=1373d9b6&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "NormalPopup",
+    { attrs: { "no-border": true, dimmed: true, width: "500px" } },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "flexed justify-between align-center",
+          attrs: { slot: "header" },
+          slot: "header"
+        },
+        [
+          _c("span", { staticClass: "pointer m-t-5 m-b-5" }, [
+            _c("i", {
+              staticClass: "el-icon-close",
+              on: {
+                click: function($event) {
+                  return _vm.$emit("close")
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("strong", { staticClass: "m-t-5 m-b-5" }, [
+            _vm._v("Add Room Rise")
+          ]),
+          _vm._v(" "),
+          _c("el-button", { on: { click: _vm.save } }, [_vm._v("Save")])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
+            }
+          ],
+          staticClass: "body"
+        },
+        [
+          _c("div", { staticClass: "flexed-column" }, [
+            _c("span", { staticClass: "text-grey" }, [
+              _vm._v(
+                "The rise will be added to " +
+                  _vm._s(_vm.selectedRooms.length) +
+                  " " +
+                  _vm._s(_vm.selectedRooms.length === 1 ? "room" : "rooms")
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticStyle: { "max-height": "500px", "padding-top": "20px" } },
+              [
+                _c(
+                  "el-table",
+                  {
+                    staticStyle: { width: "100%" },
+                    attrs: { data: _vm.selectedRooms, "row-key": "id" }
+                  },
+                  [
+                    _c("el-table-column", {
+                      attrs: { prop: "type", label: "Type", width: "180" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "code", label: "Code", width: "85" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "room_price_per_night",
+                        label: "Room Price",
+                        width: "100",
+                        align: "right"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "rise", label: "Rise", width: "125" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              _c(
+                                "el-input",
+                                {
+                                  staticStyle: { width: "100px" },
+                                  attrs: { type: "small" },
+                                  on: {
+                                    input: function($event) {
+                                      return _vm.calculateFinalPrice(scope.row)
+                                    }
+                                  },
+                                  model: {
+                                    value: scope.row.rise,
+                                    callback: function($$v) {
+                                      _vm.$set(scope.row, "rise", $$v)
+                                    },
+                                    expression: "scope.row.rise"
+                                  }
+                                },
+                                [
+                                  _c("template", { slot: "append" }, [
+                                    scope.row.discountType === "percent"
+                                      ? _c(
+                                          "span",
+                                          {
+                                            staticClass: "pointer",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.changeRiseType(
+                                                  scope.row
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("%")]
+                                        )
+                                      : _c(
+                                          "span",
+                                          {
+                                            staticClass: "pointer",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.changeRiseType(
+                                                  scope.row
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("USD")]
+                                        )
+                                  ])
+                                ],
+                                2
+                              )
+                            ]
+                          }
+                        }
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "newRoomPrice",
+                        label: "Final Price",
+                        width: "125"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(scope) {
+                            return [
+                              _c("el-input", {
+                                staticStyle: { width: "100px" },
+                                attrs: { type: "small" },
+                                model: {
+                                  value: scope.row.newRoomPrice,
+                                  callback: function($$v) {
+                                    _vm.$set(scope.row, "newRoomPrice", $$v)
+                                  },
+                                  expression: "scope.row.newRoomPrice"
+                                }
+                              })
+                            ]
+                          }
+                        }
+                      ])
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=template&id=467d33e6&scoped=true&":
 /*!***************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/administration/Rooms.vue?vue&type=template&id=467d33e6&scoped=true& ***!
@@ -3754,7 +4307,8 @@ var render = function() {
                         style: "max-width:450px",
                         attrs: {
                           size: "big",
-                          placeholder: "Search departments by name or code"
+                          placeholder: "Search departments by name or code",
+                          clearable: ""
                         },
                         model: {
                           value: _vm.query,
@@ -4174,18 +4728,18 @@ var render = function() {
                     attrs: { selectedRooms: _vm.selectedRoomIds },
                     on: {
                       close: function($event) {
-                        _vm.selectedAction = null
+                        return _vm.closeAndRefresh($event)
                       }
                     }
                   })
                 : _vm._e(),
               _vm._v(" "),
               _vm.selectedAction === "rise"
-                ? _c("discount", {
+                ? _c("rise", {
                     attrs: { selectedRooms: _vm.selectedRoomIds },
                     on: {
                       close: function($event) {
-                        _vm.selectedAction = null
+                        return _vm.closeAndRefresh($event)
                       }
                     }
                   })

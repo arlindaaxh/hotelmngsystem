@@ -58,15 +58,12 @@ class RoomController extends Controller
 
     public function updateRooms(Request $request)
     {
-        $requestData = $request->all();
-        foreach ($requestData as $key => $data) {
-
-            $room = Room::find($data->id);
-            $room->update($request->all());
+        $neededData = $request->input('rooms');
+        foreach ($neededData as $key=>$value){
+            $room = Room::find($value['id']);
+            $room->room_price_per_night = $value['room_price_per_night'];
+            $room->save();
         }
-
-        // Room::whereIn('id', $taskIds)->update()
-        return response()->json($room, 200);
-        
     }
+
 }

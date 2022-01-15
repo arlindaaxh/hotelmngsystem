@@ -6,7 +6,7 @@
     <div class="one-column-list">
         <div class="flexed justify-between m-b-20">
             <div class="flexed" style="flex:2;gap:20px;">
-                <el-input class="search-input" size="big" placeholder="Search departments by name or code" v-model="query" :style="'max-width:450px'">
+                <el-input class="search-input" size="big" placeholder="Search departments by name or code" v-model="query" :style="'max-width:450px'" clearable>
                     <i class="el-icon-search el-input__icon" slot="suffix"></i>
                 </el-input>
                 <el-button @click="selectAction()">
@@ -115,8 +115,8 @@
         />
 
         <delete-room-modal v-if="showDeleteRoomModal" :roomProp="roomProp" @close="showHideDeleteRoomModal()"/>
-        <discount v-if="selectedAction === 'discount'" @close="selectedAction = null" :selectedRooms="selectedRoomIds"/>
-        <discount v-if="selectedAction === 'rise'" @close="selectedAction = null" :selectedRooms="selectedRoomIds"/>
+        <discount v-if="selectedAction === 'discount'" @close="closeAndRefresh($event)" :selectedRooms="selectedRoomIds"/>
+        <rise v-if="selectedAction === 'rise'" @close="closeAndRefresh($event)" :selectedRooms="selectedRoomIds"/>
     </div>
    
   </div>
@@ -130,8 +130,9 @@
 import DeleteRoomModal from '../../components/administration/rooms/DeleteRoomModal.vue'
 import Discount from '../../components/administration/rooms/Discount.vue'
 import RoomServices from '../../services/room.services'
+import Rise from '../../components/administration/rooms/Rise.vue'
     export default {
-  components: { DeleteRoomModal, Discount },
+  components: { DeleteRoomModal, Discount, Rise },
         name: 'AddEditRoom',
         data(){
             
@@ -146,7 +147,7 @@ import RoomServices from '../../services/room.services'
                 selectButton: false,
                 selectAllChecked: false,
                 selectedRoomIds: [],
-                selectedAction: null
+                selectedAction: null, 
             }
         
         },
@@ -164,6 +165,15 @@ import RoomServices from '../../services/room.services'
             }
         },
         methods: {
+            closeAndRefresh(fromSave){
+                this.selectedAction = null
+                if(fromSave){
+                    this.getRooms() 
+                    this.selectButton = false
+                    this.selectAll()
+                }
+            
+            },
             addNewRoom(){
                 this.$router.push({
                     name: 'add-room',
@@ -299,8 +309,7 @@ import RoomServices from '../../services/room.services'
             
         },
         beforeMount(){
-            this.getRooms()
-           
+            this.getRooms()  
         },
         beforeRouteUpdate(to, from, next){
             if(to.name === 'rooms'){
