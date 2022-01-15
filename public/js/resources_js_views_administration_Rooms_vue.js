@@ -2264,7 +2264,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
+/* harmony import */ var _services_room_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../services/room.services */ "./resources/js/services/room.services.js");
+/* harmony import */ var _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../NormalPopup.vue */ "./resources/js/components/NormalPopup.vue");
 //
 //
 //
@@ -2342,10 +2343,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Discount',
   components: {
-    NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    NormalPopup: _NormalPopup_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['selectedRooms'],
   data: function data() {
@@ -2370,17 +2372,53 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0;
       }
+    },
+    save: function save() {
+      var _this = this;
+
+      this.selectedRooms.forEach(function (room) {
+        room.room_price_per_night = room.newRoomPrice;
+      });
+      console.log('rooms', this.selectedRooms);
+      this.loading = true;
+      _services_room_services__WEBPACK_IMPORTED_MODULE_0__["default"].updateRooms(this.selectedRooms).then(function () {
+        _this.$notify.success({
+          title: 'Success',
+          type: 'success',
+          message: 'Room were updated successfully'
+        });
+
+        _this.$emit('close');
+      })["catch"](function (error) {
+        var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+        _this.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this.loading = false;
+      });
     }
   },
   beforeMount: function beforeMount() {
-    var _this = this;
+    var _this2 = this;
 
     this.selectedRooms.forEach(function (element) {
-      _this.$set(element, 'discount', 0);
+      _this2.$set(element, 'discount', 0);
 
-      _this.$set(element, 'newRoomPrice', element.room_price_per_night.toFixed(2));
+      _this2.$set(element, 'newRoomPrice', element.room_price_per_night.toFixed(2));
 
-      _this.$set(element, 'discountType', 'percent');
+      _this2.$set(element, 'discountType', 'percent');
     });
   }
 });
@@ -2753,6 +2791,10 @@ __webpack_require__.r(__webpack_exports__);
   deleteRoom: function deleteRoom(id) {
     var url = "http://127.0.0.1:8000/api/rooms/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  },
+  updateRooms: function updateRooms(payload) {
+    var url = "http://127.0.0.1:8000/api/edit-rooms";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -3487,7 +3529,7 @@ var render = function() {
             _vm._v("Add Room Discount")
           ]),
           _vm._v(" "),
-          _c("el-button", [_vm._v("Save")])
+          _c("el-button", { on: { click: _vm.save } }, [_vm._v("Save")])
         ],
         1
       ),

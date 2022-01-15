@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Laravel\Ui\Presets\React;
 
 class RoomController extends Controller
 {
@@ -53,5 +54,19 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
         $room->delete();         
 
+    }
+
+    public function updateRooms(Request $request)
+    {
+        $requestData = $request->all();
+        foreach ($requestData as $key => $data) {
+
+            $room = Room::find($data->id);
+            $room->update($request->all());
+        }
+
+        // Room::whereIn('id', $taskIds)->update()
+        return response()->json($room, 200);
+        
     }
 }

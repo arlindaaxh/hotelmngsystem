@@ -18,6 +18,11 @@ export default {
     deleteRoom(id){
         const url = `http://127.0.0.1:8000/api/rooms/${id}`
         return axios.delete(url)
+    },
+
+    updateRooms(payload){
+        const url = `http://127.0.0.1:8000/api/edit-rooms`
+        return axios.put(url, payload)
     }
   
 }

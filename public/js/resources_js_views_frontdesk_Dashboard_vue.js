@@ -2728,6 +2728,10 @@ __webpack_require__.r(__webpack_exports__);
   deleteRoom: function deleteRoom(id) {
     var url = "http://127.0.0.1:8000/api/rooms/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  },
+  updateRooms: function updateRooms(payload) {
+    var url = "http://127.0.0.1:8000/api/edit-rooms";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 

@@ -5,7 +5,7 @@
                 <i class="el-icon-close" @click="$emit('close')"></i>
             </span>
             <strong class="m-t-5 m-b-5">Add Room Discount</strong>
-            <el-button>Save</el-button>
+            <el-button @click="save">Save</el-button>
         </div>
         <div v-loading="loading" class="body">
             <div class="flexed-column">
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import roomServices from '../../../services/room.services'
 import NormalPopup from '../../NormalPopup.vue'
     export default {
         name: 'Discount',
@@ -106,6 +107,43 @@ import NormalPopup from '../../NormalPopup.vue'
                 }else {
                     room.newRoomPrice = isFinite(room.room_price_per_night - room.discount) ? (room.room_price_per_night - room.discount).toFixed(2) : 0
                 }
+            },
+            save(){
+               
+
+                this.selectedRooms.forEach(room => {
+                    room.room_price_per_night = room.newRoomPrice
+                })
+                 console.log('rooms', this.selectedRooms)
+           
+                this.loading = true
+                
+                roomServices.updateRooms(this.selectedRooms).then(() => {
+                      this.$notify.success({
+                        title:'Success',
+                        type: 'success',
+                        message: 'Room were updated successfully'
+                    })
+                    this.$emit('close')
+                })
+                  .catch((error) => {
+                     this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
             }
         },
         beforeMount(){
