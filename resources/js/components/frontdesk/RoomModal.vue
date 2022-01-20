@@ -15,10 +15,10 @@
             <el-button-group>
                 <el-button @click="activeIndex = 1" :type="activeIndex === 1 ? 'primary' : 'default'">Schedule Details</el-button>
                 <el-button @click="activeIndex = 2" :type="activeIndex === 2 ? 'primary' : 'default'">Reservation Details</el-button>
-                <el-button @click="activeIndex = 3" :type="activeIndex === 3 ? 'primary' : 'default'">Service Options</el-button>
+                <!-- <el-button @click="activeIndex = 3" :type="activeIndex === 3 ? 'primary' : 'default'">Service Options</el-button> -->
             </el-button-group>
 
-            <div class="bordered mt-10 " style="border:1px solid lightgrey;">
+            <div v-if="activeIndex === 1" class="bordered mt-10 " style="border:1px solid lightgrey;">
                 <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
                     <span>Room Type</span>
                     <span>{{roomProp.type}}</span>
@@ -45,6 +45,29 @@
                 <div class="flexed justify-between  align-center p-10 w-100">
                     <el-button type="primary" class="w-100" @click="changeStatus(roomProp, {mark: 'Clean'})" plain>Ready for guest</el-button>
                 </div>
+            </div>
+            <div v-if="activeIndex === 2" class="bordered mt-10 " style="border:1px solid lightgrey; min-height:300px;">
+                <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                    <span>Last Name</span>
+                    <span>{{guest.last_name}}</span>
+                </div>
+                <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                    <span>First Name</span>
+                    <span>{{guest.first_name}}</span>
+                </div>
+                <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                    <span>Adults</span>
+                    <span>{{reservationDetails.num_of_adults}} 1</span>
+                </div>
+                <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                    <span>Children</span>
+                    <span>{{reservationDetails.num_of_children}} 0</span>
+                </div>
+                     <div class="flexed justify-between p-10" style="border-bottom:1px solid lightgrey;">
+                    <span>Pets</span>
+                    <span>N/A</span>
+                </div>
+
             </div>
         </div>
         <div v-loading="loading" v-else class="body" style="height: 400px;">
@@ -81,6 +104,7 @@ import RoomServices from '../../services/room.services'
 import HousekeepingHistoryServices from '../../services/housekeeping-history.service'
 import HousekeepingServices from '../../services/housekeeping.services'
 import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
+import reservationServices from '../../services/reservation.services'
 
     export default {
         name: 'RoomModal',
@@ -89,7 +113,7 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
                 HousekeepersModal,
                 HousekeepingHistoryModal
         },
-        props: ['roomProp', 'housekeepers', 'departments','schedules'],
+        props: ['roomProp', 'housekeepers', 'departments','schedules','guestsProp'],
         data() {
             return {
                 loading: false,
@@ -99,7 +123,28 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
                 hk: false,
                 reRenderKey: 1,
                 showHousekeepingHistoryModal: false,
-                housekeepingHistory: []
+                housekeepingHistory: [],
+                reservations: []
+            }
+        },
+        computed:{
+            reservationDetails(){
+                let res;
+                this.reservations.forEach(reservation => {
+                    reservation.rooms.forEach(room => {
+                        if(this.roomProp.id === room.id){
+                            res = reservation
+                            console.log('here')
+                        }
+                      
+                    });
+                })
+
+                return res;
+              
+            },
+            guest(){
+                return this.guestsProp.find(guest => guest.id === this.reservationDetails.guest_id )
             }
         },
         methods: {
@@ -256,6 +301,31 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
                     this.loading = false
                 })
         
+            },
+            getReservations(){
+                this.loading = true
+                reservationServices.getReservations().then((res) => {
+                    this.reservations = res.data
+                    console.log('this.reservations',this.reservations)
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
             }
            
         },
@@ -266,6 +336,7 @@ import HousekeepingHistoryModal from './HousekeepingHistoryModal.vue'
             }
 
             this.getHousekeepingHistory()
+            this.getReservations()
         }
     }
 </script>

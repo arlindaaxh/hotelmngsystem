@@ -82,7 +82,8 @@
            
         </div>
         
-        <room-modal v-if="showRoomModal" @close="closeRoomModal()" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" @refreshData="refreshData()" />
+        <room-modal v-if="showRoomModal" @close="closeRoomModal()" :roomProp="roomProp" :housekeepers="housekeepers" :departments="departments" :schedules="schedules" 
+            @refreshData="refreshData()" :guestsProp="guests"/>
     </div>
 </template>
 
@@ -92,6 +93,7 @@ import RoomModal from './RoomModal.vue'
 import HousekeepingServices from '../../services/housekeeping.services'
 import DepartmentServices from '../../services/department.services'
 import EmployeeServices from '../../services/employee.services'
+import guestServices from '../../services/guest.services'
     export default {
         components: {
             RoomModal 
@@ -110,7 +112,8 @@ import EmployeeServices from '../../services/employee.services'
                 selectedHousekeeper: null,
                 canSelect: false,
                 selectedRooms: [],
-                selectedFilter: 'All'
+                selectedFilter: 'All',
+                guests: []
             }
         },
         computed: {
@@ -243,6 +246,7 @@ import EmployeeServices from '../../services/employee.services'
                         DepartmentServices.getDepartments(),
                         RoomServices.getRooms(),
                         HousekeepingServices.getHousekeepingSchedules(),
+                        guestServices.getGuests(),
                     ].map((p, index) =>
                         p.then(
                             (v) => ({
@@ -252,7 +256,8 @@ import EmployeeServices from '../../services/employee.services'
                                     index == 0 ? "employees"
                                     : index == 1 ? "departments"
                                     : index == 2 ? "rooms"
-                                    : index == 3 ? "schedules"  : "unknown"
+                                    : index == 3 ? "schedules"  : 
+                                    index === 4 ? 'guests' : "unknown"
                             }),
                             (e) => ({ e, status: "error" })
                         )
@@ -278,6 +283,9 @@ import EmployeeServices from '../../services/employee.services'
                             }else if(res.type == "schedules"){
                                 this.schedules = res.data
                                 console.log('scj',this.schedules)
+                            }
+                            else if(res.type == "guests"){
+                                this.guests = res.data
                             }
                         });
                     }

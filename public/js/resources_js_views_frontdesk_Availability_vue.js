@@ -3251,7 +3251,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("span", [
                         _vm._v(
-                          "\n                            Price - $0.00\n                        "
+                          "\n                            Price - $" +
+                            _vm._s(room.room_price_per_night.toFixed(2)) +
+                            "\n                        "
                         )
                       ])
                     ]

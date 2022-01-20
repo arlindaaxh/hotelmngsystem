@@ -58,7 +58,10 @@
                           
                         </el-card>
                         <el-card shadow="never" class="card-box">
-                            Ready Rooms
+                             <div class="flexed-column" >
+                                <strong></strong>
+                                <strong class="pt-20" style="font-size:25px; font-weight:500">--</strong>
+                            </div>
                         </el-card>
                     </div>
                 </div>

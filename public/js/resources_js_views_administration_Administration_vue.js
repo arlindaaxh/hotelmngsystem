@@ -79,6 +79,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
@@ -15503,7 +15511,7 @@ var render = function() {
               attrs: { index: "employees", route: { name: "employees" } }
             },
             [
-              _c("i", { staticClass: "el-icon-s-custom" }),
+              _c("i", { staticClass: "el-icon-user" }),
               _vm._v(" "),
               _c(
                 "span",
@@ -15614,6 +15622,34 @@ var render = function() {
                   ]
                 },
                 [_vm._v("Addons")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "guests"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "guests", route: { name: "guests" } }
+            },
+            [
+              _c("i", { staticClass: "el-icon-user-solid" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "guests"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Guests")]
               )
             ]
           )

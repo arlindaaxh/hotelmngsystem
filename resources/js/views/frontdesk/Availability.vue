@@ -50,7 +50,7 @@
                             </span>
                             <span>{{room.code}} - {{room.number}}</span>
                             <span>
-                                Price - $0.00
+                                Price - ${{room.room_price_per_night.toFixed(2)}}
                             </span>
                         </div>
                         <el-button  style="color:#ff7b50" @click="openBookingTypeModal(room)">Book</el-button>

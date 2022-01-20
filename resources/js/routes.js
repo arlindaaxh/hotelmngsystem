@@ -76,6 +76,11 @@ export default {
                     path: '/addons',
                     name: 'addons',
                     component: () => import('./views/administration/Addons')
+                },
+                {
+                    path: '/guests',
+                    name: 'guests',
+                    component: () => import('./views/administration/Guests')
                 }
             ]
         },

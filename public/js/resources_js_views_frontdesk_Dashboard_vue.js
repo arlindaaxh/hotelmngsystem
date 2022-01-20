@@ -2339,6 +2339,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3540,9 +3543,21 @@ var render = function() {
                       "el-card",
                       { staticClass: "card-box", attrs: { shadow: "never" } },
                       [
-                        _vm._v(
-                          "\n                        Ready Rooms\n                    "
-                        )
+                        _c("div", { staticClass: "flexed-column" }, [
+                          _c("strong"),
+                          _vm._v(" "),
+                          _c(
+                            "strong",
+                            {
+                              staticClass: "pt-20",
+                              staticStyle: {
+                                "font-size": "25px",
+                                "font-weight": "500"
+                              }
+                            },
+                            [_vm._v("--")]
+                          )
+                        ])
                       ]
                     )
                   ],

@@ -29,7 +29,7 @@
                 :route="{ name: 'employees' }"
                 v-bind:class="[$route.name === 'employees' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
-                <i class="el-icon-s-custom"></i>
+                <i class="el-icon-user"></i>
                 <span :style="[$route.name === 'employees' ? {'color': 'white'} : {'color':'black'}]">Employees</span>
             </el-menu-item>
             <el-menu-item
@@ -56,6 +56,14 @@
             >
                 <i  class="el-icon-s-goods" :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'grey'}]"></i>
                 <span :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Addons</span>
+            </el-menu-item>
+            <el-menu-item
+                index="guests"
+                :route="{ name: 'guests' }"
+                v-bind:class="[$route.name === 'guests' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i  class="el-icon-user-solid"></i>
+                <span :style="[$route.name === 'guests' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Guests</span>
             </el-menu-item>
           
           
