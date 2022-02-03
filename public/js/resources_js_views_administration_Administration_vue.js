@@ -87,6 +87,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
@@ -15595,6 +15606,62 @@ var render = function() {
             "el-menu-item",
             {
               class: [
+                _vm.$route.name === "guests"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "guests", route: { name: "guests" } }
+            },
+            [
+              _c("i", { staticClass: "el-icon-user-solid" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "guests"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Guests")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "products"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "products", route: { name: "products" } }
+            },
+            [
+              _c("i", { staticClass: "el-icon-takeaway-box" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "products"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Products")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
                 _vm.$route.name === "addons"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
@@ -15622,34 +15689,6 @@ var render = function() {
                   ]
                 },
                 [_vm._v("Addons")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "el-menu-item",
-            {
-              class: [
-                _vm.$route.name === "guests"
-                  ? "el-menu-item is-active"
-                  : "el-menu-item"
-              ],
-              attrs: { index: "guests", route: { name: "guests" } }
-            },
-            [
-              _c("i", { staticClass: "el-icon-user-solid" }),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "m-l-5",
-                  style: [
-                    _vm.$route.name === "guests"
-                      ? { color: "white" }
-                      : { color: "black" }
-                  ]
-                },
-                [_vm._v("Guests")]
               )
             ]
           )

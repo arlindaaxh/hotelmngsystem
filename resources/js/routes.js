@@ -12,6 +12,11 @@ export default {
             name: 'About'
         },
         {
+            path: '/register',
+            component: () => import('./views/auth/Register'),
+            name: 'register',
+        },
+        {
             path: '/administration',
             component: () => import('./views/administration/Administration'),
             name: 'administration',
@@ -81,6 +86,11 @@ export default {
                     path: '/guests',
                     name: 'guests',
                     component: () => import('./views/administration/Guests')
+                },
+                {
+                    path: '/products',
+                    name: 'products',
+                    component: () => import('./views/administration/Products')
                 }
             ]
         },
