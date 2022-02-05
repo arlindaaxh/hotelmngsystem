@@ -2305,6 +2305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _components_administration_addons_AddEditAddons_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/administration/addons/AddEditAddons.vue */ "./resources/js/components/administration/addons/AddEditAddons.vue");
 /* harmony import */ var _services_addon_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/addon.services */ "./resources/js/services/addon.services.js");
+/* harmony import */ var _services_product_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/product.services */ "./resources/js/services/product.services.js");
 //
 //
 //
@@ -2375,6 +2376,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2385,28 +2417,43 @@ __webpack_require__.r(__webpack_exports__);
     return {
       loading: false,
       query: "",
-      addons: [],
-      showAddEditAddon: false,
-      addon: null,
+      products: [],
       sortField: null
     };
   },
   computed: {
-    filteredAddons: function filteredAddons() {
+    filteredProducts: function filteredProducts() {
       var _this = this;
 
-      return this.addons && this.addons.filter(function (element) {
-        return element.name.toLowerCase().match(_this.query.toLowerCase());
+      return this.products && this.products.filter(function (element) {
+        return element.name.toLowerCase().match(_this.query.toLowerCase()) || element.upc.match(_this.query);
       });
     }
   },
   methods: {
-    getAddons: function getAddons() {
+    addEditProduct: function addEditProduct() {
+      this.$router.push({
+        name: 'add-product',
+        params: {
+          insertEdit: 'add'
+        }
+      });
+    },
+    editProduct: function editProduct(product) {
+      this.$router.push({
+        name: 'edit-product',
+        params: {
+          productProp: product,
+          insertEdit: 'edit'
+        }
+      });
+    },
+    getProducts: function getProducts() {
       var _this2 = this;
 
       this.loading = true;
-      _services_addon_services__WEBPACK_IMPORTED_MODULE_1__["default"].getAddons().then(function (res) {
-        _this2.addons = res.data;
+      _services_product_services__WEBPACK_IMPORTED_MODULE_2__["default"].getProducts().then(function (res) {
+        _this2.products = res.data;
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
@@ -2426,17 +2473,6 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this2.loading = false;
       });
-    },
-    closeModal: function closeModal() {
-      this.showAddEditAddon = false;
-      this.getAddons();
-    },
-    addEditAddon: function addEditAddon(event) {
-      if (event) {
-        this.addon = event;
-      }
-
-      this.showAddEditAddon = true;
     },
     sortBy: function sortBy(field, order) {
       console.log('field', field);
@@ -2483,11 +2519,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   beforeMount: function beforeMount() {
-    this.getAddons();
+    this.getProducts();
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
-    if (to.name === 'addons') {
-      this.getAddons();
+    if (to.name === 'products') {
+      this.getProducts();
     }
 
     next();
@@ -2526,6 +2562,37 @@ __webpack_require__.r(__webpack_exports__);
   deleteAddon: function deleteAddon(id) {
     var url = "http://127.0.0.1:8000/api/addons/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/product.services.js":
+/*!***************************************************!*\
+  !*** ./resources/js/services/product.services.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postProduct: function postProduct(payload) {
+    var url = "http://127.0.0.1:8000/api/products";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getProducts: function getProducts() {
+    var url = "http://127.0.0.1:8000/api/products";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  putProduct: function putProduct(payload, id) {
+    var url = "http://127.0.0.1:8000/api/products/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -2572,7 +2639,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-1cace7e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-1cace7e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-1cace7e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-1cace7e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3179,156 +3246,252 @@ var render = function() {
         [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "one-column-list" }, [
-            _c(
-              "div",
-              { staticClass: "flexed justify-between m-b-20" },
-              [
-                _c(
-                  "el-input",
-                  {
-                    staticClass: "search-input",
-                    style: "max-width:450px",
-                    attrs: {
-                      size: "big",
-                      placeholder: "Search products by name"
-                    },
-                    model: {
-                      value: _vm.query,
-                      callback: function($$v) {
-                        _vm.query = $$v
+          _c(
+            "div",
+            { staticClass: "one-column-list" },
+            [
+              _c(
+                "div",
+                { staticClass: "flexed justify-between m-b-20" },
+                [
+                  _c(
+                    "el-input",
+                    {
+                      staticClass: "search-input",
+                      style: "max-width:450px",
+                      attrs: {
+                        size: "big",
+                        placeholder: "Search products by name or upc"
                       },
-                      expression: "query"
-                    }
+                      model: {
+                        value: _vm.query,
+                        callback: function($$v) {
+                          _vm.query = $$v
+                        },
+                        expression: "query"
+                      }
+                    },
+                    [
+                      _c("i", {
+                        staticClass: "el-icon-search el-input__icon",
+                        attrs: { slot: "suffix" },
+                        slot: "suffix"
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          staticStyle: {
+                            "background-color": "#ff7b50",
+                            "border-radius": "15px",
+                            color: "white"
+                          },
+                          attrs: { size: "big" },
+                          on: {
+                            click: function($event) {
+                              return _vm.addEditProduct()
+                            }
+                          }
+                        },
+                        [_vm._v("New")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "pl-15 mt-50 table-sort" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
                   },
                   [
-                    _c("i", {
-                      staticClass: "el-icon-search el-input__icon",
-                      attrs: { slot: "suffix" },
-                      slot: "suffix"
-                    })
+                    _c("strong", [_vm._v("Name")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "sort-icon-asc-desc pointer flexed-column"
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "name" && _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("name", "asc")
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "name" && _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("name", "desc")
+                            }
+                          }
+                        })
+                      ]
+                    )
                   ]
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
                   [
+                    _c("strong", [_vm._v("UPC")]),
+                    _vm._v(" "),
                     _c(
-                      "el-button",
-                      {
-                        staticStyle: {
-                          "background-color": "#ff7b50",
-                          "border-radius": "15px",
-                          color: "white"
-                        },
-                        attrs: { size: "big" },
-                        on: {
-                          click: function($event) {
-                            return _vm.addEditProduct()
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "upc" && _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc", "asc")
+                            }
                           }
-                        }
-                      },
-                      [_vm._v("New")]
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "upc" && _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("upc", "desc")
+                            }
+                          }
+                        })
+                      ]
                     )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "pl-15 mt-50 table-sort" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "flexed align-center ",
-                  staticStyle: { gap: "10px" }
-                },
-                [
-                  _c("strong", [_vm._v("Name")]),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    { staticClass: "sort-icon-asc-desc pointer flexed-column" },
-                    [
-                      _c("i", {
-                        staticClass: "el-icon-caret-top",
-                        class:
-                          _vm.sortField === "name" && _vm.sortOrder === "asc"
-                            ? "sorted-field-ascending"
-                            : "ascending",
-                        staticStyle: { height: "10px" },
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("name", "asc")
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flexed align-center ",
+                    staticStyle: { gap: "10px" }
+                  },
+                  [
+                    _c("strong", [_vm._v("Vendor")]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      { staticClass: "sort-icon-asc-desc flexed-column" },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-caret-top",
+                          class:
+                            _vm.sortField === "vendor" &&
+                            _vm.sortOrder === "asc"
+                              ? "sorted-field-ascending"
+                              : "ascending",
+                          staticStyle: { height: "10px" },
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("vendor", "asc")
+                            }
                           }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("i", {
-                        staticClass: "el-icon-caret-bottom",
-                        class:
-                          _vm.sortField === "name" && _vm.sortOrder === "desc"
-                            ? "sorted-field-descending"
-                            : "descending",
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("name", "desc")
+                        }),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-caret-bottom",
+                          class:
+                            _vm.sortField === "vendor" &&
+                            _vm.sortOrder === "desc"
+                              ? "sorted-field-descending"
+                              : "descending",
+                          on: {
+                            click: function($event) {
+                              return _vm.sortBy("vendor", "desc")
+                            }
                           }
-                        }
-                      })
-                    ]
-                  )
-                ]
-              ),
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(1),
+                _vm._v(" "),
+                _vm._m(2)
+              ]),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "flexed align-center ",
-                  staticStyle: { gap: "10px" }
-                },
-                [
-                  _c("strong", [_vm._v("Price")]),
-                  _vm._v(" "),
+              _vm._l(_vm.filteredProducts, function(product, index) {
+                return _c("div", { key: index, staticClass: "mt-10" }, [
                   _c(
-                    "span",
-                    { staticClass: "sort-icon-asc-desc flexed-column" },
+                    "div",
+                    {
+                      staticClass: "card-items-container pointer flexed",
+                      on: {
+                        click: function($event) {
+                          return _vm.editProduct(product)
+                        }
+                      }
+                    },
                     [
-                      _c("i", {
-                        staticClass: "el-icon-caret-top",
-                        class:
-                          _vm.sortField === "code" && _vm.sortOrder === "asc"
-                            ? "sorted-field-ascending"
-                            : "ascending",
-                        staticStyle: { height: "10px" },
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("code", "asc")
-                          }
-                        }
-                      }),
+                      _c("span", { staticClass: "info-name text" }, [
+                        _vm._v(_vm._s(product.name))
+                      ]),
                       _vm._v(" "),
-                      _c("i", {
-                        staticClass: "el-icon-caret-bottom",
-                        class:
-                          _vm.sortField === "code" && _vm.sortOrder === "desc"
-                            ? "sorted-field-descending"
-                            : "descending",
-                        on: {
-                          click: function($event) {
-                            return _vm.sortBy("code", "desc")
-                          }
-                        }
-                      })
+                      _c("span", { staticClass: "info-name text" }, [
+                        _vm._v(_vm._s(product.upc))
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "info-name text" }, [
+                        _vm._v(_vm._s(product.vendor_id))
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "info-name" }, [
+                        _vm._v(_vm._s(product.price) + "$")
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "info-name text" }, [
+                        _vm._v(_vm._s(product.initial_quantity))
+                      ])
                     ]
                   )
-                ]
-              )
-            ])
-          ]),
+                ])
+              })
+            ],
+            2
+          ),
           _vm._v(" "),
-          !_vm.loading
+          !_vm.loading &&
+          _vm.filteredProducts &&
+          _vm.filteredProducts.length === 0
             ? _c("el-alert", {
                 staticClass: "mt-30",
                 attrs: {
@@ -3342,7 +3505,7 @@ var render = function() {
         ],
         1
       )
-    : _vm._e()
+    : _c("div", [_c("router-view")], 1)
 }
 var staticRenderFns = [
   function() {
@@ -3353,6 +3516,26 @@ var staticRenderFns = [
       "div",
       { staticClass: "shortcuts-header flexed justify-between" },
       [_c("h4", [_vm._v("Products")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "flexed align-center ", staticStyle: { gap: "10px" } },
+      [_c("strong", [_vm._v("Price")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "flexed align-center ", staticStyle: { gap: "10px" } },
+      [_c("strong", [_vm._v("Initial Quantity")])]
     )
   }
 ]

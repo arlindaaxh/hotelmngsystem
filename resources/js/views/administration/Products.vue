@@ -5,7 +5,7 @@
         </div>
         <div class="one-column-list">
             <div class="flexed justify-between m-b-20">
-                <el-input class="search-input" size="big" placeholder="Search products by name" v-model="query" :style="'max-width:450px'">
+                <el-input class="search-input" size="big" placeholder="Search products by name or upc" v-model="query" :style="'max-width:450px'">
                     <i class="el-icon-search el-input__icon" slot="suffix"></i>
                 </el-input>
                 <div>
@@ -30,32 +30,59 @@
                         ></i>
                     </span>
                 </div>
-                <div class="flexed align-center " style="gap:10px">
-                    <strong>Price</strong>
+              
+                 <div class="flexed align-center " style="gap:10px">
+                    <strong>UPC</strong>
                     <span class="sort-icon-asc-desc flexed-column">
                         <i
                         class="el-icon-caret-top" style="height:10px"
-                        @click="sortBy('code', 'asc')"
-                        :class="sortField === 'code' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                        @click="sortBy('upc', 'asc')"
+                        :class="sortField === 'upc' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
                         ></i>
                         <i
                         class="el-icon-caret-bottom" 
-                        :class="sortField === 'code' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
-                        @click="sortBy('code', 'desc')"
+                        :class="sortField === 'upc' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                        @click="sortBy('upc', 'desc')"
                         ></i>
                     </span>
                 </div>
-            </div>
-            <!-- <div class="mt-10" v-for="(addon,index) in filteredAddons" :key="index">
-                <div class="card-items-container pointer flexed" @click="editAddon(addon)">  -->
-                    <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
-                    <!-- <span class="info-name text">{{addon.name}}</span>
-                    <span class="info-name">{{addon.price}}$</span>
+                <div class="flexed align-center " style="gap:10px">
+                    <strong>Vendor</strong>
+                    <span class="sort-icon-asc-desc flexed-column">
+                        <i
+                        class="el-icon-caret-top" style="height:10px"
+                        @click="sortBy('vendor', 'asc')"
+                        :class="sortField === 'vendor' && sortOrder === 'asc' ? 'sorted-field-ascending' : 'ascending'"
+                        ></i>
+                        <i
+                        class="el-icon-caret-bottom" 
+                        :class="sortField === 'vendor' && sortOrder === 'desc' ? 'sorted-field-descending' : 'descending'"
+                        @click="sortBy('vendor', 'desc')"
+                        ></i>
+                    </span>
                 </div>
-            </div> -->
+                <div class="flexed align-center " style="gap:10px">
+                    <strong>Price</strong>
+                
+                </div>
+                 <div class="flexed align-center " style="gap:10px">
+                    <strong>Initial Quantity</strong>
+                
+                </div>
+            </div>
+            <div class="mt-10" v-for="(product,index) in filteredProducts" :key="index">
+                <div class="card-items-container pointer flexed" @click="editProduct(product)"> 
+                    <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
+                    <span class="info-name text">{{product.name}}</span>
+                    <span class="info-name text">{{product.upc}}</span>
+                    <span class="info-name text">{{product.vendor_id}}</span>
+                    <span class="info-name">{{product.price}}$</span>
+                    <span class="info-name text">{{product.initial_quantity}}</span>
+                </div>
+            </div>
         </div>
     
-       <el-alert v-if="!loading"  
+       <el-alert v-if="!loading && filteredProducts && filteredProducts.length === 0"  
             type="info" 
             :closable="false" 
             class="mt-30"
@@ -66,30 +93,31 @@
   
         <!-- <add-edit-addons v-if="showAddEditAddon" :addon="addon" @close="closeModal()"/> -->
     </div>
+    <div v-else>
+        <router-view />
+    </div>
 </template>
 
 <script>
 import AddEditAddons from '../../components/administration/addons/AddEditAddons.vue'
 import AddonServices from '../../services/addon.services'
+import productServices from '../../services/product.services'
     export default {
   components: { AddEditAddons },
         data() {
             return {
                 loading: false,
                 query: "",
-                addons: [],
-                showAddEditAddon: false,
-                addon: null,
+                products: [],
                 sortField: null,
             }
         },
         computed: {
-            filteredAddons(){
+            filteredProducts(){
                 return (
-                    (this.addons && this.addons.filter(element => {
+                    (this.products && this.products.filter(element => {
                         return (
-                           element.name.toLowerCase().match(this.query.toLowerCase())
-
+                           element.name.toLowerCase().match(this.query.toLowerCase()) || element.upc.match(this.query)
                         )
                         })
                     )    
@@ -97,10 +125,28 @@ import AddonServices from '../../services/addon.services'
             }  
         },
         methods: {
-            getAddons(){
+            addEditProduct(){
+                this.$router.push({
+                    name: 'add-product',
+                    params: {
+                        insertEdit: 'add',
+                    }
+                
+                })
+            },
+            editProduct(product){
+                this.$router.push({
+                    name: 'edit-product',
+                    params: {
+                        productProp: product,
+                        insertEdit: 'edit'
+                    }
+                })
+            },
+            getProducts(){
                 this.loading = true
-                AddonServices.getAddons().then((res) => {
-                    this.addons = res.data
+                productServices.getProducts().then((res) => {
+                    this.products = res.data
                 })
                 .catch((error) => {
                     this.loading=false
@@ -120,18 +166,10 @@ import AddonServices from '../../services/addon.services'
                 .finally(() => {
                     this.loading = false
                 })
+
             },
-            closeModal(){
-                this.showAddEditAddon = false
-                this.getAddons()
-            },
-            addEditAddon(event){
-                if(event){
-                    this.addon = event
-                }
-                this.showAddEditAddon = true
-            },
-               sortBy(field, order) {
+        
+            sortBy(field, order) {
                  console.log('field', field)
             
                 this.sortField = field;
@@ -171,11 +209,11 @@ import AddonServices from '../../services/addon.services'
             },
         },
         beforeMount(){
-            this.getAddons()
+            this.getProducts()
         },
         beforeRouteUpdate(to, from, next){
-            if(to.name === 'addons'){
-                this.getAddons()
+            if(to.name === 'products'){
+                this.getProducts()
             
             }
             next()
@@ -188,7 +226,7 @@ import AddonServices from '../../services/addon.services'
 
 .card-items-container{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 
 }
 
@@ -196,7 +234,7 @@ import AddonServices from '../../services/addon.services'
     display: grid;
     padding-right:10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
     font-size: 16px;
     justify-content: space-between;

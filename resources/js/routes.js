@@ -90,7 +90,22 @@ export default {
                 {
                     path: '/products',
                     name: 'products',
-                    component: () => import('./views/administration/Products')
+                    component: () => import('./views/administration/Products'),
+                    children: [
+                        {
+                            path: '/add-product',
+                            name: 'add-product',
+                            component: () => import('./components/administration/products/AddEditProduct'),
+                        },
+                        {
+                            path: '/edit-product/:id',
+                            name: 'edit-product',
+                            component: () => import('./components/administration/products/AddEditProduct'),
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                    ]
                 }
             ]
         },

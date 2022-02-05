@@ -11,6 +11,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AddonController;
 use App\Http\Controllers\ChargeController;
+use App\Http\Controllers\ProductController;
 
 
 
@@ -85,3 +86,8 @@ Route::post('/charges', [ChargeController::class, 'store']);
 Route::put('/charges/{id}', [ChargeController::class, 'update']);
 Route::delete('/charges/{id}', [ChargeController::class, 'delete']);
 
+
+//PRODUCTS
+Route::post('/products', [ProductController::class, 'store']);
+Route::get('/products', [ProductController::class, 'index']);
+Route::put('/products/{id}', [ProductController::class, 'update']);
