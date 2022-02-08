@@ -96,6 +96,9 @@ export default {
                             path: '/add-product',
                             name: 'add-product',
                             component: () => import('./components/administration/products/AddEditProduct'),
+                            props: (route) => ({
+                                ...route.params
+                            })
                         },
                         {
                             path: '/edit-product/:id',
@@ -106,6 +109,34 @@ export default {
                             })
                         },
                     ]
+                },
+                {
+                    path: '/orders',
+                    name: 'orders',
+                    component: () => import('./views/administration/Orders'),
+                    children: [
+                        {
+                            path: '/add-order',
+                            name: 'add-order',
+                            component: () => import('./components/administration/orders/AddEditOrder'),
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                        {
+                            path: '/edit-order/:id',
+                            name: 'edit-order',
+                            component: () => import('./components/administration/orders/AddEditOrder'),
+                            props: (route) => ({
+                                ...route.params
+                            })
+                        },
+                    ]
+                },
+                {
+                    path: '/vendors',
+                    name: 'vendors',
+                    component: () => import('./views/administration/Vendors')
                 }
             ]
         },

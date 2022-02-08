@@ -98,6 +98,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Sidebar',
@@ -15662,6 +15678,34 @@ var render = function() {
             "el-menu-item",
             {
               class: [
+                _vm.$route.name === "orders"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "orders", route: { name: "orders" } }
+            },
+            [
+              _c("i", { staticClass: "el-icon-sell" }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "orders"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Orders")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
                 _vm.$route.name === "addons"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
@@ -15689,6 +15733,41 @@ var render = function() {
                   ]
                 },
                 [_vm._v("Addons")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "el-menu-item",
+            {
+              class: [
+                _vm.$route.name === "vendors"
+                  ? "el-menu-item is-active"
+                  : "el-menu-item"
+              ],
+              attrs: { index: "vendors", route: { name: "vendors" } }
+            },
+            [
+              _c("i", {
+                staticClass: "el-icon-box",
+                style: [
+                  _vm.$route.name === "vendors"
+                    ? { color: "white" }
+                    : { color: "grey" }
+                ]
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "m-l-5",
+                  style: [
+                    _vm.$route.name === "vendors"
+                      ? { color: "white" }
+                      : { color: "black" }
+                  ]
+                },
+                [_vm._v("Vendors")]
               )
             ]
           )

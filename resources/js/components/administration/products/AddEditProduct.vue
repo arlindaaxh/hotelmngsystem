@@ -34,7 +34,7 @@
                     <el-input  name="price" v-model="product.price" size="big"></el-input>
                 </el-form-item>
 
-                <el-form-item prop="vendor_id" label="Vendor">
+                <!-- <el-form-item prop="vendor_id" label="Vendor">
                     <el-select v-model="product.vendor_id"  placeholder="Select vendor for product" style="width:100%" size="big">
                         <el-option
                             v-for="vendor in vendors"
@@ -44,7 +44,7 @@
                             >
                         </el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
 
                 <el-form-item prop="initial_quantity" label="Initial Quantity">
                     <el-input  name="initial_quantity" v-model="product.initial_quantity" size="big"></el-input>
@@ -169,6 +169,7 @@ export default {
     },
     beforeMount(){
         if(!this.insertEdit){
+            console.log('jere')
             this.goBack()
         }
         else {

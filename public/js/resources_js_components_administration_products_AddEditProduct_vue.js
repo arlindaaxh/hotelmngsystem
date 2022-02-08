@@ -2241,6 +2241,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   beforeMount: function beforeMount() {
     if (!this.insertEdit) {
+      console.log('jere');
       this.goBack();
     } else {
       if (this.insertEdit === 'edit') {
@@ -17268,38 +17269,6 @@ var render = function() {
                       expression: "product.price"
                     }
                   })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "el-form-item",
-                { attrs: { prop: "vendor_id", label: "Vendor" } },
-                [
-                  _c(
-                    "el-select",
-                    {
-                      staticStyle: { width: "100%" },
-                      attrs: {
-                        placeholder: "Select vendor for product",
-                        size: "big"
-                      },
-                      model: {
-                        value: _vm.product.vendor_id,
-                        callback: function($$v) {
-                          _vm.$set(_vm.product, "vendor_id", $$v)
-                        },
-                        expression: "product.vendor_id"
-                      }
-                    },
-                    _vm._l(_vm.vendors, function(vendor) {
-                      return _c("el-option", {
-                        key: vendor.value,
-                        attrs: { label: vendor.label, value: vendor.id }
-                      })
-                    }),
-                    1
-                  )
                 ],
                 1
               ),

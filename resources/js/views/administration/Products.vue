@@ -13,7 +13,7 @@
                 </div>
             </div>
      
-
+<!-- 
             <div class="pl-15 mt-50 table-sort">
                 <div class="flexed align-center " style="gap:10px">
                     <strong>Name</strong>
@@ -72,15 +72,49 @@
             </div>
             <div class="mt-10" v-for="(product,index) in filteredProducts" :key="index">
                 <div class="card-items-container pointer flexed" @click="editProduct(product)"> 
-                    <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
+                  
                     <span class="info-name text">{{product.name}}</span>
                     <span class="info-name text">{{product.upc}}</span>
                     <span class="info-name text">{{product.vendor_id}}</span>
                     <span class="info-name">{{product.price}}$</span>
                     <span class="info-name text">{{product.initial_quantity}}</span>
                 </div>
-            </div>
-        </div>
+            </div>-->
+        </div> 
+
+        <el-table
+            :data="filteredProducts"
+            stripe
+            style="width: 100%"
+            class="table mt-50 pointer"
+            :default-sort = "{prop: 'name', order: 'ascending'}"
+            header-cell-class-name="table-header"
+            :header-cell-style="tableCellStyle"
+            @row-click="editProduct"
+            >
+            <el-table-column
+                prop="name"
+                label="Name"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="upc"
+                label="UPC"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="vendor_id"
+                label="Vendor">
+            </el-table-column>
+            <el-table-column
+                prop="price"
+                label="Price">
+            </el-table-column>
+            <el-table-column
+                prop="initial_quantity"
+                label="Initial Quantity">
+            </el-table-column>
+        </el-table>
     
        <el-alert v-if="!loading && filteredProducts && filteredProducts.length === 0"  
             type="info" 
@@ -90,8 +124,7 @@
             show-icon
             
         />
-  
-        <!-- <add-edit-addons v-if="showAddEditAddon" :addon="addon" @close="closeModal()"/> -->
+
     </div>
     <div v-else>
         <router-view />
@@ -134,11 +167,11 @@ import productServices from '../../services/product.services'
                 
                 })
             },
-            editProduct(product){
+            editProduct(row, column, event){
                 this.$router.push({
                     name: 'edit-product',
                     params: {
-                        productProp: product,
+                        productProp: row,
                         insertEdit: 'edit'
                     }
                 })
@@ -169,6 +202,9 @@ import productServices from '../../services/product.services'
 
             },
         
+            tableCellStyle({row, column, rowIndex, columnIndex}) {
+                return {'color':'#2c3e50'}
+            },
             sortBy(field, order) {
                  console.log('field', field)
             
@@ -242,5 +278,17 @@ import productServices from '../../services/product.services'
     padding-left: 15px;
     padding-right: 15px ;
     font-family: 'Mulish', sans-serif;
+}
+
+.table{
+//   max-height: 600px;
+//   overflow:scroll;
+  color: #2c3e50 !important;
+  font-family: BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.table-header{
+    color: black;
 }
 </style>

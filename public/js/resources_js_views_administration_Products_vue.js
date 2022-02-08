@@ -2406,6 +2406,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2439,11 +2472,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    editProduct: function editProduct(product) {
+    editProduct: function editProduct(row, column, event) {
       this.$router.push({
         name: 'edit-product',
         params: {
-          productProp: product,
+          productProp: row,
           insertEdit: 'edit'
         }
       });
@@ -2473,6 +2506,15 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this2.loading = false;
       });
+    },
+    tableCellStyle: function tableCellStyle(_ref) {
+      var row = _ref.row,
+          column = _ref.column,
+          rowIndex = _ref.rowIndex,
+          columnIndex = _ref.columnIndex;
+      return {
+        'color': '#2c3e50'
+      };
     },
     sortBy: function sortBy(field, order) {
       console.log('field', field);
@@ -2639,7 +2681,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-1cace7e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-1cace7e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-1cace7e6] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n}\n.table-sort[data-v-1cace7e6] {\n  display: grid;\n  padding-right: 10px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n  align-items: center;\n  font-size: 16px;\n  justify-content: space-between;\n  margin-bottom: 10px;\n  padding-left: 15px;\n  padding-right: 15px;\n  font-family: \"Mulish\", sans-serif;\n}\n.table[data-v-1cace7e6] {\n  color: #2c3e50 !important;\n  font-family: BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;\n  font-size: 14px;\n}\n.table-header[data-v-1cace7e6] {\n  color: black;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3246,247 +3288,97 @@ var render = function() {
         [
           _vm._m(0),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "one-column-list" },
-            [
-              _c(
-                "div",
-                { staticClass: "flexed justify-between m-b-20" },
-                [
-                  _c(
-                    "el-input",
-                    {
-                      staticClass: "search-input",
-                      style: "max-width:450px",
-                      attrs: {
-                        size: "big",
-                        placeholder: "Search products by name or upc"
-                      },
-                      model: {
-                        value: _vm.query,
-                        callback: function($$v) {
-                          _vm.query = $$v
-                        },
-                        expression: "query"
-                      }
-                    },
-                    [
-                      _c("i", {
-                        staticClass: "el-icon-search el-input__icon",
-                        attrs: { slot: "suffix" },
-                        slot: "suffix"
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    [
-                      _c(
-                        "el-button",
-                        {
-                          staticStyle: {
-                            "background-color": "#ff7b50",
-                            "border-radius": "15px",
-                            color: "white"
-                          },
-                          attrs: { size: "big" },
-                          on: {
-                            click: function($event) {
-                              return _vm.addEditProduct()
-                            }
-                          }
-                        },
-                        [_vm._v("New")]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "pl-15 mt-50 table-sort" }, [
+          _c("div", { staticClass: "one-column-list" }, [
+            _c(
+              "div",
+              { staticClass: "flexed justify-between m-b-20" },
+              [
                 _c(
-                  "div",
+                  "el-input",
                   {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
+                    staticClass: "search-input",
+                    style: "max-width:450px",
+                    attrs: {
+                      size: "big",
+                      placeholder: "Search products by name or upc"
+                    },
+                    model: {
+                      value: _vm.query,
+                      callback: function($$v) {
+                        _vm.query = $$v
+                      },
+                      expression: "query"
+                    }
                   },
                   [
-                    _c("strong", [_vm._v("Name")]),
-                    _vm._v(" "),
+                    _c("i", {
+                      staticClass: "el-icon-search el-input__icon",
+                      attrs: { slot: "suffix" },
+                      slot: "suffix"
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
                     _c(
-                      "span",
+                      "el-button",
                       {
-                        staticClass: "sort-icon-asc-desc pointer flexed-column"
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "name" && _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("name", "asc")
-                            }
+                        staticStyle: {
+                          "background-color": "#ff7b50",
+                          "border-radius": "15px",
+                          color: "white"
+                        },
+                        attrs: { size: "big" },
+                        on: {
+                          click: function($event) {
+                            return _vm.addEditProduct()
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "name" && _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("name", "desc")
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
-                  },
-                  [
-                    _c("strong", [_vm._v("UPC")]),
-                    _vm._v(" "),
-                    _c(
-                      "span",
-                      { staticClass: "sort-icon-asc-desc flexed-column" },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "upc" && _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("upc", "asc")
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "upc" && _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("upc", "desc")
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "flexed align-center ",
-                    staticStyle: { gap: "10px" }
-                  },
-                  [
-                    _c("strong", [_vm._v("Vendor")]),
-                    _vm._v(" "),
-                    _c(
-                      "span",
-                      { staticClass: "sort-icon-asc-desc flexed-column" },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-caret-top",
-                          class:
-                            _vm.sortField === "vendor" &&
-                            _vm.sortOrder === "asc"
-                              ? "sorted-field-ascending"
-                              : "ascending",
-                          staticStyle: { height: "10px" },
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("vendor", "asc")
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "el-icon-caret-bottom",
-                          class:
-                            _vm.sortField === "vendor" &&
-                            _vm.sortOrder === "desc"
-                              ? "sorted-field-descending"
-                              : "descending",
-                          on: {
-                            click: function($event) {
-                              return _vm.sortBy("vendor", "desc")
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _vm._m(1),
-                _vm._v(" "),
-                _vm._m(2)
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.filteredProducts, function(product, index) {
-                return _c("div", { key: index, staticClass: "mt-10" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "card-items-container pointer flexed",
-                      on: {
-                        click: function($event) {
-                          return _vm.editProduct(product)
                         }
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "info-name text" }, [
-                        _vm._v(_vm._s(product.name))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name text" }, [
-                        _vm._v(_vm._s(product.upc))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name text" }, [
-                        _vm._v(_vm._s(product.vendor_id))
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name" }, [
-                        _vm._v(_vm._s(product.price) + "$")
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "info-name text" }, [
-                        _vm._v(_vm._s(product.initial_quantity))
-                      ])
-                    ]
-                  )
-                ])
+                      },
+                      [_vm._v("New")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "el-table",
+            {
+              staticClass: "table mt-50 pointer",
+              staticStyle: { width: "100%" },
+              attrs: {
+                data: _vm.filteredProducts,
+                stripe: "",
+                "default-sort": { prop: "name", order: "ascending" },
+                "header-cell-class-name": "table-header",
+                "header-cell-style": _vm.tableCellStyle
+              },
+              on: { "row-click": _vm.editProduct }
+            },
+            [
+              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+              _vm._v(" "),
+              _c("el-table-column", { attrs: { prop: "upc", label: "UPC" } }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "vendor_id", label: "Vendor" }
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "price", label: "Price" }
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "initial_quantity", label: "Initial Quantity" }
               })
             ],
-            2
+            1
           ),
           _vm._v(" "),
           !_vm.loading &&
@@ -3516,26 +3408,6 @@ var staticRenderFns = [
       "div",
       { staticClass: "shortcuts-header flexed justify-between" },
       [_c("h4", [_vm._v("Products")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "flexed align-center ", staticStyle: { gap: "10px" } },
-      [_c("strong", [_vm._v("Price")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "flexed align-center ", staticStyle: { gap: "10px" } },
-      [_c("strong", [_vm._v("Initial Quantity")])]
     )
   }
 ]

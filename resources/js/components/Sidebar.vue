@@ -1,8 +1,6 @@
 <template>
     <div>
         <div class="flexed  ml-20 p-20 pt-40" style="font-weight:bold; font-size:17px"><span class="el-icon-office-building"></span>My Hotel Logo</div>
-    
-
         <el-menu
             :default-active="$route.path"
             class="el-menu-vertical-demo"
@@ -68,6 +66,16 @@
                 <span :style="[$route.name === 'products' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Products</span>
             </el-menu-item>
 
+            
+            <el-menu-item
+                index="orders"
+                :route="{ name: 'orders' }"
+                v-bind:class="[$route.name === 'orders' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i  class="el-icon-sell"></i>
+                <span :style="[$route.name === 'orders' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Orders</span>
+            </el-menu-item>
+
             <el-menu-item
                 index="addons"
                 :route="{ name: 'addons' }"
@@ -77,6 +85,14 @@
                 <span :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Addons</span>
             </el-menu-item>
           
+            <el-menu-item
+                index="vendors"
+                :route="{ name: 'vendors' }"
+                v-bind:class="[$route.name === 'vendors' ? 'el-menu-item is-active' : 'el-menu-item']"
+            >
+                <i  class="el-icon-box" :style="[$route.name === 'vendors' ? {'color': 'white'} : {'color':'grey'}]"></i>
+                <span :style="[$route.name === 'vendors' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Vendors</span>
+            </el-menu-item>
           
         
         </el-menu>
