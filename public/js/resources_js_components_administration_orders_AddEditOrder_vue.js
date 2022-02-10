@@ -11,7 +11,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var _common_mixins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../common/mixins */ "./resources/js/common/mixins.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -53,15 +63,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  mixins: [_common_mixins__WEBPACK_IMPORTED_MODULE_0__["default"]],
   name: 'AddEditOrder',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_0__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__.ArrowLeftIcon
   },
   props: ['insertEdit'],
   data: function data() {
     return {
-      loading: false
+      loading: false,
+      product_ids: [],
+      loadingSearch: false,
+      products: []
     };
   },
   methods: {
@@ -69,6 +84,70 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'orders'
       });
+    },
+    searchProduct: function searchProduct(query) {
+      this.testMetoda(query);
+      this.products = [];
+      if (!query || query.length === 0) return; // let payload = {
+      //     active: true,
+      //     limit: 50,
+      //     order_by : 'name',
+      //     "track_inventory": true,
+      //     text_filters: [
+      //         {
+      //             condition: "CONTAINS",
+      //             value: query,
+      //             field_name: "name",
+      //         }
+      //     ]
+      // }
+      // this.loadingSearch = true;
+      // POApprovalRulesServices.searchProduct(payload)
+      //     .then((res) => {
+      //         this.products= res.data.records;
+      //     })
+      //     .catch((error) => {
+      //         this.catchMethod(error);
+      //     })
+      //     .finally(() => {
+      //         this.loadingSearch = false;
+      //     });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/common/mixins.js":
+/*!***************************************!*\
+  !*** ./resources/js/common/mixins.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  methods: {
+    catchMethod: function catchMethod(error) {
+      var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
+
+      this.loading = false;
+      var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
+
+      if (!errorMessage && error !== null && error !== void 0 && error.data) {
+        errorMessage = error.data;
+      }
+
+      if (!errorMessage) errorMessage = 'Error_occurred';
+      this.$notify.error({
+        title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
+        message: errorMessage
+      });
+    },
+    testMetoda: function testMetoda(event) {
+      console.log('event', event);
     }
   }
 });
@@ -14994,26 +15073,36 @@ var render = function() {
                 "el-select",
                 {
                   attrs: {
-                    multiple: "",
                     filterable: "",
+                    multiple: "",
+                    clearable: "",
                     remote: "",
                     "reserve-keyword": "",
-                    placeholder: "Please enter a keyword",
-                    "remote-method": _vm.remoteMethod,
-                    loading: _vm.loading
+                    placeholder: "Search Product",
+                    "remote-method": function(data) {
+                      return _vm.searchProduct(data)
+                    },
+                    loading: _vm.loadingSearch,
+                    "value-key": "id"
                   },
                   model: {
-                    value: _vm.value,
+                    value: _vm.product_ids,
                     callback: function($$v) {
-                      _vm.value = $$v
+                      _vm.product_ids = $$v
                     },
-                    expression: "value"
+                    expression: "product_ids"
                   }
                 },
-                _vm._l(_vm.options, function(item) {
+                _vm._l(_vm.products, function(item) {
                   return _c("el-option", {
-                    key: item.value,
-                    attrs: { label: item.label, value: item.value }
+                    key: item.id,
+                    attrs: {
+                      label:
+                        item.name.length > 30
+                          ? item.name.substr(0, 30) + "..."
+                          : item.name,
+                      value: item
+                    }
                   })
                 }),
                 1

@@ -1,11 +1,4 @@
-import Vue from 'vue'
-
-Vue.mixin({
-    data() {
-        return {
-
-        }
-    }, 
+export default{
     methods: {
         catchMethod(error){
             this.loading=false
@@ -21,6 +14,9 @@ Vue.mixin({
                 title: error?.status || error?.response?.status,
                 message: errorMessage,
               });
+        },
+        testMetoda(event){
+            console.log('event', event)
         }
     }
-})
+}

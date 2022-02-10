@@ -15531,7 +15531,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "employees"
+                _vm.$route.name === "employees" ||
+                _vm.$route.name === "add-employee" ||
+                _vm.$route.name === "edit-employee"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15544,7 +15546,9 @@ var render = function() {
                 "span",
                 {
                   style: [
-                    _vm.$route.name === "employees"
+                    _vm.$route.name === "employees" ||
+                    _vm.$route.name === "add-employee" ||
+                    _vm.$route.name === "edit-employee"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -15558,7 +15562,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "departments"
+                _vm.$route.name === "departments" ||
+                _vm.$route.name === "add-department" ||
+                _vm.$route.name === "edit-department"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15571,7 +15577,9 @@ var render = function() {
                 "span",
                 {
                   style: [
-                    _vm.$route.name === "departments"
+                    _vm.$route.name === "departments" ||
+                    _vm.$route.name === "add-department" ||
+                    _vm.$route.name === "edit-department"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -15585,7 +15593,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "rooms"
+                _vm.$route.name === "rooms" ||
+                _vm.$route.name === "add-room" ||
+                _vm.$route.name === "edit-room"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15595,7 +15605,9 @@ var render = function() {
               _c("b-icon", {
                 staticClass: "m-l-5",
                 style: [
-                  _vm.$route.name === "rooms"
+                  _vm.$route.name === "rooms" ||
+                  _vm.$route.name === "add-room" ||
+                  _vm.$route.name === "edit-room"
                     ? { color: "white" }
                     : { color: "grey" }
                 ],
@@ -15607,7 +15619,9 @@ var render = function() {
                 {
                   staticClass: "m-l-5",
                   style: [
-                    _vm.$route.name === "rooms"
+                    _vm.$route.name === "rooms" ||
+                    _vm.$route.name === "add-room" ||
+                    _vm.$route.name === "edit-room"
                       ? { color: "white", marginRight: "10px" }
                       : { color: "black", marginRight: "10px" }
                   ]
@@ -15622,7 +15636,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "guests"
+                _vm.$route.name === "guests" ||
+                _vm.$route.name === "add-guest" ||
+                _vm.$route.name === "edit-guest"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15636,7 +15652,9 @@ var render = function() {
                 {
                   staticClass: "m-l-5",
                   style: [
-                    _vm.$route.name === "guests"
+                    _vm.$route.name === "guests" ||
+                    _vm.$route.name === "add-guest" ||
+                    _vm.$route.name === "edit-guest"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -15650,7 +15668,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "products"
+                _vm.$route.name === "products" ||
+                _vm.$route.name === "add-product" ||
+                _vm.$route.name === "edit-product"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15664,7 +15684,9 @@ var render = function() {
                 {
                   staticClass: "m-l-5",
                   style: [
-                    _vm.$route.name === "products"
+                    _vm.$route.name === "products" ||
+                    _vm.$route.name === "add-product" ||
+                    _vm.$route.name === "edit-product"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -15678,7 +15700,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "orders"
+                _vm.$route.name === "orders" ||
+                _vm.$route.name === "add-order" ||
+                _vm.$route.name === "edit-order"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15692,7 +15716,9 @@ var render = function() {
                 {
                   staticClass: "m-l-5",
                   style: [
-                    _vm.$route.name === "orders"
+                    _vm.$route.name === "orders" ||
+                    _vm.$route.name === "add-order" ||
+                    _vm.$route.name === "edit-order"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -15706,7 +15732,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "addons"
+                _vm.$route.name === "addons" ||
+                _vm.$route.name === "add-addon" ||
+                _vm.$route.name === "edit-addon"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15716,7 +15744,9 @@ var render = function() {
               _c("i", {
                 staticClass: "el-icon-s-goods",
                 style: [
-                  _vm.$route.name === "addons"
+                  _vm.$route.name === "addons" ||
+                  _vm.$route.name === "add-addon" ||
+                  _vm.$route.name === "edit-addon"
                     ? { color: "white" }
                     : { color: "grey" }
                 ]
@@ -15741,7 +15771,9 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "vendors"
+                _vm.$route.name === "vendors" ||
+                _vm.$route.name === "add-vendor" ||
+                _vm.$route.name === "edit-vendor"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -15751,7 +15783,9 @@ var render = function() {
               _c("i", {
                 staticClass: "el-icon-box",
                 style: [
-                  _vm.$route.name === "vendors"
+                  _vm.$route.name === "vendors" ||
+                  _vm.$route.name === "add-vendor" ||
+                  _vm.$route.name === "edit-vendor"
                     ? { color: "white" }
                     : { color: "grey" }
                 ]

@@ -25,72 +25,72 @@
             <el-menu-item
                 index="employees"
                 :route="{ name: 'employees' }"
-                v-bind:class="[$route.name === 'employees' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'employees' || $route.name === 'add-employee' || $route.name === 'edit-employee'   ? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i class="el-icon-user"></i>
-                <span :style="[$route.name === 'employees' ? {'color': 'white'} : {'color':'black'}]">Employees</span>
+                <span :style="[$route.name === 'employees' || $route.name === 'add-employee' || $route.name === 'edit-employee'  ? {'color': 'white'} : {'color':'black'}]">Employees</span>
             </el-menu-item>
             <el-menu-item
                 index="departments"
                 :route="{ name: 'departments' }"
-                v-bind:class="[$route.name === 'departments' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'departments' || $route.name === 'add-department' || $route.name === 'edit-department'  ? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i class="el-icon-s-custom"></i>
-                <span :style="[$route.name === 'departments' ? {'color': 'white'} : {'color':'black'}]">Departments</span>
+                <span :style="[$route.name === 'departments'  || $route.name === 'add-department' || $route.name === 'edit-department' ? {'color': 'white'} : {'color':'black'}]">Departments</span>
             </el-menu-item>
             <el-menu-item
                 index="rooms"
                 :route="{ name: 'rooms' }"
-                v-bind:class="[$route.name === 'rooms' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'rooms' || $route.name === 'add-room' || $route.name === 'edit-room' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
          
-                <b-icon icon="door-closed-fill" class="m-l-5" :style="[$route.name === 'rooms' ? {'color': 'white'} : {'color':'grey'}]"></b-icon>
-                <span :style="[$route.name === 'rooms' ? {'color': 'white', 'marginRight': '10px'} : {'color':'black','marginRight': '10px'}]" class="m-l-5"> Rooms</span>
+                <b-icon icon="door-closed-fill" class="m-l-5" :style="[$route.name === 'rooms'  || $route.name === 'add-room' || $route.name === 'edit-room' ? {'color': 'white'} : {'color':'grey'}]"></b-icon>
+                <span :style="[$route.name === 'rooms'  || $route.name === 'add-room' || $route.name === 'edit-room' ? {'color': 'white', 'marginRight': '10px'} : {'color':'black','marginRight': '10px'}]" class="m-l-5"> Rooms</span>
             </el-menu-item>
             
             <el-menu-item
                 index="guests"
                 :route="{ name: 'guests' }"
-                v-bind:class="[$route.name === 'guests' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'guests' || $route.name === 'add-guest' || $route.name === 'edit-guest'? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i  class="el-icon-user-solid"></i>
-                <span :style="[$route.name === 'guests' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Guests</span>
+                <span :style="[$route.name === 'guests' || $route.name === 'add-guest' || $route.name === 'edit-guest' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Guests</span>
             </el-menu-item>
 
             <el-menu-item
                 index="products"
                 :route="{ name: 'products' }"
-                v-bind:class="[$route.name === 'products' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'products' || $route.name === 'add-product' || $route.name === 'edit-product' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i  class="el-icon-takeaway-box"></i>
-                <span :style="[$route.name === 'products' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Products</span>
+                <span :style="[$route.name === 'products' || $route.name === 'add-product' || $route.name === 'edit-product' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Products</span>
             </el-menu-item>
 
             
             <el-menu-item
                 index="orders"
                 :route="{ name: 'orders' }"
-                v-bind:class="[$route.name === 'orders' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'orders' || $route.name === 'add-order' || $route.name === 'edit-order' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i  class="el-icon-sell"></i>
-                <span :style="[$route.name === 'orders' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Orders</span>
+                <span :style="[$route.name === 'orders' || $route.name === 'add-order' || $route.name === 'edit-order' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Orders</span>
             </el-menu-item>
 
             <el-menu-item
                 index="addons"
                 :route="{ name: 'addons' }"
-                v-bind:class="[$route.name === 'addons' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'addons' || $route.name === 'add-addon' || $route.name === 'edit-addon' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
-                <i  class="el-icon-s-goods" :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'grey'}]"></i>
+                <i  class="el-icon-s-goods" :style="[$route.name === 'addons' || $route.name === 'add-addon' || $route.name === 'edit-addon' ? {'color': 'white'} : {'color':'grey'}]"></i>
                 <span :style="[$route.name === 'addons' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Addons</span>
             </el-menu-item>
           
             <el-menu-item
                 index="vendors"
                 :route="{ name: 'vendors' }"
-                v-bind:class="[$route.name === 'vendors' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'vendors' || $route.name === 'add-vendor' || $route.name === 'edit-vendor' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
-                <i  class="el-icon-box" :style="[$route.name === 'vendors' ? {'color': 'white'} : {'color':'grey'}]"></i>
+                <i  class="el-icon-box" :style="[$route.name === 'vendors' || $route.name === 'add-vendor' || $route.name === 'edit-vendor' ? {'color': 'white'} : {'color':'grey'}]"></i>
                 <span :style="[$route.name === 'vendors' ? {'color': 'white'} : {'color':'black'}]" class="m-l-5">Vendors</span>
             </el-menu-item>
           
