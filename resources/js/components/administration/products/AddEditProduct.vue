@@ -34,17 +34,17 @@
                     <el-input  name="price" v-model="product.price" size="big"></el-input>
                 </el-form-item>
 
-                <!-- <el-form-item prop="vendor_id" label="Vendor">
-                    <el-select v-model="product.vendor_id"  placeholder="Select vendor for product" style="width:100%" size="big">
+                <el-form-item prop="vendor_id" label="Vendor" v-if="selectedVendor">
+                    <el-select v-model="selectedVendor"  placeholder="Select vendor for product" style="width:100%" size="big">
                         <el-option
                             v-for="vendor in vendors"
                             :key="vendor.value"
-                            :label="vendor.label"
-                            :value="vendor.id"
+                            :label="vendor.name"
+                            :value="vendor"
                             >
                         </el-option>
                     </el-select>
-                </el-form-item> -->
+                </el-form-item>
 
                 <el-form-item prop="initial_quantity" label="Initial Quantity">
                     <el-input  name="initial_quantity" v-model="product.initial_quantity" size="big"></el-input>
@@ -58,13 +58,14 @@
 <script>
 import {ArrowLeftIcon} from 'vue-feather-icons';
 import productServices from '../../../services/product.services';
-import ProductServices from '../../../services/product.services'
+import ProductServices from '../../../services/product.services';
+
 export default {
     name: 'AddEditProduct',
     components: {
         ArrowLeftIcon
     },
-    props: ['productProp', 'insertEdit'],
+    props: ['productProp', 'insertEdit', 'vendors'],
     data(){
         return{
             loading: false, 
@@ -76,6 +77,7 @@ export default {
                 initial_quantity: 1,
                 vendor_id: null,
             },
+            selectedVendor: null,
             rules: {
                 name: [
                     {
@@ -89,7 +91,9 @@ export default {
                         trigger: "change",
                     },
                 ],
-            }
+            },
+            vendors: [],
+           
         }
     },
     methods: {
@@ -102,7 +106,7 @@ export default {
             this.$refs['add-edit-product-form'].validate((valid) => {
                 if(valid){
                     this.loading = true
-                    this.product.vendor_id = 1;
+                    this.product.vendor_id = this.selectedVendor.id;
                     ProductServices.postProduct(this.product).then((res) => {
                         this.$notify.success({
                             title: 'Success',
@@ -165,18 +169,28 @@ export default {
                 this.loading = false
             })
         },
+  
 
     },
     beforeMount(){
+       
         if(!this.insertEdit){
             console.log('jere')
             this.goBack()
         }
         else {
-            if(this.insertEdit === 'edit'){
+            if(this.insertEdit === 'edit'){ 
                 this.product = {...this.productProp}
+                let found = this.vendors.find(v => v.id == this.product.vendor_id)
+                if(found){
+                    this.selectedVendor = found
+                }
+               
+               
             }
         }
+
+
     }
 }
 </script>

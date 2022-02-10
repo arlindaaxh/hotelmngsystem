@@ -2306,6 +2306,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_administration_addons_AddEditAddons_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/administration/addons/AddEditAddons.vue */ "./resources/js/components/administration/addons/AddEditAddons.vue");
 /* harmony import */ var _services_addon_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/addon.services */ "./resources/js/services/addon.services.js");
 /* harmony import */ var _services_product_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/product.services */ "./resources/js/services/product.services.js");
+/* harmony import */ var _services_vendor_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/vendor.services */ "./resources/js/services/vendor.services.js");
 //
 //
 //
@@ -2439,6 +2440,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -2451,7 +2453,8 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       query: "",
       products: [],
-      sortField: null
+      sortField: null,
+      vendors: []
     };
   },
   computed: {
@@ -2468,7 +2471,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'add-product',
         params: {
-          insertEdit: 'add'
+          insertEdit: 'add',
+          vendors: this.vendors
         }
       });
     },
@@ -2477,7 +2481,8 @@ __webpack_require__.r(__webpack_exports__);
         name: 'edit-product',
         params: {
           productProp: row,
-          insertEdit: 'edit'
+          insertEdit: 'edit',
+          vendors: this.vendors
         }
       });
     },
@@ -2487,6 +2492,17 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       _services_product_services__WEBPACK_IMPORTED_MODULE_2__["default"].getProducts().then(function (res) {
         _this2.products = res.data;
+        var found = null;
+
+        _this2.products.forEach(function (product) {
+          found = _this2.vendors.find(function (v) {
+            return v.id == product.vendor_id;
+          });
+
+          if (found) {
+            _this2.$set(product, 'vendor_name', found.name);
+          }
+        });
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
@@ -2558,9 +2574,36 @@ __webpack_require__.r(__webpack_exports__);
 
         return 0;
       });
+    },
+    getVendors: function getVendors() {
+      var _this3 = this;
+
+      this.loading = true;
+      _services_vendor_services__WEBPACK_IMPORTED_MODULE_3__["default"].getVendors().then(function (res) {
+        _this3.vendors = res.data;
+      })["catch"](function (error) {
+        var _error$data2, _error$response4, _error$response5, _error$response5$data, _error$response6;
+
+        _this3.loading = false;
+        var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data2 = error.data) === null || _error$data2 === void 0 ? void 0 : _error$data2.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response4 = error.response) === null || _error$response4 === void 0 ? void 0 : _error$response4.message) || (error === null || error === void 0 ? void 0 : (_error$response5 = error.response) === null || _error$response5 === void 0 ? void 0 : (_error$response5$data = _error$response5.data) === null || _error$response5$data === void 0 ? void 0 : _error$response5$data.message);
+
+        if (!errorMessage && error !== null && error !== void 0 && error.data) {
+          errorMessage = error.data;
+        }
+
+        if (!errorMessage) errorMessage = 'Error_occurred';
+
+        _this3.$notify.error({
+          title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response6 = error.response) === null || _error$response6 === void 0 ? void 0 : _error$response6.status),
+          message: errorMessage
+        });
+      })["finally"](function () {
+        _this3.loading = false;
+      });
     }
   },
   beforeMount: function beforeMount() {
+    this.getVendors();
     this.getProducts();
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -2634,6 +2677,41 @@ __webpack_require__.r(__webpack_exports__);
   },
   putProduct: function putProduct(payload, id) {
     var url = "http://127.0.0.1:8000/api/products/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  searchProd: function searchProd(query) {
+    var url = "http://127.0.0.1:8000/api/search-products";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, query);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/vendor.services.js":
+/*!**************************************************!*\
+  !*** ./resources/js/services/vendor.services.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postVendor: function postVendor(payload) {
+    var url = "http://127.0.0.1:8000/api/vendors";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getVendors: function getVendors() {
+    var url = "http://127.0.0.1:8000/api/vendors";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  putVendor: function putVendor(payload, id) {
+    var url = "http://127.0.0.1:8000/api/vendors/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
@@ -3367,7 +3445,7 @@ var render = function() {
               _c("el-table-column", { attrs: { prop: "upc", label: "UPC" } }),
               _vm._v(" "),
               _c("el-table-column", {
-                attrs: { prop: "vendor_id", label: "Vendor" }
+                attrs: { prop: "vendor_name", label: "Vendor" }
               }),
               _vm._v(" "),
               _c("el-table-column", {

@@ -53,4 +53,14 @@ class ProductController extends Controller
 
     }
 
+   
+
+    public function searchProd(Request $request){
+                //$dogs = Dogs::latest()->take(50)->get();
+        $products = Product::where('name', 'LIKE','%'.$request->input('keyword').'%')->get();
+        return $products;
+    }  
+
+   
+   
 }

@@ -103,7 +103,7 @@
             >
             </el-table-column>
             <el-table-column
-                prop="vendor_id"
+                prop="vendor_name"
                 label="Vendor">
             </el-table-column>
             <el-table-column
@@ -134,7 +134,9 @@
 <script>
 import AddEditAddons from '../../components/administration/addons/AddEditAddons.vue'
 import AddonServices from '../../services/addon.services'
-import productServices from '../../services/product.services'
+import productServices from '../../services/product.services';
+import VendorServices from '../../services/vendor.services';
+
     export default {
   components: { AddEditAddons },
         data() {
@@ -143,6 +145,7 @@ import productServices from '../../services/product.services'
                 query: "",
                 products: [],
                 sortField: null,
+                vendors: []
             }
         },
         computed: {
@@ -163,6 +166,7 @@ import productServices from '../../services/product.services'
                     name: 'add-product',
                     params: {
                         insertEdit: 'add',
+                        vendors: this.vendors
                     }
                 
                 })
@@ -172,7 +176,9 @@ import productServices from '../../services/product.services'
                     name: 'edit-product',
                     params: {
                         productProp: row,
-                        insertEdit: 'edit'
+                        insertEdit: 'edit',
+                        vendors: this.vendors
+                        
                     }
                 })
             },
@@ -180,6 +186,14 @@ import productServices from '../../services/product.services'
                 this.loading = true
                 productServices.getProducts().then((res) => {
                     this.products = res.data
+                    let found = null
+                    this.products.forEach(product => {
+                        found =  this.vendors.find(v => v.id == product.vendor_id)
+                        if(found){
+                            this.$set(product,'vendor_name', found.name )
+                        }
+                      
+                    })
                 })
                 .catch((error) => {
                     this.loading=false
@@ -243,9 +257,37 @@ import productServices from '../../services/product.services'
                     return 0;
                 });
             },
+            getVendors(){
+                this.loading = true
+                VendorServices.getVendors().then((res) => {
+                    this.vendors = res.data
+                  
+                })
+                .catch((error) => {
+                    this.loading=false
+                    let errorMessage = error?.data?.message ||
+                    error?.message ||
+                    error?.response?.message ||
+                    error?.response?.data?.message
+                    if(!errorMessage && error?.data){
+                    errorMessage =  error.data
+                    }
+                    if(!errorMessage) errorMessage = 'Error_occurred'
+                    this.$notify.error({
+                        title: error?.status || error?.response?.status,
+                        message: errorMessage,
+                    });
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
         },
         beforeMount(){
+            this.getVendors()
             this.getProducts()
+
+     
         },
         beforeRouteUpdate(to, from, next){
             if(to.name === 'products'){

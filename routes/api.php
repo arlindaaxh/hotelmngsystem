@@ -72,7 +72,7 @@ Route::get('/guests', [GuestController::class, 'index']);
 Route::post('/reservations', [ReservationController::class, 'store']);
 Route::get('/reservations', [ReservationController::class, 'index']);
 Route::get('/reservations-list', [ReservationController::class, 'daily_report']);
-Route::put('/edit-reservation/{id}', [ReservationController::class, 'update']);
+Route::get('/edit-reservation/{id}', [ReservationController::class, 'update']);
 
 
 //ADDONS
@@ -93,6 +93,7 @@ Route::delete('/charges/{id}', [ChargeController::class, 'delete']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
+Route::post('/search-products', [ProductController::class, 'searchProd']);
 
 //VENDORS
 Route::post('/vendors', [VendorController::class, 'store']);

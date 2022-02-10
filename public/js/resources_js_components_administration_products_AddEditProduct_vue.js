@@ -2137,7 +2137,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   components: {
     ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_1__.ArrowLeftIcon
   },
-  props: ['productProp', 'insertEdit'],
+  props: ['productProp', 'insertEdit', 'vendors'],
   data: function data() {
     return {
       loading: false,
@@ -2149,6 +2149,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         initial_quantity: 1,
         vendor_id: null
       },
+      selectedVendor: null,
       rules: {
         name: [{
           required: true,
@@ -2159,7 +2160,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           message: "Maximum characters allowed is 255",
           trigger: "change"
         }]
-      }
+      },
+      vendors: []
     };
   },
   methods: {
@@ -2174,7 +2176,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.$refs['add-edit-product-form'].validate(function (valid) {
         if (valid) {
           _this.loading = true;
-          _this.product.vendor_id = 1;
+          _this.product.vendor_id = _this.selectedVendor.id;
           _services_product_services__WEBPACK_IMPORTED_MODULE_0__["default"].postProduct(_this.product).then(function (res) {
             _this.$notify.success({
               title: 'Success',
@@ -2240,12 +2242,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   beforeMount: function beforeMount() {
+    var _this3 = this;
+
     if (!this.insertEdit) {
       console.log('jere');
       this.goBack();
     } else {
       if (this.insertEdit === 'edit') {
         this.product = _objectSpread({}, this.productProp);
+        var found = this.vendors.find(function (v) {
+          return v.id == _this3.product.vendor_id;
+        });
+
+        if (found) {
+          this.selectedVendor = found;
+        }
       }
     }
   }
@@ -2279,6 +2290,10 @@ __webpack_require__.r(__webpack_exports__);
   putProduct: function putProduct(payload, id) {
     var url = "http://127.0.0.1:8000/api/products/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  searchProd: function searchProd(query) {
+    var url = "http://127.0.0.1:8000/api/search-products";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, query);
   }
 });
 
@@ -17272,6 +17287,40 @@ var render = function() {
                 ],
                 1
               ),
+              _vm._v(" "),
+              _vm.selectedVendor
+                ? _c(
+                    "el-form-item",
+                    { attrs: { prop: "vendor_id", label: "Vendor" } },
+                    [
+                      _c(
+                        "el-select",
+                        {
+                          staticStyle: { width: "100%" },
+                          attrs: {
+                            placeholder: "Select vendor for product",
+                            size: "big"
+                          },
+                          model: {
+                            value: _vm.selectedVendor,
+                            callback: function($$v) {
+                              _vm.selectedVendor = $$v
+                            },
+                            expression: "selectedVendor"
+                          }
+                        },
+                        _vm._l(_vm.vendors, function(vendor) {
+                          return _c("el-option", {
+                            key: vendor.value,
+                            attrs: { label: vendor.name, value: vendor }
+                          })
+                        }),
+                        1
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "el-form-item",

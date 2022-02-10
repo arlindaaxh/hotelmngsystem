@@ -15,4 +15,9 @@ export default{
         const url = `http://127.0.0.1:8000/api/products/${id}`
         return axios.put(url, payload)
     },
+
+    searchProd(query){
+        const url = `http://127.0.0.1:8000/api/search-products`
+        return axios.post(url, query)
+    }
 }
