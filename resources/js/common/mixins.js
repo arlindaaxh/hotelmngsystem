@@ -17,6 +17,7 @@ export default{
         },
         testMetoda(event){
             console.log('event', event)
-        }
+        },
+      
     }
 }

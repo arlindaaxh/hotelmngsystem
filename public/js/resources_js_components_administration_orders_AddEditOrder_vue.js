@@ -2064,10 +2064,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _common_mixins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../common/mixins */ "./resources/js/common/mixins.js");
 /* harmony import */ var _services_vendor_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../services/vendor.services */ "./resources/js/services/vendor.services.js");
 /* harmony import */ var _services_product_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/product.services */ "./resources/js/services/product.services.js");
+/* harmony import */ var _common_utilities_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../common/utilities.services */ "./resources/js/common/utilities.services.js");
 //
 //
 //
@@ -2127,6 +2128,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2135,22 +2184,31 @@ __webpack_require__.r(__webpack_exports__);
   mixins: [_common_mixins__WEBPACK_IMPORTED_MODULE_0__["default"]],
   name: 'AddEditOrder',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_3__.ArrowLeftIcon
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__.ArrowLeftIcon
   },
   props: ['insertEdit'],
   data: function data() {
     return {
       loading: false,
-      product_ids: [],
+      selectedProduct: null,
       loadingSearch: false,
       products: [],
       vendors: [],
-      quantity: 0
+      quantity: 0,
+      order: {
+        serial_number: null,
+        items: 0,
+        products: [],
+        total_amount: null,
+        payment_type: 'in_place',
+        guest_id: null,
+        employee_id: null
+      }
     };
   },
   computed: {
     disableSave: function disableSave() {
-      return !this.quantity || this.quantity * 1 === 0;
+      return !this.quantity || this.quantity * 1 === 0 || !this.selectedProduct;
     }
   },
   methods: {
@@ -2190,7 +2248,71 @@ __webpack_require__.r(__webpack_exports__);
       })["finally"](function () {
         _this2.loading = false;
       });
-    }
+    },
+    addProduct: function addProduct() {
+      this.$set(this.selectedProduct, 'quantity', this.quantity);
+      var total = this.quantity * 1 * this.selectedProduct.price;
+      this.$set(this.selectedProduct, 'total_amount_per_product', total);
+      this.order.products.push(this.selectedProduct);
+      console.log('order', this.order.products);
+      this.resetFields();
+      var gid = (0,_common_utilities_services__WEBPACK_IMPORTED_MODULE_3__.generateOrderNumber)();
+      console.log('gid', gid);
+    },
+    resetFields: function resetFields() {
+      this.selectedProduct = null;
+      this.quantity = null;
+      this.products = [];
+    },
+    formatPrice: function formatPrice(row, column) {
+      return "$".concat(row[column.property].toFixed(2));
+    },
+    getSummaries: function getSummaries(param) {
+      var _this3 = this;
+
+      var columns = param.columns,
+          data = param.data;
+      var sums = [];
+      columns.forEach(function (column, index) {
+        if (index === 2) {
+          sums[index] = 'Total Cost';
+          return;
+        }
+
+        if (index === 1 || index === 0) {
+          sums[index] = '';
+          return;
+        }
+
+        var values = data.map(function (item) {
+          return Number(item[column.property]);
+        });
+
+        if (!values.every(function (value) {
+          return isNaN(value);
+        })) {
+          sums[index] = '$ ' + values.reduce(function (prev, curr) {
+            var value = Number(curr);
+
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+        } else {
+          sums[index] = 'N/A';
+        }
+
+        _this3.order.total_amount = (sums[index] * 1).toFixed(2);
+      });
+      return sums;
+    },
+    calculateTotalPrice: function calculateTotalPrice(product) {
+      var total = product.total_amount_per_product = product.quantity * 1 * product.price;
+      return total;
+    },
+    save: function save() {}
   }
 });
 
@@ -2230,6 +2352,36 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
+
+/***/ }),
+
+/***/ "./resources/js/common/utilities.services.js":
+/*!***************************************************!*\
+  !*** ./resources/js/common/utilities.services.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "generateShortUUID": () => (/* binding */ generateShortUUID),
+/* harmony export */   "generateOrderNumber": () => (/* binding */ generateOrderNumber)
+/* harmony export */ });
+var generateShortUUID = function generateShortUUID() {
+  return 'xxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 12 | 0,
+        v = c == 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(12);
+  });
+};
+var generateOrderNumber = function generateOrderNumber() {
+  var now = Date.now().toString(); // '1492341545873'
+  // pad with extra random digit
+
+  now += now + Math.floor(Math.random() * 10); // format
+
+  return [now.slice(0, 4), now.slice(4, 10)].join('');
+};
 
 /***/ }),
 
@@ -17198,7 +17350,7 @@ var render = function() {
                     "border-radius": "15px",
                     color: "white"
                   },
-                  attrs: { size: "big", disabled: _vm.disableSave },
+                  attrs: { size: "big" },
                   on: {
                     click: function($event) {
                       return _vm.save()
@@ -17234,7 +17386,6 @@ var render = function() {
                         staticStyle: { width: "400px" },
                         attrs: {
                           filterable: "",
-                          multiple: "",
                           clearable: "",
                           remote: "",
                           "reserve-keyword": "",
@@ -17247,11 +17398,11 @@ var render = function() {
                           "no-data-text": "No data"
                         },
                         model: {
-                          value: _vm.product_ids,
+                          value: _vm.selectedProduct,
                           callback: function($$v) {
-                            _vm.product_ids = $$v
+                            _vm.selectedProduct = $$v
                           },
-                          expression: "product_ids"
+                          expression: "selectedProduct"
                         }
                       },
                       _vm._l(_vm.products, function(item) {
@@ -17267,19 +17418,6 @@ var render = function() {
                         })
                       }),
                       1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-button",
-                      {
-                        staticStyle: { "min-width": "70px" },
-                        attrs: { type: "primary" }
-                      },
-                      [
-                        _vm.loadingSearch
-                          ? _c("i", { staticClass: "el-icon-loading" })
-                          : _c("span", [_vm._v("Add")])
-                      ]
                     )
                   ],
                   1
@@ -17297,7 +17435,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("el-input", {
                   staticStyle: { width: "160px" },
-                  attrs: { placeholder: "quantity" },
+                  attrs: { type: "number", placeholder: "quantity" },
                   model: {
                     value: _vm.quantity,
                     callback: function($$v) {
@@ -17308,9 +17446,113 @@ var render = function() {
                 })
               ],
               1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-button",
+              {
+                staticStyle: { "min-width": "70px", "margin-top": "32px" },
+                attrs: { type: "primary", disabled: _vm.disableSave },
+                on: {
+                  click: function($event) {
+                    return _vm.addProduct()
+                  }
+                }
+              },
+              [
+                _vm.loadingSearch
+                  ? _c("i", { staticClass: "el-icon-loading" })
+                  : _c("span", [_vm._v("Add")])
+              ]
             )
-          ]
-        )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm.order.products.length
+          ? _c(
+              "div",
+              { staticClass: "m-t-30" },
+              [
+                _c(
+                  "el-table",
+                  {
+                    staticClass: "table mt-50",
+                    staticStyle: { width: "100%" },
+                    attrs: {
+                      data: _vm.order.products,
+                      stripe: "",
+                      "default-sort": { prop: "name", order: "ascending" },
+                      "header-cell-class-name": "table-header",
+                      "show-summary": "",
+                      "summary-method": _vm.getSummaries
+                    }
+                  },
+                  [
+                    _c("el-table-column", {
+                      attrs: { prop: "name", label: "Name" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "upc", label: "UPC" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: { prop: "quantity", label: "Quantity" },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "default",
+                            fn: function(scope) {
+                              return [
+                                _c("el-input", {
+                                  staticStyle: { width: "150px" },
+                                  attrs: { placeholder: "Qty" },
+                                  on: {
+                                    input: function($event) {
+                                      return _vm.calculateTotalPrice(scope.row)
+                                    }
+                                  },
+                                  model: {
+                                    value: scope.row.quantity,
+                                    callback: function($$v) {
+                                      _vm.$set(scope.row, "quantity", $$v)
+                                    },
+                                    expression: "scope.row.quantity"
+                                  }
+                                })
+                              ]
+                            }
+                          }
+                        ],
+                        null,
+                        false,
+                        2444765126
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "price",
+                        label: "Price",
+                        formatter: _vm.formatPrice
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("el-table-column", {
+                      attrs: {
+                        prop: "total_amount_per_product",
+                        label: "Total",
+                        formatter: _vm.formatPrice
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          : _vm._e()
       ])
     ]
   )
