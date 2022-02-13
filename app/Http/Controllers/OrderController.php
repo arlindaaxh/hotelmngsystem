@@ -24,6 +24,7 @@ class OrderController extends Controller
         $payment_type = $request->input('payment_type');
         $guest_id = $request->input('guest_id');
         $employee_id =  $request->input('employee_id');
+        $status = $request->input('status');
 
         $order = new Order();
         $order ->serial_number = $serial_number;
@@ -33,9 +34,11 @@ class OrderController extends Controller
         $order ->payment_type = $payment_type;
         $order->guest_id = $guest_id;
         $order->employee_id = $employee_id;
+        $order->status = $status;
+ 
  
         if($order->save()){
-            return "success";
+            return $order;
         }else{
             return "error";
         } 

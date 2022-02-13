@@ -15,7 +15,8 @@ class Order extends Model
         'total_amount',
         'payment_type',
         'guest_id',
-        'employee_id'
+        'employee_id',
+        'status'
     ];
 
 }

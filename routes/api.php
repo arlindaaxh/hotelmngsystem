@@ -13,7 +13,7 @@ use App\Http\Controllers\AddonController;
 use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\VendorController;
-
+use App\Http\Controllers\OrderController;
 
 
 
@@ -99,3 +99,6 @@ Route::post('/search-products', [ProductController::class, 'searchProd']);
 Route::post('/vendors', [VendorController::class, 'store']);
 Route::get('/vendors', [VendorController::class, 'index']);
 Route::put('/vendors/{id}', [VendorController::class, 'update']);
+
+//ORDERS
+Route::post('/create-order', [OrderController::class, 'store']);
