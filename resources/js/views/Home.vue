@@ -27,6 +27,25 @@
                 </div>
             </el-card>
         </div>
+
+        <div>
+            <el-button  type="text" @click="openRegisterModal()">
+                <h3 class="pt-20">
+                    qisishne
+                </h3>
+            </el-button>
+        </div>
+
+        <div>
+            <el-button  type="text" @click="logOut()">
+                <h3 class="pt-20">
+                    lug aut
+                </h3>
+            </el-button>
+        </div>
+
+        <login-modal @refreshDashbordOnLogin="refreshHome"></login-modal>
+        <register-modal @refreshDashbordOnRegister="refreshHome"></register-modal>
      
         
         <!-- 
@@ -37,7 +56,14 @@
 </template>
 
 <script>
+import axios from 'axios'
+import RegisterModal from '../components/RegisterModal.vue'
+import LoginModal from '../components/LoginModal.vue'
     export default {
+        components: {        
+            RegisterModal,
+            LoginModal
+        },
         data(){
             return {
 
@@ -59,8 +85,21 @@
                 this.$router.push({
                     name: 'frontdesk'
                 })
-            }
-            
+            },
+            openRegisterModal(){
+                this.$root.$emit('openLoginModal')
+            }, 
+
+            logOut(){        
+                axios.post('/logout').then((response) => {
+                this.$notify({
+                    title: 'Info',
+                    type: 'info',
+                    message: 'Ju duhet të kyqeni përsëri për të pasur qasje në të dhëna!'
+                })
+                this.$emit("refreshDashbordOnLogin")
+                })
+            },   
         },
     }
 </script>
