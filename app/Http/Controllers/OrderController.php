@@ -25,7 +25,7 @@ class OrderController extends Controller
         $guest_id = $request->input('guest_id');
         $employee_id =  $request->input('employee_id');
         $status = $request->input('status');
-        $initial_qty = $request->input('initial_qty');
+    
 
         $order = new Order();
         $order ->serial_number = $serial_number;
@@ -36,7 +36,7 @@ class OrderController extends Controller
         $order->guest_id = $guest_id;
         $order->employee_id = $employee_id;
         $order->status = $status;
-        $order->initial_qty = $initial_qty;
+
  
         if($order->save()){
             return $order;

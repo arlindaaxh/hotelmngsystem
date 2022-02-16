@@ -192,7 +192,6 @@ export default {
                 guest_id: null,
                 employee_id : null,
                 status: 'REQUESTED',
-                initial_qty: 0
             },
             activeIndex: 0,
             rules:{}
@@ -359,13 +358,12 @@ export default {
             let payload = {
                 serial_number: generateOrderNumber(),
                 items: this.order.products.length,
-                products: this.order.products.length,
+                products: this.order.products,
                 total_amount: this.order.total_amount,
                 payment_type: this.order.payment_type,
                 guest_id: this.order.guest_id,
                 employee_id : 1,
                 status: this.order.status,
-                initial_qty: 0
             }
 
             OrderServices.postOrder(payload).then((res) => {

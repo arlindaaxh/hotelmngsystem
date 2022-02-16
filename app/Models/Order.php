@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-
     protected $fillable = [
         'serial_number',
         'items',
@@ -19,7 +18,6 @@ class Order extends Model
         'status',
         'initial_qty'
     ];
-
     protected $casts = [
         'products' => 'array',
     ];

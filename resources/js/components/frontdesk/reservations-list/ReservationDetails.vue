@@ -66,7 +66,7 @@
                             <strong>{{guest.birth_date}}</strong>
                         </div>
                         <div class="flexed justify-between">
-                            <span>Sex</span>
+                            <span>Gender</span>
                             <strong>{{guest.sex}}</strong>
                         </div>
                         <div class="flexed justify-between">

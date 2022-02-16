@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->string('payment_type');
             $table->bigInteger('guest_id');
             $table->bigInteger('employee_id');
+            $table->string('status');
             $table->id();
             $table->timestamps();
         });
