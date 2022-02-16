@@ -16,7 +16,12 @@ class Order extends Model
         'payment_type',
         'guest_id',
         'employee_id',
-        'status'
+        'status',
+        'initial_qty'
+    ];
+
+    protected $casts = [
+        'products' => 'array',
     ];
 
 }

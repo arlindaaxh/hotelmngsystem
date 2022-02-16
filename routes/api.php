@@ -102,3 +102,4 @@ Route::put('/vendors/{id}', [VendorController::class, 'update']);
 
 //ORDERS
 Route::post('/create-order', [OrderController::class, 'store']);
+Route::get('/orders', [OrderController::class, 'index']);

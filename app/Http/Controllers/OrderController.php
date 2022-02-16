@@ -17,7 +17,7 @@ class OrderController extends Controller
      //save employee
     public function store(Request $request)
     {
-        $serial_number = filter_var($request->input('serial_number'), FILTER_SANITIZE_STRING);
+        $serial_number = $request->input('serial_number');
         $items = $request->input('items');
         $products = $request->input('products');
         $total_amount = $request->input('total_amount');
@@ -25,6 +25,7 @@ class OrderController extends Controller
         $guest_id = $request->input('guest_id');
         $employee_id =  $request->input('employee_id');
         $status = $request->input('status');
+        $initial_qty = $request->input('initial_qty');
 
         $order = new Order();
         $order ->serial_number = $serial_number;
@@ -35,7 +36,7 @@ class OrderController extends Controller
         $order->guest_id = $guest_id;
         $order->employee_id = $employee_id;
         $order->status = $status;
- 
+        $order->initial_qty = $initial_qty;
  
         if($order->save()){
             return $order;

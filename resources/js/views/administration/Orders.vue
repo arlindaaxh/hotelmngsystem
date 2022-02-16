@@ -25,21 +25,24 @@
         >
             <el-table-column
                 prop="serial_number"
-                label="Order Number"
+                label="#Order Number"
             >
             </el-table-column>
             <el-table-column
-                prop="date"
-                label="Date"
+                prop="created_at"
+                label="Order Date"
+                :formatter="formatDate" 
             >
             </el-table-column>
             <el-table-column
-                prop="vendor_id"
-                label="Vendor">
+                prop="total_amount"
+                label="Price"
+                :formatter="formatPrice"        
+            >
             </el-table-column>
             <el-table-column
-                prop="price"
-                label="Price">
+                prop="status"
+                label="Status">
             </el-table-column>
             <el-table-column
                 prop="items"
@@ -47,7 +50,7 @@
             </el-table-column>
         </el-table>
 
-       <el-alert v-if="!loading && filteredProducts && filteredProducts.length === 0"  
+       <el-alert v-if="!loading && filteredOrders && filteredOrders.length === 0"  
             type="info" 
             :closable="false" 
             class="mt-30"
@@ -64,13 +67,27 @@
 </template>
 
 <script>
+import OrderServices from '../../services/order.services'
 export default {
     data() {
         return {
             loading: false,
             query: "",
+            orders: []
 
         }
+    },
+    computed: {
+        filteredOrders(){
+            return (
+                (this.orders && this.orders.filter(element => {
+                    return (
+                        element.serial_number.match(this.query.toLowerCase())
+                    )
+                    })
+                )    
+            )
+        }  
     },
     methods: {
         tableCellStyle({row, column, rowIndex, columnIndex}) {
@@ -84,9 +101,40 @@ export default {
                 }
             })
         },
+        getOrders(){
+            this.loading = true
+            OrderServices.getOrders().then((res) => {
+                this.orders = res.data
+            })
+            .catch((error) => {
+                this.catchMethod(error)
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        },
+        formatPrice(row, column){
+            return `$ ${row[column.property].toFixed(2)}`; 
+        },
+        formatDate(row,column){
+            return `${row[column.property].split('T')[0]}`
+        },
+        editOrder(row, column, event){
+            console.log('o', row)
+            this.$router.push({
+                name: 'edit-order',
+                params: {
+                    insertEdit: 'edit',
+                    orderProp: row
+                }
+            })
+        }
         
 
     },
+    beforeMount(){
+        this.getOrders()
+    }
 
 }
 </script>

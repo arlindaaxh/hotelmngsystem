@@ -172,7 +172,7 @@ export default {
     components: {
         ArrowLeftIcon
     },
-    props: ['insertEdit'],
+    props: ['insertEdit', 'orderProp'],
     data() {
         return {
             loading: false,
@@ -191,7 +191,8 @@ export default {
                 payment_type: 'in_place',
                 guest_id: null,
                 employee_id : null,
-                status: 'REQUESTED'
+                status: 'REQUESTED',
+                initial_qty: 0
             },
             activeIndex: 0,
             rules:{}
@@ -200,6 +201,10 @@ export default {
     },
     beforeMount(){
         this.getOptionsData()
+        console.log('orderi', this.orderProp)
+        if(this.insertEdit === 'edit'){
+            this.order = {...this.orderProp}
+        }
     },
 
     computed: {
@@ -290,7 +295,6 @@ export default {
             this.$set(this.selectedProduct, 'total_amount_per_product', total)
             this.order.products.push(this.selectedProduct)
             this.resetFields()
-            let gid = generateOrderNumber()
 
         },
         resetFields(){
@@ -360,7 +364,8 @@ export default {
                 payment_type: this.order.payment_type,
                 guest_id: this.order.guest_id,
                 employee_id : 1,
-                status: this.order.status
+                status: this.order.status,
+                initial_qty: 0
             }
 
             OrderServices.postOrder(payload).then((res) => {

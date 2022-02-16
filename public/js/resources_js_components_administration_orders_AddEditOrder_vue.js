@@ -2072,6 +2072,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_guest_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/guest.services */ "./resources/js/services/guest.services.js");
 /* harmony import */ var _services_charge_services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/charge.services */ "./resources/js/services/charge.services.js");
 /* harmony import */ var _services_order_services__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/order.services */ "./resources/js/services/order.services.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2244,7 +2250,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_7__.ArrowLeftIcon
   },
-  props: ['insertEdit'],
+  props: ['insertEdit', 'orderProp'],
   data: function data() {
     return {
       loading: false,
@@ -2263,7 +2269,8 @@ __webpack_require__.r(__webpack_exports__);
         payment_type: 'in_place',
         guest_id: null,
         employee_id: null,
-        status: 'REQUESTED'
+        status: 'REQUESTED',
+        initial_qty: 0
       },
       activeIndex: 0,
       rules: {}
@@ -2271,6 +2278,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   beforeMount: function beforeMount() {
     this.getOptionsData();
+    console.log('orderi', this.orderProp);
+
+    if (this.insertEdit === 'edit') {
+      this.order = _objectSpread({}, this.orderProp);
+    }
   },
   computed: {
     disableSave: function disableSave() {
@@ -2353,7 +2365,6 @@ __webpack_require__.r(__webpack_exports__);
       this.$set(this.selectedProduct, 'total_amount_per_product', total);
       this.order.products.push(this.selectedProduct);
       this.resetFields();
-      var gid = (0,_common_utilities_services__WEBPACK_IMPORTED_MODULE_3__.generateOrderNumber)();
     },
     resetFields: function resetFields() {
       this.selectedProduct = null;
@@ -2427,7 +2438,8 @@ __webpack_require__.r(__webpack_exports__);
         payment_type: this.order.payment_type,
         guest_id: this.order.guest_id,
         employee_id: 1,
-        status: this.order.status
+        status: this.order.status,
+        initial_qty: 0
       };
       _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].postOrder(payload).then(function (res) {
         _this4.$notify.success({
@@ -2631,6 +2643,10 @@ __webpack_require__.r(__webpack_exports__);
   postOrder: function postOrder(payload) {
     var url = "http://127.0.0.1:8000/api/create-order";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getOrders: function getOrders() {
+    var url = "http://127.0.0.1:8000/api/orders";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
   }
 });
 
