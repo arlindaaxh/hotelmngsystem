@@ -92,7 +92,46 @@
                         </div>
                         
                     </div>
-                
+
+                  
+                    <div class="mt-30" v-if="orderDetails.length">
+                        <span class="label-no-height">Orders</span>
+                        <el-table
+                            :data="orderDetails"
+                            stripe
+                            style="width: 100%"
+                            class="table mt-20"
+                            :default-sort = "{prop: 'name', order: 'ascending'}"
+                            header-cell-class-name="table-header"
+                            show-summary
+                            :summary-method="getSummaries"
+        
+                            >
+                            <el-table-column
+                                prop="serial_number"
+                                label="#Order Number"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="created_at"
+                                label="Order Date"
+                                :formatter="formatDate" 
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="items"
+                                label="Items"
+                            ></el-table-column>
+                            <el-table-column
+                                prop="total_amount"
+                                label="Total"
+                                :formatter="formatPrice"
+                            ></el-table-column>
+                        
+
+                        </el-table>
+                    </div>
+                        
                 </el-card>
 
 
@@ -113,6 +152,7 @@ import CheckoutModal from './CheckoutModal.vue'
 import Checkout from './Checkout.vue'
 import dayjs from 'dayjs'
 import reservationServices from '../../../services/reservation.services'
+import OrderServices from '../../../services/order.services'
     export default {
         name: 'ReservationDetails',
         components: {ArrowLeftIcon, CheckoutModal, Checkout},
@@ -124,23 +164,29 @@ import reservationServices from '../../../services/reservation.services'
                 room: null,
                 charges: null,
                 showCheckoutModal: false,
-                checkout: false
+                checkout: false,
+                orders: [],
+                reservations: [],
+                guests: []
+                
                 
             }
         },
         computed: {
             stayDays(){
-            
-       
                 let dateOut = dayjs(this.reservation.date_out).date()
-                console.log('dateOut',dateOut)
                 let dateIn = dayjs(this.reservation.date_in).date()
-                console.log('dateIN',dateIn)
-                
                 return dateOut - dateIn
+            },
+            orderDetails(){
+                let reservation  = this.reservations.find(res => res.active && res.guest_id === this.guest.id)
+                console.log('res', reservation)
+                let orders = this.orders.filter(order => order.guest_id === reservation.guest_id)
+                console.log('orde', orders)
+                return orders
 
-         
             }
+            
         },
         methods: {
             goBack(){
@@ -148,6 +194,48 @@ import reservationServices from '../../../services/reservation.services'
                     name: 'reservations-list',
                 })
             },
+            formatDate(row,column){
+                return `${row[column.property].split('T')[0]}`
+            },
+            getSummaries(param){
+                const { columns, data } = param;
+                const sums = [];
+            
+                columns.forEach((column, index) => {
+                if (index === 2  ) {
+                    sums[index] = 'Total Cost';
+                    return;
+                }
+                if(index === 1 || index === 0 || index === 5){
+                    sums[index] = '';
+                    return;
+                }
+                const values = data.map(item => Number(item[column.property]));
+                if (!values.every(value => isNaN(value))) {
+                    sums[index] = '$ ' + values.reduce((prev, curr) => {
+                    const value = Number(curr);
+                    if (!isNaN(value)) {
+                        return prev + curr;
+                    } else {
+                        return prev;
+                    }
+                    
+                    }, 0);
+                } else {
+                    sums[index] = 'N/A';
+                }
+
+
+            
+                });
+
+                return sums;
+            },
+    
+            formatPrice(row, column){
+                return `$ ${row[column.property].toFixed(2)}`; 
+            },
+            
             getGuest(){
                 return this.optionsData.guests.find(g => g.id === this.reservation.guest_id)
             },
@@ -203,14 +291,30 @@ import reservationServices from '../../../services/reservation.services'
                 .finally(() => {
                     this.loading = false
                 })
-            } 
+            },
+         
+            getOrders(){
+                this.loading = true
+                OrderServices.getOrders().then((res) => {
+                    this.orders = res.data
+                })
+                .catch((error) => {
+                    this.catchMethod(error)
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            },
+
          
           
         },
         beforeMount(){
             this.guest = this.getGuest()
             this.charges = this.getCharges()
-            console.log('charges', this.charges)
+            this.reservations = this.optionsData.reservations
+            this.guests = this.optionsData.guests
+            this.getOrders()
         
         }
         

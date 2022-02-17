@@ -34,7 +34,7 @@
                     <el-input  name="price" v-model="product.price" size="big"></el-input>
                 </el-form-item>
 
-                <el-form-item prop="vendor_id" label="Vendor" v-if="selectedVendor">
+                <el-form-item prop="vendor_id" label="Vendor" >
                     <el-select v-model="selectedVendor"  placeholder="Select vendor for product" style="width:100%" size="big">
                         <el-option
                             v-for="vendor in vendors"
@@ -92,7 +92,7 @@ export default {
                     },
                 ],
             },
-            vendors: [],
+         
            
         }
     },

@@ -2533,6 +2533,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.loading = true;
+      this.charge.reservation_id = this.reservationData.id;
       _services_charge_services__WEBPACK_IMPORTED_MODULE_4__["default"].postCharge(this.charge).then(function () {
         _this5.$notify.success({
           title: 'Success',

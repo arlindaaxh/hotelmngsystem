@@ -2429,12 +2429,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
+/* harmony import */ var vue_feather_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-feather-icons */ "./node_modules/vue-feather-icons/dist/vue-feather-icons.es.js");
 /* harmony import */ var _CheckoutModal_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CheckoutModal.vue */ "./resources/js/components/frontdesk/reservations-list/CheckoutModal.vue");
 /* harmony import */ var _Checkout_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Checkout.vue */ "./resources/js/components/frontdesk/reservations-list/Checkout.vue");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/reservation.services */ "./resources/js/services/reservation.services.js");
+/* harmony import */ var _services_order_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/order.services */ "./resources/js/services/order.services.js");
 //
 //
 //
@@ -2544,6 +2545,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2552,7 +2593,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ReservationDetails',
   components: {
-    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_4__.ArrowLeftIcon,
+    ArrowLeftIcon: vue_feather_icons__WEBPACK_IMPORTED_MODULE_5__.ArrowLeftIcon,
     CheckoutModal: _CheckoutModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Checkout: _Checkout_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
@@ -2564,16 +2605,30 @@ __webpack_require__.r(__webpack_exports__);
       room: null,
       charges: null,
       showCheckoutModal: false,
-      checkout: false
+      checkout: false,
+      orders: [],
+      reservations: [],
+      guests: []
     };
   },
   computed: {
     stayDays: function stayDays() {
       var dateOut = dayjs__WEBPACK_IMPORTED_MODULE_2___default()(this.reservation.date_out).date();
-      console.log('dateOut', dateOut);
       var dateIn = dayjs__WEBPACK_IMPORTED_MODULE_2___default()(this.reservation.date_in).date();
-      console.log('dateIN', dateIn);
       return dateOut - dateIn;
+    },
+    orderDetails: function orderDetails() {
+      var _this = this;
+
+      var reservation = this.reservations.find(function (res) {
+        return res.active && res.guest_id === _this.guest.id;
+      });
+      console.log('res', reservation);
+      var orders = this.orders.filter(function (order) {
+        return order.guest_id === reservation.guest_id;
+      });
+      console.log('orde', orders);
+      return orders;
     }
   },
   methods: {
@@ -2582,24 +2637,67 @@ __webpack_require__.r(__webpack_exports__);
         name: 'reservations-list'
       });
     },
+    formatDate: function formatDate(row, column) {
+      return "".concat(row[column.property].split('T')[0]);
+    },
+    getSummaries: function getSummaries(param) {
+      var columns = param.columns,
+          data = param.data;
+      var sums = [];
+      columns.forEach(function (column, index) {
+        if (index === 2) {
+          sums[index] = 'Total Cost';
+          return;
+        }
+
+        if (index === 1 || index === 0 || index === 5) {
+          sums[index] = '';
+          return;
+        }
+
+        var values = data.map(function (item) {
+          return Number(item[column.property]);
+        });
+
+        if (!values.every(function (value) {
+          return isNaN(value);
+        })) {
+          sums[index] = '$ ' + values.reduce(function (prev, curr) {
+            var value = Number(curr);
+
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+        } else {
+          sums[index] = 'N/A';
+        }
+      });
+      return sums;
+    },
+    formatPrice: function formatPrice(row, column) {
+      return "$ ".concat(row[column.property].toFixed(2));
+    },
     getGuest: function getGuest() {
-      var _this = this;
+      var _this2 = this;
 
       return this.optionsData.guests.find(function (g) {
-        return g.id === _this.reservation.guest_id;
+        return g.id === _this2.reservation.guest_id;
       });
     },
     getCharges: function getCharges() {
-      var _this2 = this;
+      var _this3 = this;
 
       console.log('ipt', this.optionsData);
       console.log('reser', this.reservation);
       return this.optionsData.charges.find(function (ch) {
-        return ch.reservation_id === _this2.reservation.id;
+        return ch.reservation_id === _this3.reservation.id;
       });
     },
     open: function open() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$confirm('Are you sure you want to complete the check out?', 'Warning', {
         confirmButtonText: 'Confirm',
@@ -2607,34 +2705,34 @@ __webpack_require__.r(__webpack_exports__);
         type: 'warning',
         center: true
       }).then(function () {
-        _this3.confirmCheckout();
+        _this4.confirmCheckout();
 
-        _this3.$message({
+        _this4.$message({
           type: 'success',
           message: 'Check Out completed'
         });
       })["catch"](function () {
-        _this3.$message({
+        _this4.$message({
           type: 'info',
           message: 'Check out canceled'
         });
       });
     },
     confirmCheckout: function confirmCheckout() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.loading = true;
       this.reservation.active = false;
       _services_reservation_services__WEBPACK_IMPORTED_MODULE_3__["default"].putReservation(this.reservation, this.reservation.id).then(function () {
         console.log('res');
 
-        _this4.$router.push({
+        _this5.$router.push({
           name: 'in-house'
         });
       })["catch"](function (error) {
         var _error$data, _error$response, _error$response2, _error$response2$data, _error$response3;
 
-        _this4.loading = false;
+        _this5.loading = false;
         var errorMessage = (error === null || error === void 0 ? void 0 : (_error$data = error.data) === null || _error$data === void 0 ? void 0 : _error$data.message) || (error === null || error === void 0 ? void 0 : error.message) || (error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : _error$response.message) || (error === null || error === void 0 ? void 0 : (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : (_error$response2$data = _error$response2.data) === null || _error$response2$data === void 0 ? void 0 : _error$response2$data.message);
 
         if (!errorMessage && error !== null && error !== void 0 && error.data) {
@@ -2643,19 +2741,33 @@ __webpack_require__.r(__webpack_exports__);
 
         if (!errorMessage) errorMessage = 'Error_occurred';
 
-        _this4.$notify.error({
+        _this5.$notify.error({
           title: (error === null || error === void 0 ? void 0 : error.status) || (error === null || error === void 0 ? void 0 : (_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status),
           message: errorMessage
         });
       })["finally"](function () {
-        _this4.loading = false;
+        _this5.loading = false;
+      });
+    },
+    getOrders: function getOrders() {
+      var _this6 = this;
+
+      this.loading = true;
+      _services_order_services__WEBPACK_IMPORTED_MODULE_4__["default"].getOrders().then(function (res) {
+        _this6.orders = res.data;
+      })["catch"](function (error) {
+        _this6.catchMethod(error);
+      })["finally"](function () {
+        _this6.loading = false;
       });
     }
   },
   beforeMount: function beforeMount() {
     this.guest = this.getGuest();
     this.charges = this.getCharges();
-    console.log('charges', this.charges);
+    this.reservations = this.optionsData.reservations;
+    this.guests = this.optionsData.guests;
+    this.getOrders();
   }
 });
 
@@ -2691,6 +2803,41 @@ __webpack_require__.r(__webpack_exports__);
   deleteCharges: function deleteCharges(id) {
     var url = "http://127.0.0.1:8000/api/charges/".concat(id);
     return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](url);
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/services/order.services.js":
+/*!*************************************************!*\
+  !*** ./resources/js/services/order.services.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  postOrder: function postOrder(payload) {
+    var url = "http://127.0.0.1:8000/api/create-order";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload);
+  },
+  getOrders: function getOrders() {
+    var url = "http://127.0.0.1:8000/api/orders";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  putOrder: function putOrder(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-order/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  updateOrderStatuses: function updateOrderStatuses(payload) {
+    var url = "http://127.0.0.1:8000/api/edit-orders";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -18539,7 +18686,68 @@ var render = function() {
                           _c("span", [_vm._v(_vm._s(addon.price))])
                         ])
                       ])
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.orderDetails.length
+                      ? _c(
+                          "div",
+                          { staticClass: "mt-30" },
+                          [
+                            _c("span", { staticClass: "label-no-height" }, [
+                              _vm._v("Orders")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-table",
+                              {
+                                staticClass: "table mt-20",
+                                staticStyle: { width: "100%" },
+                                attrs: {
+                                  data: _vm.orderDetails,
+                                  stripe: "",
+                                  "default-sort": {
+                                    prop: "name",
+                                    order: "ascending"
+                                  },
+                                  "header-cell-class-name": "table-header",
+                                  "show-summary": "",
+                                  "summary-method": _vm.getSummaries
+                                }
+                              },
+                              [
+                                _c("el-table-column", {
+                                  attrs: {
+                                    prop: "serial_number",
+                                    label: "#Order Number"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("el-table-column", {
+                                  attrs: {
+                                    prop: "created_at",
+                                    label: "Order Date",
+                                    formatter: _vm.formatDate
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("el-table-column", {
+                                  attrs: { prop: "items", label: "Items" }
+                                }),
+                                _vm._v(" "),
+                                _c("el-table-column", {
+                                  attrs: {
+                                    prop: "total_amount",
+                                    label: "Total",
+                                    formatter: _vm.formatPrice
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      : _vm._e()
                   ],
                   2
                 )

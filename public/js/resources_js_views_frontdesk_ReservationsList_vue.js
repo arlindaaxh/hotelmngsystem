@@ -2160,15 +2160,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    guestData: function guestData() {
-      var name;
-      var surname;
-      this.guests.forEach(function (guest) {
-        name = guest.first_name;
-        surname = guest.last_name;
-      });
-      return name + ' ' + surname;
-    },
+    // guestData(){
+    //     let name;
+    //     let surname;
+    //     this.guests.forEach(guest => {
+    //         name = guest.first_name
+    //         surname = guest.last_name
+    //     })
+    //     return name + ' ' + surname
+    // },
     bookedToday: function bookedToday() {
       var currentDate = this.dayjs().format('YYYY-MM-DD');
       return this.fromDashboard ? this.reservationsList.filter(function (res) {
@@ -2177,6 +2177,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    getGuestData: function getGuestData(reservation) {
+      var guest = this.guests.find(function (guest) {
+        return reservation.guest_id === guest.id;
+      });
+      var name;
+      var surname;
+      name = guest.first_name;
+      surname = guest.last_name;
+      return name + ' ' + surname;
+    },
     createNewReservation: function createNewReservation() {
       this.$router.push({
         name: 'availability'
@@ -2190,7 +2200,8 @@ __webpack_require__.r(__webpack_exports__);
           optionsData: {
             guests: this.guests,
             rooms: this.rooms,
-            charges: this.charges
+            charges: this.charges,
+            reservations: this.reservationsList
           }
         }
       });
@@ -2792,7 +2803,7 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "info-name" }, [
-                          _vm._v(_vm._s(_vm.guestData))
+                          _vm._v(_vm._s(_vm.getGuestData(reservation)))
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "info-item" }, [

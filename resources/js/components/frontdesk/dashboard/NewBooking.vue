@@ -470,6 +470,7 @@ import ChargeServices from '../../../services/charge.services'
                     this.charge.reservation_id = this.reservationData.id
                 }
                 this.loading = true
+                this.charge.reservation_id = this.reservationData.id
                 ChargeServices.postCharge(this.charge).then(() => {
                     this.$notify.success({
                         title: 'Success',

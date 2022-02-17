@@ -44,4 +44,23 @@ class OrderController extends Controller
             return "error";
         } 
     }
+
+    public function update(Request $request, $id)
+    {   
+        $order = Order::find($id);
+        $order->update($request->all());
+
+        return response()->json($order, 200);
+    }
+
+    public function updateOrderStatuses(Request $request)
+    {
+        $neededData = $request->input('orders');
+        foreach ($neededData as $key=>$value){
+            $order = Order::find($value['id']);
+            $order->status = $value['status'];
+            $order->save();
+        }
+    }
+
 }

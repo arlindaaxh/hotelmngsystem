@@ -3,7 +3,7 @@
         <div class="flexed justify-between  m-b-20">
             <span @click="goBack()" class="flexed align-center pointer">
                 <arrow-left-icon size="1.2x" class="m-r-5" />
-                <h4 v-if="insertEdit ==='edit'">Edit Order - {{order.name}} </h4>
+                <h4 v-if="insertEdit ==='edit'">Edit Order - #{{order.serial_number}} </h4>
                 <h4 v-else>Add Order</h4>
             </span>
             <!-- <el-button size="big" style="background-color:#ff7b50; border-radius:15px;color:white" v-if="insertEdit === 'edit'" @click="save()" :disabled="activeIndex === 0 ? disabledNext : false">{{activeIndex === 1 ? 'Save' : 'Next'}}</el-button> -->
@@ -48,7 +48,7 @@
                     <span class="label-no-height">Quantity</span>
                     <el-input type="number" v-model="quantity" style="width:160px;" placeholder="quantity"></el-input>
                 </div>
-                <el-button type="primary" style="min-width: 70px; margin-top:32px;"  :disabled="disableSave" @click="addProduct()">
+                <el-button  style="min-width: 70px; margin-top:32px;"  :disabled="disableSave" @click="addProduct()">
                     <i class="el-icon-loading" v-if="loadingSearch"></i>
                     <span v-else>Add</span>
                 </el-button> 
@@ -102,6 +102,12 @@
                         label="Total"
                         :formatter="formatPrice"
                     >
+                    </el-table-column>
+                    <el-table-column width="70px">
+                        <template slot-scope="scope">
+                            <i style="font-size:18px" class="el-icon-delete text-danger pointer"
+                            @click="handleDelete(scope.$index, scope.row)"></i>
+                        </template>
                     </el-table-column>
                    
 
@@ -216,6 +222,9 @@ export default {
     
     },
     methods: {
+        handleDelete(indeksi, product){
+            this.order.products = this.order.products.filter(p => p.id !== product.id)
+        },
         getOptionsData() {
             this.loading = true;
             Promise.all([GuestServices.getGuests(),chargeServices.getCharges(),ReservationServices.getReservations()].map((p, index) =>
@@ -313,7 +322,7 @@ export default {
                 sums[index] = 'Total Cost';
                 return;
             }
-            if(index === 1 || index === 0){
+            if(index === 1 || index === 0 || index === 5){
                 sums[index] = '';
                 return;
             }
@@ -366,34 +375,65 @@ export default {
                 status: this.order.status,
             }
 
-            OrderServices.postOrder(payload).then((res) => {
-                this.$notify.success({
-                    title: 'Success',
-                    type: 'Success',
-                    message: 'Order was made successfully' 
-                })
-                if(res.data){
-                    console.log('res', res.data)
-                    if(res.data.payment_type == 'to_room'){
-                        let foundReservation = this.reservations.find(res => res.guest_id === payload.guest_id)
-                        console.log('res', foundReservation)
-                        let foundCharge = this.charges.find(charge => charge.reservation_id === foundReservation.id)
-                        if(foundCharge){
-                            foundCharge.total += payload.total_amount * 1
-                            this.addChargeToRoom(foundCharge)
-                        
+            if(this.insertEdit !== 'edit'){
+                OrderServices.postOrder(payload).then((res) => {
+                    this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Order was made successfully' 
+                    })
+                    if(res.data){
+                        console.log('res', res.data)
+                        if(res.data.payment_type == 'to_room'){
+                            let foundReservation = this.reservations.find(res => res.guest_id === payload.guest_id)
+                            console.log('res', foundReservation)
+                            let foundCharge = this.charges.find(charge => charge.reservation_id === foundReservation.id)
+                            if(foundCharge){
+                                foundCharge.total += payload.total_amount * 1
+                                this.addChargeToRoom(foundCharge)
+                            
+                            }
                         }
                     }
-                }
-                this.goBack()
-        
-            })
-            .catch((error) => {
-                this.catchMethod(error)
-            })
-            .finally(() => {
-                this.loading = false
-            })
+                    this.goBack()
+            
+                })
+                .catch((error) => {
+                    this.catchMethod(error)
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            
+            }else{
+                OrderServices.putOrder(payload, this.order.id).then((res) => {
+                    this.$notify.success({
+                        title: 'Success',
+                        type: 'Success',
+                        message: 'Order was updated successfully' 
+                    })
+                    if(res.data){
+                        console.log('res', res.data)
+                        if(res.data.payment_type == 'to_room'){
+                            let foundReservation = this.reservations.find(res => res.guest_id === payload.guest_id)
+                            console.log('res', foundReservation)
+                            let foundCharge = this.charges.find(charge => charge.reservation_id === foundReservation.id)
+                            if(foundCharge){
+                                foundCharge.total += payload.total_amount * 1
+                                this.addChargeToRoom(foundCharge)
+                            }
+                        }
+                    }
+                    this.goBack()
+            
+                })
+                .catch((error) => {
+                    this.catchMethod(error)
+                })
+                .finally(() => {
+                    this.loading = false
+                })
+            }
             
 
             
@@ -434,6 +474,23 @@ export default {
 
 .form-data{
     align-items: start;
+}
+
+::v-deep .el-button{
+    color: white;
+    background-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary:hover {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
 }
 
 </style>

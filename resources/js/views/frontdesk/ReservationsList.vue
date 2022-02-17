@@ -42,7 +42,7 @@
                         <span class="info-name">{{reservation.date_in}}</span>
                         
                         <span style="info-item">{{reservation.date_out}}</span>
-                        <span class="info-name">{{guestData}}</span>
+                        <span class="info-name">{{getGuestData(reservation)}}</span>
                     
                         <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>
                     
@@ -90,16 +90,16 @@ import chargeServices from '../../services/charge.services'
             }
         },
         computed: {
-            guestData(){
-                let name;
-                let surname;
-                this.guests.forEach(guest => {
-                    name = guest.first_name
-                    surname = guest.last_name
-                })
+            // guestData(){
+            //     let name;
+            //     let surname;
+            //     this.guests.forEach(guest => {
+            //         name = guest.first_name
+            //         surname = guest.last_name
+            //     })
 
-                return name + ' ' + surname
-            },
+            //     return name + ' ' + surname
+            // },
             
             bookedToday(){
                 let currentDate =  this.dayjs().format('YYYY-MM-DD')
@@ -107,6 +107,17 @@ import chargeServices from '../../services/charge.services'
             }
         },
         methods:{
+            getGuestData(reservation){
+                let guest = this.guests.find(guest => reservation.guest_id === guest.id)
+                
+                let name;
+                let surname;
+           
+                name = guest.first_name
+                surname = guest.last_name
+   
+                return name + ' ' + surname
+            },
             createNewReservation(){
                 this.$router.push({
                     name: 'availability'
@@ -120,7 +131,8 @@ import chargeServices from '../../services/charge.services'
                         optionsData: {
                             guests: this.guests,
                             rooms: this.rooms,
-                            charges: this.charges
+                            charges: this.charges,
+                            reservations: this.reservationsList
                             
                         }
                     }

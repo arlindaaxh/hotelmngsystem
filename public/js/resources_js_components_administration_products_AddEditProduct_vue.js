@@ -2160,8 +2160,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           message: "Maximum characters allowed is 255",
           trigger: "change"
         }]
-      },
-      vendors: []
+      }
     };
   },
   methods: {
@@ -17288,39 +17287,37 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _vm.selectedVendor
-                ? _c(
-                    "el-form-item",
-                    { attrs: { prop: "vendor_id", label: "Vendor" } },
-                    [
-                      _c(
-                        "el-select",
-                        {
-                          staticStyle: { width: "100%" },
-                          attrs: {
-                            placeholder: "Select vendor for product",
-                            size: "big"
-                          },
-                          model: {
-                            value: _vm.selectedVendor,
-                            callback: function($$v) {
-                              _vm.selectedVendor = $$v
-                            },
-                            expression: "selectedVendor"
-                          }
+              _c(
+                "el-form-item",
+                { attrs: { prop: "vendor_id", label: "Vendor" } },
+                [
+                  _c(
+                    "el-select",
+                    {
+                      staticStyle: { width: "100%" },
+                      attrs: {
+                        placeholder: "Select vendor for product",
+                        size: "big"
+                      },
+                      model: {
+                        value: _vm.selectedVendor,
+                        callback: function($$v) {
+                          _vm.selectedVendor = $$v
                         },
-                        _vm._l(_vm.vendors, function(vendor) {
-                          return _c("el-option", {
-                            key: vendor.value,
-                            attrs: { label: vendor.name, value: vendor }
-                          })
-                        }),
-                        1
-                      )
-                    ],
+                        expression: "selectedVendor"
+                      }
+                    },
+                    _vm._l(_vm.vendors, function(vendor) {
+                      return _c("el-option", {
+                        key: vendor.value,
+                        attrs: { label: vendor.name, value: vendor }
+                      })
+                    }),
                     1
                   )
-                : _vm._e(),
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "el-form-item",

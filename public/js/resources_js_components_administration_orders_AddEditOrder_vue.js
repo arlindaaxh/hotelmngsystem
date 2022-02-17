@@ -2236,6 +2236,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2292,6 +2298,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   methods: {
+    handleDelete: function handleDelete(indeksi, product) {
+      this.order.products = this.order.products.filter(function (p) {
+        return p.id !== product.id;
+      });
+    },
     getOptionsData: function getOptionsData() {
       var _this = this;
 
@@ -2385,7 +2396,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return;
         }
 
-        if (index === 1 || index === 0) {
+        if (index === 1 || index === 0 || index === 5) {
           sums[index] = '';
           return;
         }
@@ -2439,41 +2450,80 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         employee_id: 1,
         status: this.order.status
       };
-      _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].postOrder(payload).then(function (res) {
-        _this4.$notify.success({
-          title: 'Success',
-          type: 'Success',
-          message: 'Order was made successfully'
-        });
 
-        if (res.data) {
-          console.log('res', res.data);
+      if (this.insertEdit !== 'edit') {
+        _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].postOrder(payload).then(function (res) {
+          _this4.$notify.success({
+            title: 'Success',
+            type: 'Success',
+            message: 'Order was made successfully'
+          });
 
-          if (res.data.payment_type == 'to_room') {
-            var foundReservation = _this4.reservations.find(function (res) {
-              return res.guest_id === payload.guest_id;
-            });
+          if (res.data) {
+            console.log('res', res.data);
 
-            console.log('res', foundReservation);
+            if (res.data.payment_type == 'to_room') {
+              var foundReservation = _this4.reservations.find(function (res) {
+                return res.guest_id === payload.guest_id;
+              });
 
-            var foundCharge = _this4.charges.find(function (charge) {
-              return charge.reservation_id === foundReservation.id;
-            });
+              console.log('res', foundReservation);
 
-            if (foundCharge) {
-              foundCharge.total += payload.total_amount * 1;
+              var foundCharge = _this4.charges.find(function (charge) {
+                return charge.reservation_id === foundReservation.id;
+              });
 
-              _this4.addChargeToRoom(foundCharge);
+              if (foundCharge) {
+                foundCharge.total += payload.total_amount * 1;
+
+                _this4.addChargeToRoom(foundCharge);
+              }
             }
           }
-        }
 
-        _this4.goBack();
-      })["catch"](function (error) {
-        _this4.catchMethod(error);
-      })["finally"](function () {
-        _this4.loading = false;
-      });
+          _this4.goBack();
+        })["catch"](function (error) {
+          _this4.catchMethod(error);
+        })["finally"](function () {
+          _this4.loading = false;
+        });
+      } else {
+        _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].putOrder(payload, this.order.id).then(function (res) {
+          _this4.$notify.success({
+            title: 'Success',
+            type: 'Success',
+            message: 'Order was updated successfully'
+          });
+
+          if (res.data) {
+            console.log('res', res.data);
+
+            if (res.data.payment_type == 'to_room') {
+              var foundReservation = _this4.reservations.find(function (res) {
+                return res.guest_id === payload.guest_id;
+              });
+
+              console.log('res', foundReservation);
+
+              var foundCharge = _this4.charges.find(function (charge) {
+                return charge.reservation_id === foundReservation.id;
+              });
+
+              if (foundCharge) {
+                foundCharge.total += payload.total_amount * 1;
+
+                _this4.addChargeToRoom(foundCharge);
+              }
+            }
+          }
+
+          _this4.goBack();
+        })["catch"](function (error) {
+          _this4.catchMethod(error);
+        })["finally"](function () {
+          _this4.loading = false;
+        });
+      }
     },
     addChargeToRoom: function addChargeToRoom(foundCharge) {
       var _this5 = this;
@@ -2645,6 +2695,14 @@ __webpack_require__.r(__webpack_exports__);
   getOrders: function getOrders() {
     var url = "http://127.0.0.1:8000/api/orders";
     return axios__WEBPACK_IMPORTED_MODULE_0___default().get(url);
+  },
+  putOrder: function putOrder(payload, id) {
+    var url = "http://127.0.0.1:8000/api/edit-order/".concat(id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
+  },
+  updateOrderStatuses: function updateOrderStatuses(payload) {
+    var url = "http://127.0.0.1:8000/api/edit-orders";
+    return axios__WEBPACK_IMPORTED_MODULE_0___default().put(url, payload);
   }
 });
 
@@ -2739,7 +2797,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "[data-v-e2bc95b2] .el-radio-button__inner {\n  width: 200px;\n}\n.total-amount-custom .label-no-height[data-v-e2bc95b2] {\n  padding-bottom: 10px;\n  margin-bottom: 10px;\n  line-height: 36px;\n}\n.form-data[data-v-e2bc95b2] {\n  align-items: start;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-e2bc95b2] .el-radio-button__inner {\n  width: 200px;\n}\n.total-amount-custom .label-no-height[data-v-e2bc95b2] {\n  padding-bottom: 10px;\n  margin-bottom: 10px;\n  line-height: 36px;\n}\n.form-data[data-v-e2bc95b2] {\n  align-items: start;\n}\n[data-v-e2bc95b2] .el-button {\n  color: white;\n  background-color: #ff7b50 !important;\n}\n[data-v-e2bc95b2] .el-button--primary {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}\n[data-v-e2bc95b2] .el-button--primary:hover {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -17657,7 +17715,9 @@ var render = function() {
               _vm._v(" "),
               _vm.insertEdit === "edit"
                 ? _c("h4", [
-                    _vm._v("Edit Order - " + _vm._s(_vm.order.name) + " ")
+                    _vm._v(
+                      "Edit Order - #" + _vm._s(_vm.order.serial_number) + " "
+                    )
                   ])
                 : _c("h4", [_vm._v("Add Order")])
             ],
@@ -17827,7 +17887,7 @@ var render = function() {
                   "el-button",
                   {
                     staticStyle: { "min-width": "70px", "margin-top": "32px" },
-                    attrs: { type: "primary", disabled: _vm.disableSave },
+                    attrs: { disabled: _vm.disableSave },
                     on: {
                       click: function($event) {
                         return _vm.addProduct()
@@ -17922,6 +17982,37 @@ var render = function() {
                             label: "Total",
                             formatter: _vm.formatPrice
                           }
+                        }),
+                        _vm._v(" "),
+                        _c("el-table-column", {
+                          attrs: { width: "70px" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "default",
+                                fn: function(scope) {
+                                  return [
+                                    _c("i", {
+                                      staticClass:
+                                        "el-icon-delete text-danger pointer",
+                                      staticStyle: { "font-size": "18px" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.handleDelete(
+                                            scope.$index,
+                                            scope.row
+                                          )
+                                        }
+                                      }
+                                    })
+                                  ]
+                                }
+                              }
+                            ],
+                            null,
+                            false,
+                            3771019698
+                          )
                         })
                       ],
                       1

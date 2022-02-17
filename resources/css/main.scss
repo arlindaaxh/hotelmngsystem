@@ -324,3 +324,28 @@ color: #f66;
     display: flex;
     flex-wrap: wrap;
 }
+
+::v-deep .el-button{
+    background-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary {
+    color: #FFF;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary:hover {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
+
+
+.el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
+    color: #ebedf0;
+    cursor: not-allowed;
+    background-image: none;
+    background-color: #FFF;
+    border-color: #EBEEF5;
+}
