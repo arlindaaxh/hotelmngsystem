@@ -54,7 +54,7 @@
           </div>
 
           <div class="validation-icons pl-2 pt-2" v-if="passwordIsFocused">
-            <div v-for="(item, index) in passwordResctrictions" :key="item.id" class="mb-2" style="display:flex;gap:5px; align-items:center;">
+            <div v-for="(item, index) in passwordResctrictions" :key="index" class="mb-2" style="display:flex;gap:5px; align-items:center;">
               <div :style="{color: item.checked ? '#67C23A' : '#F56C6C'}">
                 <i class="el-icon-check"></i>
               </div>

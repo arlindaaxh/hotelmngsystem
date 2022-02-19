@@ -4,7 +4,8 @@
         <div class="cards container flexed justify-around">
             <el-card class="card flexed-column">
                 <!-- <img :src="'../../public/images/administration-logo.jpg'" class="image"> -->
-                <img src="../../css/images/administration-logo.jpg" class="image">
+                <!-- <img src="../../css/images/administration-logo.jpg" class="image"> -->
+                <img v-bind:src="'../../images/' + admImage.url"  class="image"/>
                  <!-- <img src="C:\xampp\htdocs\hotelmngsystem\resources\css\images\administration-logo.jpg" class="image"> -->
                 <div class="flexed justify-center vertical-middle align-center mt-30" style="height:100px;">
                     <el-button  type="text" @click="goToAdministration()"><h3 class="pt-20">Administration</h3></el-button>
@@ -12,20 +13,13 @@
             </el-card>
             <el-card class="card flexed-column">
                 <!-- <img :src="'../../public/images/administration-logo.jpg'" class="image"> -->
-                <img src="../../css/images/frontdesk.png" class="image">
+                <img v-bind:src="'../../images/' + image.url"  class="image"/>
                  <!-- <img src="C:\xampp\htdocs\hotelmngsystem\resources\css\images\administration-logo.jpg" class="image"> -->
                 <div class="flexed justify-center vertical-middle align-center mt-30" style="height:100px;">
                     <el-button  type="text" @click="goToFrontDesk()"><h3 class="pt-20">Frontdesk</h3></el-button>
                 </div>
             </el-card>
-            <el-card class="card flexed-column">
-                <!-- <img :src="'../../public/images/administration-logo.jpg'" class="image"> -->
-                <img src="../../css/images/frontdesk.png" class="image">
-                 <!-- <img src="C:\xampp\htdocs\hotelmngsystem\resources\css\images\administration-logo.jpg" class="image"> -->
-                <div class="flexed justify-center vertical-middle align-center mt-30" style="height:100px;">
-                    <el-button  type="text" @click="goToAdministration()"><h3 class="pt-20">Housekeeping</h3></el-button>
-                </div>
-            </el-card>
+         
         </div>
 
         <div>
@@ -66,7 +60,12 @@ import LoginModal from '../components/LoginModal.vue'
         },
         data(){
             return {
-
+                image: {
+                    url: 'frontdesk.png'
+                },
+                admImage: {
+                    url: 'admin.png'
+                }
             }
         },
         methods: {

@@ -2111,8 +2111,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 
@@ -2174,7 +2172,8 @@ __webpack_require__.r(__webpack_exports__);
           optionsData: {
             guests: this.guests,
             rooms: this.rooms,
-            charges: this.charges
+            charges: this.charges,
+            reservations: this.reservationsList
           }
         }
       });
@@ -2416,7 +2415,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-74786e1f] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".card-items-container[data-v-74786e1f] {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;\n}\n[data-v-74786e1f] .el-button--primary {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}\n[data-v-74786e1f] .el-button--primary:hover {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

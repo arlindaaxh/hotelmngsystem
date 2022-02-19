@@ -2,9 +2,14 @@ export default {
     mode:'history',
     routes:[
         {
-            path: '/',
+            path: '/home',
             component: () => import('./views/Home'),
             name: 'home'
+        },
+        {
+            path: '/',
+            component: () => import('./views/LoginRegister'),
+            name: 'login-register'
         },
         {
             path: '/about',

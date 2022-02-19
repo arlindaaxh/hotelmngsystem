@@ -2395,12 +2395,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2410,7 +2404,14 @@ __webpack_require__.r(__webpack_exports__);
     LoginModal: _components_LoginModal_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
-    return {};
+    return {
+      image: {
+        url: 'frontdesk.png'
+      },
+      admImage: {
+        url: 'admin.png'
+      }
+    };
   },
   methods: {
     got: function got() {
@@ -2446,36 +2447,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
-
-/***/ }),
-
-/***/ "./resources/css/images/administration-logo.jpg":
-/*!******************************************************!*\
-  !*** ./resources/css/images/administration-logo.jpg ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/administration-logo.jpg?5a0380341071cb6e2dfbfab57947e6ef");
-
-/***/ }),
-
-/***/ "./resources/css/images/frontdesk.png":
-/*!********************************************!*\
-  !*** ./resources/css/images/frontdesk.png ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/frontdesk.png?d55638e1ff660012f14b70c4a7d0b5c3");
 
 /***/ }),
 
@@ -3222,7 +3193,7 @@ var render = function() {
                   return _c(
                     "div",
                     {
-                      key: item.id,
+                      key: index,
                       staticClass: "mb-2",
                       staticStyle: {
                         display: "flex",
@@ -3288,9 +3259,7 @@ var render = function() {
           _c("el-card", { staticClass: "card flexed-column" }, [
             _c("img", {
               staticClass: "image",
-              attrs: {
-                src: __webpack_require__(/*! ../../css/images/administration-logo.jpg */ "./resources/css/images/administration-logo.jpg")
-              }
+              attrs: { src: "../../images/" + _vm.admImage.url }
             }),
             _vm._v(" "),
             _c(
@@ -3325,7 +3294,7 @@ var render = function() {
           _c("el-card", { staticClass: "card flexed-column" }, [
             _c("img", {
               staticClass: "image",
-              attrs: { src: __webpack_require__(/*! ../../css/images/frontdesk.png */ "./resources/css/images/frontdesk.png") }
+              attrs: { src: "../../images/" + _vm.image.url }
             }),
             _vm._v(" "),
             _c(
@@ -3347,37 +3316,6 @@ var render = function() {
                     }
                   },
                   [_c("h3", { staticClass: "pt-20" }, [_vm._v("Frontdesk")])]
-                )
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("el-card", { staticClass: "card flexed-column" }, [
-            _c("img", {
-              staticClass: "image",
-              attrs: { src: __webpack_require__(/*! ../../css/images/frontdesk.png */ "./resources/css/images/frontdesk.png") }
-            }),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "flexed justify-center vertical-middle align-center mt-30",
-                staticStyle: { height: "100px" }
-              },
-              [
-                _c(
-                  "el-button",
-                  {
-                    attrs: { type: "text" },
-                    on: {
-                      click: function($event) {
-                        return _vm.goToAdministration()
-                      }
-                    }
-                  },
-                  [_c("h3", { staticClass: "pt-20" }, [_vm._v("Housekeeping")])]
                 )
               ],
               1

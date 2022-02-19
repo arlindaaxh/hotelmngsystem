@@ -2584,6 +2584,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2763,11 +2770,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   beforeMount: function beforeMount() {
-    this.guest = this.getGuest();
-    this.charges = this.getCharges();
-    this.reservations = this.optionsData.reservations;
-    this.guests = this.optionsData.guests;
-    this.getOrders();
+    if (!this.optionsData) {
+      this.goBack();
+    } else {
+      this.guest = this.getGuest();
+      this.charges = this.getCharges();
+      this.reservations = this.optionsData.reservations;
+      this.guests = this.optionsData.guests;
+      this.getOrders();
+    }
   }
 });
 
@@ -2952,6 +2963,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".right-input[data-v-523468d8]  .el-inp
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/laravel-mix/node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "[data-v-1e1d0619] .el-button--primary {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}\n[data-v-1e1d0619] .el-button--primary:hover {\n  color: white;\n  background-color: #ff7b50 !important;\n  border-color: #ff7b50 !important;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/NormalPopup.vue?vue&type=style&index=0&id=8135a72c&lang=scss&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/NormalPopup.vue?vue&type=style&index=0&id=8135a72c&lang=scss&scoped=true& ***!
@@ -3039,6 +3074,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CheckoutModal_vue_vue_type_style_index_0_id_523468d8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationDetails_vue_vue_type_style_index_0_id_1e1d0619_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationDetails_vue_vue_type_style_index_0_id_1e1d0619_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationDetails_vue_vue_type_style_index_0_id_1e1d0619_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -17920,15 +17985,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ReservationDetails_vue_vue_type_template_id_1e1d0619_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReservationDetails.vue?vue&type=template&id=1e1d0619&scoped=true& */ "./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=template&id=1e1d0619&scoped=true&");
 /* harmony import */ var _ReservationDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservationDetails.vue?vue&type=script&lang=js& */ "./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _ReservationDetails_vue_vue_type_style_index_0_id_1e1d0619_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& */ "./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _ReservationDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _ReservationDetails_vue_vue_type_template_id_1e1d0619_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
   _ReservationDetails_vue_vue_type_template_id_1e1d0619_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -18045,6 +18112,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_CheckoutModal_vue_vue_type_style_index_0_id_523468d8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CheckoutModal.vue?vue&type=style&index=0&id=523468d8&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/CheckoutModal.vue?vue&type=style&index=0&id=523468d8&lang=scss&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&":
+/*!**********************************************************************************************************************************************!*\
+  !*** ./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& ***!
+  \**********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationDetails_vue_vue_type_style_index_0_id_1e1d0619_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/frontdesk/reservations-list/ReservationDetails.vue?vue&type=style&index=0&id=1e1d0619&lang=scss&scoped=true&");
 
 
 /***/ }),
@@ -18511,96 +18591,90 @@ var render = function() {
           "div",
           { staticClass: "flexed-column", staticStyle: { gap: "20px" } },
           [
-            _c(
-              "el-card",
-              [
+            _c("el-card", [
+              _c(
+                "div",
+                {
+                  staticClass: "clearfix",
+                  attrs: { slot: "header" },
+                  slot: "header"
+                },
+                [
+                  _c("span", { staticClass: "label-no-height" }, [
+                    _vm._v("Stay")
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-data" }, [
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("From: ")]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(_vm.reservation.date_in))])
+                ]),
+                _vm._v(" "),
                 _c(
                   "div",
-                  {
-                    staticClass: "clearfix",
-                    attrs: { slot: "header" },
-                    slot: "header"
-                  },
+                  { staticClass: "flexed justify-between" },
                   [
-                    _c("span", { staticClass: "label-no-height" }, [
-                      _vm._v("Stay")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _vm._l(_vm.reservation.rooms, function(room, index) {
-                  return _c("div", { key: index, staticClass: "form-data" }, [
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("From: ")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(_vm.reservation.date_in))])
-                    ]),
+                    _c("span", [_vm._v("To: ")]),
                     _vm._v(" "),
                     _c(
-                      "div",
-                      { staticClass: "flexed justify-between" },
-                      [
-                        _c("span", [_vm._v("To: ")]),
-                        _vm._v(" "),
-                        _c(
-                          "el-button",
-                          {
-                            attrs: { type: "default" },
-                            on: {
-                              click: function($event) {
-                                _vm.showCheckoutModal = true
-                              }
-                            }
-                          },
-                          [_vm._v(_vm._s(_vm.reservation.date_out))]
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("Room Code: ")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(room.code))])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("Room Number: ")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(room.number))])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("Room Type: ")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(room.type))])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("Room Status: ")]),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        {
-                          class:
-                            room.cleaning_status === 1
-                              ? "text-green"
-                              : "text-primary"
-                        },
-                        [_vm._v(_vm._s(room.cleaning_status))]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "flexed justify-between" }, [
-                      _c("span", [_vm._v("Nights: ")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v(_vm._s(_vm.stayDays))])
-                    ])
-                  ])
-                })
-              ],
-              2
-            ),
+                      "el-button",
+                      {
+                        attrs: { type: "default" },
+                        on: {
+                          click: function($event) {
+                            _vm.showCheckoutModal = true
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.reservation.date_out))]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("Room Code: ")]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(_vm.reservation.rooms[0].code))])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("Room Number: ")]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(_vm.reservation.rooms[0].number))])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("Room Type: ")]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(_vm.reservation.rooms[0].type))])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("Room Status: ")]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      class:
+                        _vm.reservation.rooms[0].cleaning_status === 1
+                          ? "text-green"
+                          : "text-primary"
+                    },
+                    [_vm._v(_vm._s(_vm.reservation.rooms[0].cleaning_status))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flexed justify-between" }, [
+                  _c("span", [_vm._v("Nights: ")]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(_vm.stayDays))])
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _c("el-card", [
               _c(
@@ -18683,7 +18757,7 @@ var render = function() {
                         _c("div", { staticClass: "flexed justify-between" }, [
                           _c("span", [_vm._v(_vm._s(addon.name))]),
                           _vm._v(" "),
-                          _c("span", [_vm._v(_vm._s(addon.price))])
+                          _c("span", [_vm._v("$" + _vm._s(addon.price))])
                         ])
                       ])
                     }),
@@ -18743,6 +18817,20 @@ var render = function() {
                                 })
                               ],
                               1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "flexed justify-between" },
+                              [
+                                _c("span", { staticClass: "label-no-height" }, [
+                                  _vm._v("Total:")
+                                ]),
+                                _vm._v(" "),
+                                _c("span", [
+                                  _vm._v("$" + _vm._s(_vm.charges.total))
+                                ])
+                              ]
                             )
                           ],
                           1

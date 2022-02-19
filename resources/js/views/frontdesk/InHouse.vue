@@ -25,8 +25,6 @@
             </div>
 
         
-            
-    
             <el-alert  v-if="!loading && reservationsList.length === 0"
                     type="info" 
                     :closable="false" 
@@ -105,7 +103,8 @@ import chargeServices from '../../services/charge.services'
                         optionsData: {
                             guests: this.guests,
                             rooms: this.rooms,
-                            charges: this.charges
+                            charges: this.charges,
+                            reservations: this.reservationsList
                             
                         }
                     }
@@ -203,5 +202,17 @@ import chargeServices from '../../services/charge.services'
 .card-items-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+::v-deep .el-button--primary {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary:hover {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
 }
 </style>

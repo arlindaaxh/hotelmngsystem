@@ -14,7 +14,7 @@
                     <div slot="header" class="clearfix">
                         <span class="label-no-height">Stay</span>
                     </div>
-                    <div class="form-data" v-for="(room,index) in  reservation.rooms" :key="index">
+                    <div class="form-data">
             
                         <div class="flexed justify-between">
                             <span>From: </span>
@@ -26,19 +26,19 @@
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Code: </span>
-                            <span>{{room.code}}</span> 
+                            <span>{{reservation.rooms[0].code}}</span> 
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Number: </span>
-                            <span>{{room.number}}</span> 
+                            <span>{{reservation.rooms[0].number}}</span> 
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Type: </span>
-                            <span>{{room.type}}</span> 
+                            <span>{{reservation.rooms[0].type}}</span> 
                         </div>
                         <div class="flexed justify-between">
                             <span>Room Status: </span>
-                            <span :class="room.cleaning_status === 1 ? 'text-green' : 'text-primary'">{{room.cleaning_status}}</span> 
+                            <span :class="reservation.rooms[0].cleaning_status === 1 ? 'text-green' : 'text-primary'">{{reservation.rooms[0].cleaning_status}}</span> 
                         </div>
 
                         <div class="flexed justify-between">
@@ -88,7 +88,7 @@
                     <div v-for="(addon,index) in charges.addons" :key="index">
                         <div class="flexed justify-between">
                             <span>{{addon.name}}</span>
-                            <span>{{addon.price}}</span>
+                            <span>${{addon.price}}</span>
                         </div>
                         
                     </div>
@@ -130,6 +130,13 @@
                         
 
                         </el-table>
+
+
+                        <div class="flexed justify-between">
+                            <span class="label-no-height">Total:</span>
+                            <span>${{charges.total}}</span>
+                        </div>
+
                     </div>
                         
                 </el-card>
@@ -310,11 +317,19 @@ import OrderServices from '../../../services/order.services'
           
         },
         beforeMount(){
-            this.guest = this.getGuest()
-            this.charges = this.getCharges()
-            this.reservations = this.optionsData.reservations
-            this.guests = this.optionsData.guests
-            this.getOrders()
+            if(!this.optionsData){
+                this.goBack()
+            }
+            else{
+                this.guest = this.getGuest()
+                this.charges = this.getCharges()
+                this.reservations = this.optionsData.reservations
+                this.guests = this.optionsData.guests
+                this.getOrders()
+            }
+      
+
+        
         
         }
         
@@ -323,4 +338,15 @@ import OrderServices from '../../../services/order.services'
 
 <style lang="scss" scoped>
 
+::v-deep .el-button--primary {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
+
+::v-deep .el-button--primary:hover {
+    color: white;
+    background-color: #ff7b50 !important;
+    border-color: #ff7b50 !important;
+}
 </style>
