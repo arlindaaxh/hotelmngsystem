@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div class="header justify-between">
         <div class="bread-crumb" :key="key">
             <div v-for="(item, index) in breadCrumb" :key="index">
                 <i class="el-icon-arrow-right" v-if="index !== 0"></i>
@@ -10,10 +10,19 @@
                 >{{ item.name }}</span>
             </div>
         </div>
+
+        <div>
+            <el-button  type="text" @click="logOut()">
+                <h5 style="padding-right:30px;color:#212529">
+                    Log Out
+                </h5>
+            </el-button>
+        </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import {ArrowRightIcon} from 'vue-feather-icons'
     export default {
         name: 'pHeader',
@@ -69,7 +78,19 @@ import {ArrowRightIcon} from 'vue-feather-icons'
                 this.$router.push({
                     name: 'home'
                 })
-            }
+            },
+            logOut(){        
+                axios.post('/logout').then((response) => {
+                // this.$notify({
+                //     title: 'Info',
+                //     type: 'info',
+                //     message: 'Ju duhet të kyqeni përsëri për të pasur qasje në të dhëna!'
+                // })
+                this.$router.push({
+                    name: 'login-register'
+                })
+                })
+            },   
 
         },
         beforeMount() {

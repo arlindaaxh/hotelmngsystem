@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -61,6 +62,49 @@ class ProductController extends Controller
         return $products;
     }  
 
+    public function getMostSoldProducts(){
+        
+        // $sales = Product::with('sales')
+        // ->leftJoin('orders','products.id','=','orders.product_id')
+        // ->selectRaw('products.*, COALESCE(sum(orders.item_count),0) total')
+        // ->groupBy('products.id')
+        // ->orderBy('total','desc')
+        // ->take(5)
+        // ->get();
+
+
+        
+        DB::table('products')
+            ->select([
+                'products.id',
+                'products.name',
+                DB::raw('COUNT(*) as total_sales'),
+                DB::raw('SUM( products.price * order_product.qty) AS total_price'),
+            ])
+            ->join('order_product', 'order_product.product_id', '=', 'products.id')
+            ->join('orders', 'order_product.order_id', '=', 'orders.id')
+            ->where('orders.status','approved')
+            ->groupBy('products.id')
+            ->orderByDesc('total_sales')
+            ->get();
+         
+
+        //     $products = Product::all();
+
+        //     $orders = Order::all();
+
+        // $neededData = $request->input('orders');
+        // foreach ($orders as $key=>$value){
+        //     $order = Order::find($value['id']);
+        //     $soldprods =  $value['products'];
+        //     foreach($soldprods as $key=>$value){
+
+        //     }
+        //     $order->status = $value['status'];
+        //     $order->save();
+        // }
+
+   }
    
    
 }

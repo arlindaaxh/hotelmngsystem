@@ -2617,7 +2617,7 @@ var render = function() {
                           { staticClass: "flexed" },
                           _vm._l(reservation.rooms, function(room, index) {
                             return _c("span", { key: index }, [
-                              _vm._v(_vm._s(room.code) + ",")
+                              _vm._v(_vm._s(room.code))
                             ])
                           }),
                           0

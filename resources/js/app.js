@@ -15,6 +15,11 @@ import '../css/main.scss'
 import JsonCSV from 'vue-json-csv'
 import dayjs from 'dayjs'
 
+import VueApexCharts from 'vue-apexcharts'
+
+
+// Vue.component('apexchart', VueApexCharts)
+
 Vue.prototype.dayjs = dayjs;
 Vue.prototype.dayjs.Ls.en.weekStart = 1;
 Vue.use(i18n);
@@ -22,6 +27,7 @@ Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(ElementUI, { locale });
+Vue.use(VueApexCharts)
 Vue.config.lang = 'en';
 
 

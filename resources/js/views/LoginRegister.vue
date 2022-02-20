@@ -29,10 +29,7 @@
                                 size="big"
                                 style="margin-bottom:18px"
                             >
-                            </el-input>
-           
-                           
-                                      
+                            </el-input>              
                     </div>
                     <div>
                         <el-button size="big" style="width:312px;margin-bottom:20px" @click="submit()" type="primary" :loading="buttonLoading">Login</el-button>
@@ -51,6 +48,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -78,8 +76,11 @@ export default {
                     message: 'Logimi u krye me sukses!'
                 })
                 this.buttonLoading = false
-                this.openLogin = false
-                this.$emit("refreshDashbordOnLogin")
+                this.$router.push({
+                    name: 'home'
+                })
+                // this.openLogin = false
+                // this.$emit("refreshDashbordOnLogin")
             }).catch((errors) =>{   
                 this.$notify({
                     title: 'Error',

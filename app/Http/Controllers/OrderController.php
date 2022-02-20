@@ -14,6 +14,21 @@ class OrderController extends Controller
         return $orders;
     }
     //
+
+    // public function getMostSoldProducts()
+    // {
+
+
+       
+    //     $orders = Product::with('sales')
+    //     ->leftJoin('orders','products.id','=','orders.product_id')
+    //     ->selectRaw('products.*, COALESCE(sum(orders.item_count),0) total')
+    //     ->groupBy('products.id')
+    //     ->orderBy('total','desc')
+    //     ->take(5)
+    //     ->get();
+    // }
+    //
      //save employee
     public function store(Request $request)
     {

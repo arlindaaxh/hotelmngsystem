@@ -58,6 +58,7 @@ import axios from 'axios'
     },
     methods: {
       submit(){
+        console.log('here')
           this.buttonLoading = true
           let url = `http://127.0.0.1:8000/login`;
           axios.post(url, this.formData).then((response) => {

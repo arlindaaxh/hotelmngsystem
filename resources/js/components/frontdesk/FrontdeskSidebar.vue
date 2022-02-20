@@ -130,10 +130,19 @@ import {BIcon} from 'bootstrap-vue'
   
 
     }
+    
+    .el-menu-item:hover{
+        background-color: #fc855ead !important;
 
-    // .el-menu-item:hover{
-    //     // background-color: #ff6666f8 !important;
-    // }
+        span, i{
+              color:white !important;
+                       transition: 0.5s;
+        }
+      
+
+         transition: 0.9s;
+    }
+    
     
     // .el-submenu__title {
     //     border-top-right-radius: 15px;

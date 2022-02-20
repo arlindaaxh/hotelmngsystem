@@ -2125,6 +2125,7 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this = this;
 
+      console.log('here');
       this.buttonLoading = true;
       var url = "http://127.0.0.1:8000/login";
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, this.formData).then(function (response) {
@@ -2304,6 +2305,8 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$emit("refreshDashbordOnLogin");
       })["catch"](function (errors) {
+        console.log('errors', errors);
+
         _this.$notify({
           title: 'Error',
           type: 'error',
@@ -2344,6 +2347,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_RegisterModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/RegisterModal.vue */ "./resources/js/components/RegisterModal.vue");
 /* harmony import */ var _components_LoginModal_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/LoginModal.vue */ "./resources/js/components/LoginModal.vue");
+//
+//
+//
+//
 //
 //
 //
@@ -2436,13 +2443,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().post('/logout').then(function (response) {
-        _this.$notify({
-          title: 'Info',
-          type: 'info',
-          message: 'Ju duhet të kyqeni përsëri për të pasur qasje në të dhëna!'
+        // this.$notify({
+        //     title: 'Info',
+        //     type: 'info',
+        //     message: 'Ju duhet të kyqeni përsëri për të pasur qasje në të dhëna!'
+        // })
+        _this.$router.push({
+          name: 'login-register'
         });
-
-        _this.$emit("refreshDashbordOnLogin");
       });
     }
   }
@@ -3248,10 +3256,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container align-center" },
-    [
+  return _c("div", { staticClass: "flexed-column" }, [
+    _c(
+      "div",
+      { staticStyle: { position: "absolute", right: "50px" } },
+      [
+        _c(
+          "el-button",
+          {
+            attrs: { type: "text" },
+            on: {
+              click: function($event) {
+                return _vm.logOut()
+              }
+            }
+          },
+          [
+            _c("h3", { staticClass: "pt-20" }, [
+              _vm._v("\n                Log Out\n            ")
+            ])
+          ]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "container align-center" }, [
       _c(
         "div",
         { staticClass: "cards container flexed justify-around" },
@@ -3323,62 +3353,9 @@ var render = function() {
           ])
         ],
         1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
-            "el-button",
-            {
-              attrs: { type: "text" },
-              on: {
-                click: function($event) {
-                  return _vm.openRegisterModal()
-                }
-              }
-            },
-            [
-              _c("h3", { staticClass: "pt-20" }, [
-                _vm._v("\n                qisishne\n            ")
-              ])
-            ]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
-            "el-button",
-            {
-              attrs: { type: "text" },
-              on: {
-                click: function($event) {
-                  return _vm.logOut()
-                }
-              }
-            },
-            [
-              _c("h3", { staticClass: "pt-20" }, [
-                _vm._v("\n                lug aut\n            ")
-              ])
-            ]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("login-modal", { on: { refreshDashbordOnLogin: _vm.refreshHome } }),
-      _vm._v(" "),
-      _c("register-modal", {
-        on: { refreshDashbordOnRegister: _vm.refreshHome }
-      })
-    ],
-    1
-  )
+      )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

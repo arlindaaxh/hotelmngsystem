@@ -108,13 +108,15 @@ import axios from 'axios'
               this.buttonLoading = false
               this.openRegister = false
               this.$emit("refreshDashbordOnLogin")
-          }).catch((errors) =>{   
+          }).catch((errors) =>{  
+            console.log('errors', errors) 
               this.$notify({
                   title: 'Error',
                   type: 'error',
                   message: 'Diçka shkoi gabim, ju lutem provoni përsëri ose provoni më vonë!'
               });
               this.buttonLoading = false
+              
           })
       },
       openLoginModal(){

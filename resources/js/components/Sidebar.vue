@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flexed  ml-20 p-20 pt-40" style="font-weight:bold; font-size:17px"><span class="el-icon-office-building"></span>My Hotel Logo</div>
+        <div class="flexed  ml-20 p-20 pt-40" style="font-weight:bold; font-size:17px;color:#ff7b50"><span class="el-icon-office-building" style="color:#ff7b50"></span>My Hotel Logo</div>
         <el-menu
             :default-active="$route.path"
             class="el-menu-vertical-demo"
@@ -163,9 +163,17 @@ import {BIcon} from 'bootstrap-vue'
 
     }
 
-    // .el-menu-item:hover{
-    //     // background-color: #ff6666f8 !important;
-    // }
+    .el-menu-item:hover{
+        background-color: #fc855ead !important;
+
+        span, i{
+              color:white !important;
+                       transition: 0.5s;
+        }
+      
+
+         transition: 0.9s;
+    }
     
     // .el-submenu__title {
     //     border-top-right-radius: 15px;
@@ -173,7 +181,7 @@ import {BIcon} from 'bootstrap-vue'
     // }
 
     // .el-submenu__title:hover {
-    //     background-color: #ff666691 !important;
+    //     color: white !important;
     // }
 
   }

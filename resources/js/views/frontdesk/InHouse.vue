@@ -12,7 +12,7 @@
                 <div v-for="(reservation,index) in InHouseFilterByGuest" :key="index">
                     <div class="card-items-container pointer flexed" @click="goToDetails(reservation)"> 
                         <!-- <el-avatar :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar> -->
-                        <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}},</span></strong>
+                        <strong class="flexed" ><span v-for="(room,index) in reservation.rooms" :key="index">{{room.code}}</span></strong>
                     
                         <span class="info-name">{{reservation.date_in}}</span>
                         
