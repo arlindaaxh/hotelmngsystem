@@ -1,9 +1,10 @@
 <template>
     <div>
         <div id="chart" style="width:900px; height:600px">
-                <VueApexCharts  size="200px" type="pie" :options="chartOptions" :series="series" :key="reRender"></VueApexCharts>
+                <VueApexCharts  size="200px" type="pie" :options="chartOptions" :series="filteredSeries" :key="reRender"></VueApexCharts>
         </div>
-
+        <el-button @click="count()" type="primary" class="pointer">here</el-button>
+        <span @click="count()">pls</span>
     </div>
 </template>
 
@@ -53,30 +54,34 @@ import mixins from '../../common/mixins';
                     },
                 
                 },
-                series: [25,43,23,45,13],
+                series: [1],
                 
 
             }
         },
         computed: {
-            // chartData(){
-            //     let prods = []
-            //     this.products.forEach(product => {
-            //         this.orders.forEach(order => {
-            //             let prod = order.products.find(p => p.id === product.id)
-            //             if(prod){
-            //                 prods.push(prod)
-            //             }
-            //         })
-            //     })
+            chartData(){
+                let prods = []
+                this.products.forEach(product => {
+                    this.orders.forEach(order => {
+                        console.log('order', order)
+                        let prod = order.products.find(p => p.id === product.id)
+                        if(prod){
+                            prods.push(prod)
+                        }
+                    })
+                })
 
-
+               
                                 
-            //     const toFindDuplicates = prods => prods.filter((item, index) => prods.indexOf(item) !== index)
-            //     const duplicateElements = toFindDuplicates(prods);
-            //     console.log('dps',duplicateElements);
-            //     return duplicateElements
-            // }
+                const toFindDuplicates = prods => prods.filter((item, index) => prods.indexOf(item) !== index)
+                const duplicateElements = toFindDuplicates(prods);
+                console.log('dps',duplicateElements);
+                return duplicateElements
+            },
+            filteredSeries(){
+               return this.series
+           }
         },
         methods: {
             getOptionsData() {
@@ -87,9 +92,10 @@ import mixins from '../../common/mixins';
                         RoomServices.getRooms(),
                         GuestService.getGuests(),
                         chargeServices.getCharges(),
-                        vendorServices.getVendors(),
                         orderServices.getOrders(),
-                        productServices.getProducts()
+                        productServices.getProducts(),
+                        vendorServices.getVendors(),
+                       
                     ].map((p, index) =>
                         p.then(
                             (v) => ({
@@ -100,7 +106,7 @@ import mixins from '../../common/mixins';
                                     index == 1 ? "rooms" : 
                                     index == 2 ? "guests" :
                                     index == 3 ? "charges" :
-                              
+
                                     index == 4 ? "orders" :
                                     index == 5 ? "products" :
                                           index == 6 ? "vendors" :
@@ -127,8 +133,8 @@ import mixins from '../../common/mixins';
                                 this.charges = res.data
                             }
                             else if(res.type == "orders"){
-                                console.log('here')
                                 this.orders = res.data
+                                console.log('orders', this.orders)
                             }else if(res.type == "products"){
                                 this.products = res.data
                                 //   console.log('this.products',this.products)
@@ -139,10 +145,10 @@ import mixins from '../../common/mixins';
                                 // console.log('this.products',occurrences)
                             } else if(res.type == "vendors"){
                                 this.vendors = res.data
-                                this.vendors.forEach(v => {
-                                    this.chartOptions.labels.push(v.name)
-                                    this.reRender++
-                                })
+                                // this.vendors.forEach(v => {
+                                //     this.chartOptions.labels.push(v.name)
+                                //     this.reRender++
+                                // })
                             }
                             
                         });
@@ -155,6 +161,46 @@ import mixins from '../../common/mixins';
                     this.loading = false
                 })
             },
+            count() {
+                // prods = ["a", "b", "c", "d", "e", "a", "b", "c", "f", "g", "h", "h", "h", "e", "a"];
+                console.log('here')
+                let prods = []
+                this.products.forEach(product => {
+                    this.orders.forEach(order => {
+                        let prod = order.products.find(p => p.id === product.id)
+                        if(prod){
+                            prods.push(prod)
+                        }
+                    })
+                })
+
+                this.chartOptions.labels = prods
+
+                prods.sort();
+
+                var current = null;
+                var cnt = 0;
+                for (var i = 0; i < prods.length; i++) {
+                    if (prods[i].name != current) {
+                        if (cnt > 0) {
+                            console.log(current + ' comes --> ' + cnt + ' times<br>');
+                            this.series.push(cnt)
+                        }
+                        current = prods[i].name;
+                        cnt = 1;
+                    } else {
+                        cnt++;
+                    }
+                }
+                if (cnt > 0) {
+                    console.log(current + ' comes --> ' + cnt + ' times');
+                    this.series.push(cnt)
+                                console.log('ser1', this.series)
+                }
+
+            }
+
+            
             
 
         },

@@ -2083,6 +2083,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2127,31 +2128,47 @@ __webpack_require__.r(__webpack_exports__);
           width: 380
         }
       },
-      series: [25, 43, 23, 45, 13]
+      series: [1]
     };
   },
-  computed: {// chartData(){
-    //     let prods = []
-    //     this.products.forEach(product => {
-    //         this.orders.forEach(order => {
-    //             let prod = order.products.find(p => p.id === product.id)
-    //             if(prod){
-    //                 prods.push(prod)
-    //             }
-    //         })
-    //     })
-    //     const toFindDuplicates = prods => prods.filter((item, index) => prods.indexOf(item) !== index)
-    //     const duplicateElements = toFindDuplicates(prods);
-    //     console.log('dps',duplicateElements);
-    //     return duplicateElements
-    // }
+  computed: {
+    chartData: function chartData() {
+      var _this = this;
+
+      var prods = [];
+      this.products.forEach(function (product) {
+        _this.orders.forEach(function (order) {
+          console.log('order', order);
+          var prod = order.products.find(function (p) {
+            return p.id === product.id;
+          });
+
+          if (prod) {
+            prods.push(prod);
+          }
+        });
+      });
+
+      var toFindDuplicates = function toFindDuplicates(prods) {
+        return prods.filter(function (item, index) {
+          return prods.indexOf(item) !== index;
+        });
+      };
+
+      var duplicateElements = toFindDuplicates(prods);
+      console.log('dps', duplicateElements);
+      return duplicateElements;
+    },
+    filteredSeries: function filteredSeries() {
+      return this.series;
+    }
   },
   methods: {
     getOptionsData: function getOptionsData() {
-      var _this = this;
+      var _this2 = this;
 
       this.loading = true;
-      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_2__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_4__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_1__["default"].getGuests(), _services_charge_services__WEBPACK_IMPORTED_MODULE_5__["default"].getCharges(), _services_vendor_services__WEBPACK_IMPORTED_MODULE_3__["default"].getVendors(), _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].getOrders(), _services_product_services__WEBPACK_IMPORTED_MODULE_7__["default"].getProducts()].map(function (p, index) {
+      Promise.all([_services_reservation_services__WEBPACK_IMPORTED_MODULE_2__["default"].getReservations(), _services_room_services__WEBPACK_IMPORTED_MODULE_4__["default"].getRooms(), _services_guest_services__WEBPACK_IMPORTED_MODULE_1__["default"].getGuests(), _services_charge_services__WEBPACK_IMPORTED_MODULE_5__["default"].getCharges(), _services_order_services__WEBPACK_IMPORTED_MODULE_6__["default"].getOrders(), _services_product_services__WEBPACK_IMPORTED_MODULE_7__["default"].getProducts(), _services_vendor_services__WEBPACK_IMPORTED_MODULE_3__["default"].getVendors()].map(function (p, index) {
         return p.then(function (v) {
           return {
             data: v.data,
@@ -2171,38 +2188,77 @@ __webpack_require__.r(__webpack_exports__);
             return r.status == "success";
           }).forEach(function (res) {
             if (res.type == "reservations") {
-              _this.reservations = res.data;
+              _this2.reservations = res.data;
             } else if (res.type == "rooms") {
-              _this.rooms = res.data;
+              _this2.rooms = res.data;
             } else if (res.type == "guests") {
-              _this.guests = res.data;
+              _this2.guests = res.data;
             } else if (res.type == "charges") {
-              _this.charges = res.data;
+              _this2.charges = res.data;
             } else if (res.type == "orders") {
-              console.log('here');
-              _this.orders = res.data;
+              _this2.orders = res.data;
+              console.log('orders', _this2.orders);
             } else if (res.type == "products") {
-              _this.products = res.data; //   console.log('this.products',this.products)
+              _this2.products = res.data; //   console.log('this.products',this.products)
               // const occurrences = this.products.reduce(function (acc, curr) {
               // return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
               // }, {});
               // console.log('this.products',occurrences)
             } else if (res.type == "vendors") {
-              _this.vendors = res.data;
-
-              _this.vendors.forEach(function (v) {
-                _this.chartOptions.labels.push(v.name);
-
-                _this.reRender++;
-              });
+              _this2.vendors = res.data; // this.vendors.forEach(v => {
+              //     this.chartOptions.labels.push(v.name)
+              //     this.reRender++
+              // })
             }
           });
         }
       })["catch"](function (error) {
-        _this.catchMethod(error);
+        _this2.catchMethod(error);
       })["finally"](function () {
-        _this.loading = false;
+        _this2.loading = false;
       });
+    },
+    count: function count() {
+      var _this3 = this;
+
+      // prods = ["a", "b", "c", "d", "e", "a", "b", "c", "f", "g", "h", "h", "h", "e", "a"];
+      console.log('here');
+      var prods = [];
+      this.products.forEach(function (product) {
+        _this3.orders.forEach(function (order) {
+          var prod = order.products.find(function (p) {
+            return p.id === product.id;
+          });
+
+          if (prod) {
+            prods.push(prod);
+          }
+        });
+      });
+      this.chartOptions.labels = prods;
+      prods.sort();
+      var current = null;
+      var cnt = 0;
+
+      for (var i = 0; i < prods.length; i++) {
+        if (prods[i].name != current) {
+          if (cnt > 0) {
+            console.log(current + ' comes --> ' + cnt + ' times<br>');
+            this.series.push(cnt);
+          }
+
+          current = prods[i].name;
+          cnt = 1;
+        } else {
+          cnt++;
+        }
+      }
+
+      if (cnt > 0) {
+        console.log(current + ' comes --> ' + cnt + ' times');
+        this.series.push(cnt);
+        console.log('ser1', this.series);
+      }
     }
   },
   beforeMount: function beforeMount() {
@@ -2576,27 +2632,57 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        staticStyle: { width: "900px", height: "600px" },
-        attrs: { id: "chart" }
-      },
-      [
-        _c("VueApexCharts", {
-          key: _vm.reRender,
-          attrs: {
-            size: "200px",
-            type: "pie",
-            options: _vm.chartOptions,
-            series: _vm.series
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          staticStyle: { width: "900px", height: "600px" },
+          attrs: { id: "chart" }
+        },
+        [
+          _c("VueApexCharts", {
+            key: _vm.reRender,
+            attrs: {
+              size: "200px",
+              type: "pie",
+              options: _vm.chartOptions,
+              series: _vm.filteredSeries
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "el-button",
+        {
+          staticClass: "pointer",
+          attrs: { type: "primary" },
+          on: {
+            click: function($event) {
+              return _vm.count()
+            }
           }
-        })
-      ],
-      1
-    )
-  ])
+        },
+        [_vm._v("here")]
+      ),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          on: {
+            click: function($event) {
+              return _vm.count()
+            }
+          }
+        },
+        [_vm._v("pls")]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
