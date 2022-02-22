@@ -2257,8 +2257,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_employee_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/employee.services */ "./resources/js/services/employee.services.js");
 /* harmony import */ var _components_frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/frontdesk/dashboard/NewBookingTypeModal.vue */ "./resources/js/components/frontdesk/dashboard/NewBookingTypeModal.vue");
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/reservation.services */ "./resources/js/services/reservation.services.js");
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-apexcharts */ "./node_modules/vue-apexcharts/dist/vue-apexcharts.js");
+/* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_apexcharts__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_7__);
 //
 //
 //
@@ -2342,6 +2344,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -2351,7 +2357,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    NewBookingTypeModal: _components_frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+    NewBookingTypeModal: _components_frontdesk_dashboard_NewBookingTypeModal_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    VueApexCharts: (vue_apexcharts__WEBPACK_IMPORTED_MODULE_6___default())
   },
   data: function data() {
     return {
@@ -2361,7 +2368,28 @@ __webpack_require__.r(__webpack_exports__);
       rooms: [],
       schedules: [],
       showNewBookingTypeModal: false,
-      reservations: []
+      reservations: [],
+      available: 0,
+      chartOptions: {
+        chart: {
+          type: 'pie',
+          size: 200,
+          customScale: 0.8
+        },
+        labels: ['Clean', 'Dirty', 'Ready'],
+        stroke: {
+          show: true,
+          curve: 'smooth',
+          lineCap: 'butt',
+          colors: undefined,
+          width: 1,
+          dashArray: 0
+        },
+        legend: {
+          width: 380
+        }
+      },
+      series: []
     };
   },
   beforeMount: function beforeMount() {
@@ -2487,6 +2515,9 @@ __webpack_require__.r(__webpack_exports__);
       return this.reservations.filter(function (reservation) {
         return reservation.created_at === currentDate;
       });
+    },
+    filteredSeries: function filteredSeries() {
+      return this.series;
     }
   },
   methods: {
@@ -2554,7 +2585,12 @@ __webpack_require__.r(__webpack_exports__);
     openBookingTypeModal: function openBookingTypeModal() {
       this.showNewBookingTypeModal = true;
     }
-  }
+  } // mounted(){
+  //     this.$nextTick(() => {
+  //       this.series = [this.inHouse.length, this.departures.length, this.bookedToday.length]  
+  //     })
+  // }
+
 });
 
 /***/ }),
@@ -3309,266 +3345,289 @@ var render = function() {
         [
           _c("div", { staticClass: "flexed", staticStyle: { gap: "40px" } }, [
             _c("div", [
-              _c("span", [_vm._v("House")]),
+              _c(
+                "span",
+                {
+                  staticClass: "label-no-height p-b-20",
+                  staticStyle: { color: "#ff7b50", "font-size": "18px" }
+                },
+                [_vm._v("House")]
+              ),
               _vm._v(" "),
-              _c("div", { staticStyle: { width: "400px" } }, [
-                _c(
-                  "div",
-                  { staticClass: "form-data pointer" },
-                  [
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("in-house")
+              _c(
+                "div",
+                { staticClass: "mt-10", staticStyle: { width: "400px" } },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "form-data pointer" },
+                    [
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("in-house")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("In House")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.inHouse.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("departures")
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("In House")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.inHouse.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("departures")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Departures")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.departures.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("housekeeping", "Dirty")
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Departures")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.departures.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("housekeeping", "Dirty")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Dirty Rooms")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.dirtyRooms.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("housekeeping", "Ready")
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Dirty Rooms")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.dirtyRooms.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("housekeeping", "Ready")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Ready Rooms")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.readyRooms.length))]
-                          )
-                        ])
-                      ]
-                    )
-                  ],
-                  1
-                )
-              ])
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Ready Rooms")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.readyRooms.length))]
+                            )
+                          ])
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]
+              )
             ]),
             _vm._v(" "),
             _c("div", [
-              _c("span", [_vm._v("Availability and Bookings")]),
+              _c(
+                "span",
+                {
+                  staticClass: "label-no-height",
+                  staticStyle: { color: "#ff7b50", "font-size": "18px" }
+                },
+                [_vm._v("Availability and Bookings")]
+              ),
               _vm._v(" "),
-              _c("div", { staticStyle: { width: "400px" } }, [
-                _c(
-                  "div",
-                  { staticClass: "form-data pointer" },
-                  [
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("housekeeping", "All")
+              _c(
+                "div",
+                { staticClass: "mt-10", staticStyle: { width: "400px" } },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "form-data pointer" },
+                    [
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("housekeeping", "All")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Total Rooms")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.rooms.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("availability")
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Total Rooms")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.rooms.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("availability")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Available")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.availableRooms.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      {
-                        staticClass: "card-box",
-                        attrs: { shadow: "never" },
-                        nativeOn: {
-                          click: function($event) {
-                            return _vm.goToView("reservations-list")
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Available")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.availableRooms.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        {
+                          staticClass: "card-box",
+                          attrs: { shadow: "never" },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.goToView("reservations-list")
+                            }
                           }
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong", [_vm._v("Booked today")]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v(_vm._s(_vm.bookedToday.length))]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-card",
-                      { staticClass: "card-box", attrs: { shadow: "never" } },
-                      [
-                        _c("div", { staticClass: "flexed-column" }, [
-                          _c("strong"),
-                          _vm._v(" "),
-                          _c(
-                            "strong",
-                            {
-                              staticClass: "pt-20",
-                              staticStyle: {
-                                "font-size": "25px",
-                                "font-weight": "500"
-                              }
-                            },
-                            [_vm._v("--")]
-                          )
-                        ])
-                      ]
-                    )
-                  ],
-                  1
-                )
-              ])
+                        },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong", [_vm._v("Booked today")]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.bookedToday.length))]
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-card",
+                        { staticClass: "card-box", attrs: { shadow: "never" } },
+                        [
+                          _c("div", { staticClass: "flexed-column" }, [
+                            _c("strong"),
+                            _vm._v(" "),
+                            _c(
+                              "strong",
+                              {
+                                staticClass: "pt-20",
+                                staticStyle: {
+                                  "font-size": "25px",
+                                  "font-weight": "500"
+                                }
+                              },
+                              [_vm._v("--")]
+                            )
+                          ])
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]
+              )
             ])
           ]),
           _vm._v(" "),
           _c(
             "div",
+            { staticClass: "mt-20" },
             [
               _c(
                 "el-button",

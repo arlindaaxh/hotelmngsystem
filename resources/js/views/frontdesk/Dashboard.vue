@@ -2,8 +2,8 @@
     <div v-if="$route.name === 'frontdesk-dashboard'" v-loading="loading" class="p-30">
         <div class="flexed" style="gap: 40px;">
             <div>
-                <span>House</span>
-                <div style="width:400px;">
+                <span style="color:#ff7b50;font-size:18px" class="label-no-height p-b-20">House</span>
+                <div style="width:400px;" class="mt-10">
                     <div class="form-data pointer">
                         <el-card shadow="never" class="card-box" @click.native="goToView('in-house')">
                             <div class="flexed-column">
@@ -34,8 +34,8 @@
             </div>
 
             <div>
-                <span>Availability and Bookings</span>
-                <div style="width:400px;">
+                <span style="color:#ff7b50;font-size:18px" class="label-no-height">Availability and Bookings</span>
+                <div style="width:400px;" class="mt-10">
                     <div class="form-data pointer">
                         <el-card shadow="never" class="card-box" @click.native="goToView('housekeeping', 'All')">
                            <div class="flexed-column">
@@ -67,8 +67,11 @@
                 </div>
             </div>
         </div>
+        <!-- <div id="chart" style="width:800px; height:600px">
+            <VueApexCharts  size="200px" type="pie" :options="chartOptions" :series="filteredSeries"></VueApexCharts>
+        </div> -->
 
-        <div>
+        <div class="mt-20">
             <el-button @click="openBookingTypeModal()">New Booking</el-button>
         </div>
 
@@ -88,10 +91,12 @@ import DepartmentServices from '../../services/department.services'
 import EmployeeServices from '../../services/employee.services'
 import NewBookingTypeModal from '../../components/frontdesk/dashboard/NewBookingTypeModal.vue'
 import reservationServices from '../../services/reservation.services'
+import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
     export default {
         components: {
-            NewBookingTypeModal
+            NewBookingTypeModal,
+            VueApexCharts
         },
         data() {
             return {
@@ -101,13 +106,36 @@ import dayjs from 'dayjs'
                 rooms: [],
                 schedules: [],
                 showNewBookingTypeModal: false,
-                reservations: []
+                reservations: [],
+                available: 0,
+                chartOptions: {
+                    chart: {
+                        type: 'pie',
+                        size: 200,
+                        customScale: 0.8
+                    },
+                    labels: ['Clean', 'Dirty', 'Ready'],
+                    stroke: {
+                        show: true,
+                        curve: 'smooth',
+                        lineCap: 'butt',
+                        colors: undefined,
+                        width: 1,
+                        dashArray: 0,
+                    },
+                    legend:{
+                        width: 380
+                    },
+                
+                },
+                series: [],
             }
         },
         beforeMount(){
             this.getOptionsData()
         },
         computed: {
+        
             filteredRooms(){
                 let result = this.rooms
                 if(this.rooms && this.rooms.length > 0){
@@ -173,6 +201,7 @@ import dayjs from 'dayjs'
                         dirtyRooms.push(room)
                     }
                 })
+                
                 return dirtyRooms
             },
             cleanRooms(){
@@ -203,7 +232,10 @@ import dayjs from 'dayjs'
                 let currentDate = this.dayjs().format('YYYY-MM-DD')
                 console.log('current', currentDate)
                 return this.reservations.filter(reservation => reservation.created_at === currentDate)
-            }    
+            },
+            filteredSeries(){
+                return this.series
+            },    
         },
         methods: {
             getOptionsData() {
@@ -286,7 +318,13 @@ import dayjs from 'dayjs'
                 this.showNewBookingTypeModal = true
             }
        
-        }
+        },
+        // mounted(){
+        //     this.$nextTick(() => {
+        //       this.series = [this.inHouse.length, this.departures.length, this.bookedToday.length]  
+        //     })
+            
+        // }
         
     }
 </script>
