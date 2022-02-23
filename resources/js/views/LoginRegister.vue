@@ -1,5 +1,5 @@
 <template>
-    <div class="container align-center" style="width:100%;" >
+    <div class="container align-center" style="width:100%;">
         <div class="container box">
             <el-card class="card" style="width:450px;margin:0 auto;" >
                 <div slot="header" class="clearfix text-center">

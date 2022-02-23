@@ -64,6 +64,10 @@ import {ArrowRightIcon} from 'vue-feather-icons'
             changePathByBreadCrumb(val) {
                 if (val.value === "home") {
                     this.goToHome();
+                }else if(val.value === 'frontdesk'){
+                     this.goToDashboard()
+                }else if(val.value === 'administration'){
+                     this.goToDashboardAdm()
                 } else if ((val.value = "rk-admin")) {
                     if (this.$route.name != val.route_name)
                     this.$router.push({ name: val.route_name });
@@ -77,6 +81,16 @@ import {ArrowRightIcon} from 'vue-feather-icons'
             goToHome(){
                 this.$router.push({
                     name: 'home'
+                })
+            },
+            goToDashboard(){
+                this.$router.push({
+                    name: 'frontdesk-dashboard'
+                })
+            },
+            goToDashboardAdm(){
+                this.$router.push({
+                    name: 'dashboard'
                 })
             },
             logOut(){        

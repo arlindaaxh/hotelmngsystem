@@ -2300,6 +2300,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     changePathByBreadCrumb: function changePathByBreadCrumb(val) {
       if (val.value === "home") {
         this.goToHome();
+      } else if (val.value === 'frontdesk') {
+        this.goToDashboard();
+      } else if (val.value === 'administration') {
+        this.goToDashboardAdm();
       } else if (val.value = "rk-admin") {
         if (this.$route.name != val.route_name) this.$router.push({
           name: val.route_name
@@ -2316,6 +2320,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     goToHome: function goToHome() {
       this.$router.push({
         name: 'home'
+      });
+    },
+    goToDashboard: function goToDashboard() {
+      this.$router.push({
+        name: 'frontdesk-dashboard'
+      });
+    },
+    goToDashboardAdm: function goToDashboardAdm() {
+      this.$router.push({
+        name: 'dashboard'
       });
     },
     logOut: function logOut() {
