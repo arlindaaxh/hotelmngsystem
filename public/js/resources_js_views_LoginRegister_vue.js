@@ -2115,6 +2115,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2129,6 +2142,18 @@ __webpack_require__.r(__webpack_exports__);
       buttonLoading: false,
       image: {
         url: 'frontdesk.png'
+      },
+      rules: {
+        email: [{
+          required: true,
+          message: "Field is required!",
+          trigger: "change"
+        }],
+        password: [{
+          required: true,
+          message: "Field is required!",
+          trigger: "change"
+        }]
       }
     };
   },
@@ -2156,7 +2181,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.$notify({
           title: 'Error',
           type: 'error',
-          message: 'Të dhënat e shënuara nuk janë të sakta, ju lutem provoni përsëri ose provoni më vonë!'
+          message: 'Incorrect email or password'
         });
 
         _this.buttonLoading = false;
@@ -2368,85 +2393,107 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c(
-                    "div",
-                    {
-                      staticClass: "forma align-center",
-                      staticStyle: { "margin-bottom": "18px" }
-                    },
-                    [
-                      _vm.error
-                        ? _c(
-                            "div",
-                            { staticClass: "alert alert-danger error" },
-                            [_vm._v(_vm._s(_vm.error))]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("el-input", {
-                        staticClass: " w-75",
-                        staticStyle: { "margin-bottom": "18px" },
-                        attrs: {
-                          placeholder: "Email",
-                          clearable: "",
-                          size: "big"
-                        },
-                        model: {
-                          value: _vm.formData.email,
-                          callback: function($$v) {
-                            _vm.$set(_vm.formData, "email", $$v)
-                          },
-                          expression: "formData.email"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("el-input", {
-                        staticClass: "my-3 w-75",
-                        staticStyle: { "margin-bottom": "18px" },
-                        attrs: {
-                          placeholder: "Password",
-                          clearable: "",
-                          "show-password": "",
-                          size: "big"
-                        },
-                        model: {
-                          value: _vm.formData.password,
-                          callback: function($$v) {
-                            _vm.$set(_vm.formData, "password", $$v)
-                          },
-                          expression: "formData.password"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
+                    "el-form",
+                    { attrs: { model: _vm.formData, rules: _vm.rules } },
                     [
                       _c(
-                        "el-button",
+                        "div",
                         {
-                          staticStyle: {
-                            width: "312px",
-                            "margin-bottom": "20px"
-                          },
-                          attrs: {
-                            size: "big",
-                            type: "primary",
-                            loading: _vm.buttonLoading
-                          },
-                          on: {
-                            click: function($event) {
-                              return _vm.submit()
-                            }
-                          }
+                          staticClass: "forma align-center",
+                          staticStyle: { "margin-bottom": "18px" }
                         },
-                        [_vm._v("Login")]
+                        [
+                          _vm.error
+                            ? _c(
+                                "div",
+                                { staticClass: "alert alert-danger error" },
+                                [_vm._v(_vm._s(_vm.error))]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "el-form-item",
+                            { attrs: { prop: "email" } },
+                            [
+                              _c("el-input", {
+                                staticStyle: { "margin-bottom": "18px" },
+                                attrs: {
+                                  placeholder: "Email",
+                                  clearable: "",
+                                  size: "big",
+                                  type: "email",
+                                  name: "email"
+                                },
+                                model: {
+                                  value: _vm.formData.email,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.formData, "email", $$v)
+                                  },
+                                  expression: "formData.email"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-form-item",
+                            { attrs: { prop: "password" } },
+                            [
+                              _c("el-input", {
+                                staticStyle: { "margin-bottom": "18px" },
+                                attrs: {
+                                  placeholder: "Password",
+                                  clearable: "",
+                                  "show-password": "",
+                                  size: "big",
+                                  name: "password"
+                                },
+                                model: {
+                                  value: _vm.formData.password,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.formData, "password", $$v)
+                                  },
+                                  expression: "formData.password"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              staticStyle: {
+                                width: "312px",
+                                "margin-bottom": "20px"
+                              },
+                              attrs: {
+                                size: "big",
+                                type: "primary",
+                                loading: _vm.buttonLoading
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.submit()
+                                }
+                              }
+                            },
+                            [_vm._v("Login")]
+                          )
+                        ],
+                        1
                       )
-                    ],
-                    1
+                    ]
                   )
-                ]
+                ],
+                1
               )
             ]
           )

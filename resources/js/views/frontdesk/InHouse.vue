@@ -17,9 +17,9 @@
                         <span class="info-name">{{reservation.date_in}}</span>
                         
                         <span style="info-item">{{reservation.date_out}}</span>
-                        <span class="info-name">{{guestData}}</span>
+                        <span class="info-name">{{getGuestName(reservation)}} - {{getGuestSurname(reservation)}}</span>
                     
-                        <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>    
+                        <span class="info-item text-green" style="color:green">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>    
                     </div>
                 </div>
             </div>
@@ -62,16 +62,7 @@ import chargeServices from '../../services/charge.services'
             }
         },
         computed: {
-            guestData(){
-                let name;
-                let surname;
-                this.guests.forEach(guest => {
-                    name = guest.first_name
-                    surname = guest.last_name
-                })
-
-                return name + ' ' + surname
-            },
+           
             // inHouse(){
             //     let inHouse = this.reservationsList.filter(reservation => reservation.is_completed === 1 && reservation.active === 1)
             //     return inHouse
@@ -94,6 +85,16 @@ import chargeServices from '../../services/charge.services'
                 this.$router.push({
                     name: 'availability'
                 })
+            },
+            guestData(){
+                let name;
+                let surname;
+                this.guests.forEach(guest => {
+                    name = guest.first_name
+                    surname = guest.last_name
+                })
+
+                return name + ' ' + surname
             },
             goToDetails(reservation){
                 this.$router.push({

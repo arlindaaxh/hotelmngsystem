@@ -17908,7 +17908,13 @@ var render = function() {
           _c("div", { staticClass: "flexed-column" }, [
             _c("span", [
               _vm._v("Are you sure you want to delete "),
-              _c("strong", [_vm._v(_vm._s(_vm.employeeProp.name))]),
+              _c("strong", [
+                _vm._v(
+                  _vm._s(_vm.employeeProp.name) +
+                    " " +
+                    _vm._s(_vm.employeeProp.surname)
+                )
+              ]),
               _vm._v(" employee ?")
             ])
           ])
@@ -18004,7 +18010,7 @@ var render = function() {
                       style: "max-width:450px",
                       attrs: {
                         size: "big",
-                        placeholder: "Search employees by name or code"
+                        placeholder: "Search employees by name or surname"
                       },
                       model: {
                         value: _vm.query,

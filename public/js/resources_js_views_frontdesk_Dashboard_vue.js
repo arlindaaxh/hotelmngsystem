@@ -3625,25 +3625,6 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mt-20" },
-            [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      return _vm.openBookingTypeModal()
-                    }
-                  }
-                },
-                [_vm._v("New Booking")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
           _vm.showNewBookingTypeModal
             ? _c("new-booking-type-modal", {
                 attrs: { fromDashboard: true },

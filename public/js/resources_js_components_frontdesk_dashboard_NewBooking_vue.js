@@ -2071,6 +2071,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_reservation_services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/reservation.services */ "./resources/js/services/reservation.services.js");
 /* harmony import */ var _services_addon_services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/addon.services */ "./resources/js/services/addon.services.js");
 /* harmony import */ var _services_charge_services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/charge.services */ "./resources/js/services/charge.services.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
 //
 //
 //
@@ -2240,6 +2243,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ['checkin', 'checkout', 'selectedRooms'],
   data: function data() {
+    var _rules;
+
     return {
       activeStep: 1,
       loading: false,
@@ -2275,10 +2280,10 @@ __webpack_require__.r(__webpack_exports__);
         total: 0
       },
       addons: [],
-      rules: {
+      rules: (_rules = {
         first_name: [{
           required: true,
-          message: "Field is required",
+          message: "Field is required!",
           trigger: "change"
         }, {
           max: 255,
@@ -2287,7 +2292,7 @@ __webpack_require__.r(__webpack_exports__);
         }],
         last_name: [{
           required: true,
-          message: "Field is required",
+          message: "Field is required!",
           trigger: "change"
         }, {
           max: 255,
@@ -2296,7 +2301,7 @@ __webpack_require__.r(__webpack_exports__);
         }],
         address: [{
           required: true,
-          message: "Field is required",
+          message: "Field is required!",
           trigger: "change"
         }, {
           max: 255,
@@ -2305,19 +2310,44 @@ __webpack_require__.r(__webpack_exports__);
         }],
         birth_date: [{
           required: true,
-          message: "Field is required",
+          message: "Field is required!",
           trigger: "change"
         }],
         citizenship: [{
           required: true,
-          message: "Field is required",
+          message: "Field is required!",
+          trigger: "change"
+        }, {
+          max: 255,
+          message: "Maximum characters allowed is 255",
+          trigger: "change"
+        }],
+        personal_number: [{
+          required: true,
+          message: "Field is required!",
           trigger: "change"
         }, {
           max: 255,
           message: "Maximum characters allowed is 255",
           trigger: "change"
         }]
-      }
+      }, _defineProperty(_rules, "birth_date", [{
+        required: true,
+        message: "Field is required!",
+        trigger: "change"
+      }, {
+        max: 255,
+        message: "Maximum characters allowed is 255",
+        trigger: "change"
+      }]), _defineProperty(_rules, "email", [{
+        required: true,
+        message: "Field is required!",
+        trigger: "change"
+      }, {
+        max: 255,
+        message: "Maximum characters allowed is 255",
+        trigger: "change"
+      }]), _rules)
     };
   },
   beforeMount: function beforeMount() {
@@ -17796,6 +17826,7 @@ var render = function() {
                         [
                           _c("el-date-picker", {
                             attrs: {
+                              name: "birth_date",
                               type: "date",
                               placeholder: "Select date of birth"
                             },

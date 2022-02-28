@@ -17673,7 +17673,8 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "availability"
+                _vm.$route.name === "availability" ||
+                _vm.$route.name === "new-booking"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -17686,7 +17687,8 @@ var render = function() {
                 "span",
                 {
                   style: [
-                    _vm.$route.name === "availability"
+                    _vm.$route.name === "availability" ||
+                    _vm.$route.name === "new-booking"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -17700,7 +17702,8 @@ var render = function() {
             "el-menu-item",
             {
               class: [
-                _vm.$route.name === "reservations-list"
+                _vm.$route.name === "reservations-list" ||
+                _vm.$route.name === "reservation-details"
                   ? "el-menu-item is-active"
                   : "el-menu-item"
               ],
@@ -17716,7 +17719,8 @@ var render = function() {
                 "span",
                 {
                   style: [
-                    _vm.$route.name === "reservations-list"
+                    _vm.$route.name === "reservations-list" ||
+                    _vm.$route.name === "reservation-details"
                       ? { color: "white" }
                       : { color: "black" }
                   ]
@@ -17842,8 +17846,15 @@ var render = function() {
           },
           [
             _c(
-              "h5",
-              { staticStyle: { "padding-right": "30px", color: "#212529" } },
+              "span",
+              {
+                staticClass: "bold500",
+                staticStyle: {
+                  "padding-right": "30px",
+                  color: "black",
+                  "font-size": "17px"
+                }
+              },
               [_vm._v("\n                Log Out\n            ")]
             )
           ]

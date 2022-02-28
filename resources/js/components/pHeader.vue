@@ -13,9 +13,9 @@
 
         <div>
             <el-button  type="text" @click="logOut()">
-                <h5 style="padding-right:30px;color:#212529">
+                <span class="bold500" style="padding-right:30px; color:black; font-size:17px">
                     Log Out
-                </h5>
+                </span>
             </el-button>
         </div>
     </div>

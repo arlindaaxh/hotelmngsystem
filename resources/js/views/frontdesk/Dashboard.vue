@@ -71,9 +71,9 @@
             <VueApexCharts  size="200px" type="pie" :options="chartOptions" :series="filteredSeries"></VueApexCharts>
         </div> -->
 
-        <div class="mt-20">
+        <!-- <div class="mt-20">
             <el-button @click="openBookingTypeModal()">New Booking</el-button>
-        </div>
+        </div> -->
 
 
         <new-booking-type-modal v-if="showNewBookingTypeModal" @close="showNewBookingTypeModal = false" :fromDashboard="true"/>

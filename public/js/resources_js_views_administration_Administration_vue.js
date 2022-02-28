@@ -18016,8 +18016,15 @@ var render = function() {
           },
           [
             _c(
-              "h5",
-              { staticStyle: { "padding-right": "30px", color: "#212529" } },
+              "span",
+              {
+                staticClass: "bold500",
+                staticStyle: {
+                  "padding-right": "30px",
+                  color: "black",
+                  "font-size": "17px"
+                }
+              },
               [_vm._v("\n                Log Out\n            ")]
             )
           ]

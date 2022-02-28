@@ -2132,15 +2132,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    guestData: function guestData() {
-      var name;
-      var surname;
-      this.guests.forEach(function (guest) {
-        name = guest.first_name;
-        surname = guest.last_name;
-      });
-      return name + ' ' + surname;
-    },
     // inHouse(){
     //     let inHouse = this.reservationsList.filter(reservation => reservation.is_completed === 1 && reservation.active === 1)
     //     return inHouse
@@ -2163,6 +2154,15 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'availability'
       });
+    },
+    guestData: function guestData() {
+      var name;
+      var surname;
+      this.guests.forEach(function (guest) {
+        name = guest.first_name;
+        surname = guest.last_name;
+      });
+      return name + ' ' + surname;
     },
     goToDetails: function goToDetails(reservation) {
       this.$router.push({
@@ -2638,16 +2638,27 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "info-name" }, [
-                          _vm._v(_vm._s(_vm.guestData))
+                          _vm._v(
+                            _vm._s(_vm.getGuestName(reservation)) +
+                              " - " +
+                              _vm._s(_vm.getGuestSurname(reservation))
+                          )
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-item" }, [
-                          _vm._v(
-                            _vm._s(
-                              reservation.active === 1 ? "ACTIVE" : "INACTIVE"
+                        _c(
+                          "span",
+                          {
+                            staticClass: "info-item text-green",
+                            staticStyle: { color: "green" }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(
+                                reservation.active === 1 ? "ACTIVE" : "INACTIVE"
+                              )
                             )
-                          )
-                        ])
+                          ]
+                        )
                       ]
                     )
                   ])

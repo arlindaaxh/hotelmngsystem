@@ -17,9 +17,9 @@
                         <span class="info-name">{{reservation.date_in}}</span>
                         
                         <span style="info-item">{{reservation.date_out}}</span>
-                        <span class="info-name">{{guestData}}</span>
+                        <span class="info-name">{{getGuestName(reservation)}} - {{getGuestSurname(reservation)}}</span>
                     
-                        <span class="info-item">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>    
+                        <span class="info-item text-danger">{{reservation.active === 1 ? 'ACTIVE' : 'INACTIVE'}}</span>    
                     </div>
                 </div>
             </div>

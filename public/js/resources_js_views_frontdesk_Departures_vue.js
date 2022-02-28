@@ -2632,10 +2632,14 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "info-name" }, [
-                          _vm._v(_vm._s(_vm.guestData))
+                          _vm._v(
+                            _vm._s(_vm.getGuestName(reservation)) +
+                              " - " +
+                              _vm._s(_vm.getGuestSurname(reservation))
+                          )
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "info-item" }, [
+                        _c("span", { staticClass: "info-item text-danger" }, [
                           _vm._v(
                             _vm._s(
                               reservation.active === 1 ? "ACTIVE" : "INACTIVE"

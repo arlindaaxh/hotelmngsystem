@@ -5,7 +5,7 @@
     </div>
     <div class="one-column-list">
       <div class="flexed justify-between m-b-20">
-        <el-input class="search-input" size="big" placeholder="Search employees by name or code" v-model="query" :style="'max-width:450px'">
+        <el-input class="search-input" size="big" placeholder="Search employees by name or surname" v-model="query" :style="'max-width:450px'">
           <i class="el-icon-search el-input__icon" slot="suffix"></i>
         </el-input>
         <div>

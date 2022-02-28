@@ -2267,6 +2267,22 @@ __webpack_require__.r(__webpack_exports__);
         _this2.loading = false;
       });
     },
+    sortedObjectDescending: function sortedObjectDescending(array, key) {
+      return array.sort(function (a, b) {
+        var nameA = a[key].toUpperCase();
+        var nameB = b[key].toUpperCase();
+
+        if (nameA > nameB) {
+          return -1;
+        }
+
+        if (nameA < nameB) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
     getOptionsData: function getOptionsData() {
       var _this3 = this;
 
@@ -2291,6 +2307,7 @@ __webpack_require__.r(__webpack_exports__);
           }).forEach(function (res) {
             if (res.type == "reservations") {
               _this3.reservationsList = res.data;
+              _this3.reservationsList = _this3.sortedObjectDescending(_this3.reservationsList, 'date_in');
 
               _this3.reservations.forEach(function (res) {
                 res.created_at = res.created_at.split('T');

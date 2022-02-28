@@ -40,19 +40,19 @@
             <el-menu-item 
                 index="availability" 
                 :route="{name: 'availability'}" 
-                v-bind:class="[$route.name === 'availability' ? 'el-menu-item is-active' : 'el-menu-item']"
+                v-bind:class="[$route.name === 'availability' || $route.name === 'new-booking' ? 'el-menu-item is-active' : 'el-menu-item']"
             >
                 <i class="el-icon-date"></i>
                 <!-- <img src="../../../css/assets/bed-svg.svg"/> -->
-                <span :style="[$route.name === 'availability' ? {'color': 'white'} : {'color':'black'}]">Availability</span>
+                <span :style="[$route.name === 'availability' || $route.name === 'new-booking' ? {'color': 'white'} : {'color':'black'}]">Availability</span>
             </el-menu-item>
             <el-menu-item 
                 index="reservations-list" 
                 :route="{name: 'reservations-list'}" 
-                v-bind:class="[$route.name === 'reservations-list' ? 'el-menu-item is-active' : 'el-menu-item']"  
+                v-bind:class="[$route.name === 'reservations-list' || $route.name === 'reservation-details' ? 'el-menu-item is-active' : 'el-menu-item']"  
             >
                 <i class="el-icon-notebook-1"></i>
-                <span :style="[$route.name === 'reservations-list' ? {'color': 'white'} : {'color':'black'}]">Reservations</span>
+                <span :style="[$route.name === 'reservations-list' || $route.name === 'reservation-details' ? {'color': 'white'} : {'color':'black'}]">Reservations</span>
             </el-menu-item>
             <el-menu-item 
                 index="housekeeping" 

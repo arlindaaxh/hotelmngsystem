@@ -197,6 +197,19 @@ import chargeServices from '../../services/charge.services'
                     this.loading = false
                 })
             },
+            sortedObjectDescending(array, key) {
+                return array.sort((a, b) => {
+                    let nameA = a[key].toUpperCase();
+                    let nameB = b[key].toUpperCase();
+                    if (nameA > nameB) {
+                        return -1;
+                    }
+                    if (nameA < nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            },
             getOptionsData() {
                 this.loading = true;
                 
@@ -229,6 +242,7 @@ import chargeServices from '../../services/charge.services'
                         .forEach((res) => {
                             if (res.type == "reservations") {
                                 this.reservationsList = res.data;
+                                this.reservationsList = this.sortedObjectDescending( this.reservationsList, 'date_in') 
                                 this.reservations.forEach(res => {
                                     res.created_at = res.created_at.split('T')
                                     res.created_at = res.created_at[0]

@@ -5,7 +5,7 @@
         </div>
         <div v-loading="loading" class="body">
             <div class="flexed-column">
-                <span>Are you sure you want to delete <strong>{{employeeProp.name}}</strong> employee ?</span>
+                <span>Are you sure you want to delete <strong>{{employeeProp.name}} {{employeeProp.surname}}</strong> employee ?</span>
             </div>
         
         </div>

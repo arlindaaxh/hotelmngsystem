@@ -44,6 +44,7 @@
                     <el-form-item prop="birth_date" label="Birthdate">
                         <el-date-picker
                             v-model="guest.birth_date"
+                            name="birth_date"
                             type="date"
                             placeholder="Select date of birth"
                             @change="dateChanged()"
@@ -209,7 +210,7 @@ import ChargeServices from '../../../services/charge.services'
                     first_name: [
                         {
                             required: true,
-                            message: "Field is required",
+                            message: "Field is required!",
                             trigger: "change",
                         },
                         {
@@ -221,7 +222,7 @@ import ChargeServices from '../../../services/charge.services'
                     last_name: [
                         {
                             required: true,
-                            message: "Field is required",
+                            message: "Field is required!",
                             trigger: "change",
                         },
                         {
@@ -233,7 +234,7 @@ import ChargeServices from '../../../services/charge.services'
                     address: [
                         {
                             required: true,
-                            message: "Field is required",
+                            message: "Field is required!",
                             trigger: "change",
                         },
                         {
@@ -245,7 +246,7 @@ import ChargeServices from '../../../services/charge.services'
                     birth_date: [
                         {
                             required: true,
-                            message: "Field is required",
+                            message: "Field is required!",
                             trigger: "change",
                         },
                 
@@ -253,7 +254,7 @@ import ChargeServices from '../../../services/charge.services'
                     citizenship: [
                         {
                             required: true,
-                            message: "Field is required",
+                            message: "Field is required!",
                             trigger: "change",
                         },
                         {
@@ -262,6 +263,42 @@ import ChargeServices from '../../../services/charge.services'
                             trigger: "change",
                         },
                     ],
+                    personal_number: [
+                        {
+                            required: true,
+                            message: "Field is required!",
+                            trigger: "change",
+                        },
+                        {
+                            max: 255,
+                            message: "Maximum characters allowed is 255",
+                            trigger: "change",
+                        },
+                    ],
+                    birth_date: [
+                         {
+                            required: true,
+                            message: "Field is required!",
+                            trigger: "change",
+                        },
+                        {
+                            max: 255,
+                            message: "Maximum characters allowed is 255",
+                            trigger: "change",
+                        },
+                    ],
+                     email: [
+                         {
+                            required: true,
+                            message: "Field is required!",
+                            trigger: "change",
+                        },
+                        {
+                            max: 255,
+                            message: "Maximum characters allowed is 255",
+                            trigger: "change",
+                        },
+                    ]
                 }
             }
         },

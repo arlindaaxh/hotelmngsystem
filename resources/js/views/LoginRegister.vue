@@ -9,31 +9,44 @@
                   
                    <img v-bind:src="'../../images/' + image.url"  style="width:150px;height:150px; border-radius:50%; margin-bottom:20px"/> 
                     <!-- <i class="el-icon-office-building" style="font-size:40px; margin-bottom: 40px; margin-top:40px"></i> -->
-                    <div class="forma align-center" style="margin-bottom:18px">
-                        <div v-if="error" class="alert alert-danger error">{{ error }}</div>                    
-                            <el-input
-                                placeholder="Email"
-                                class=" w-75"
-                                v-model="formData.email"
-                                clearable
-                                size="big"
-                                style="margin-bottom:18px"
-                            >
-                            </el-input>                      
-                            <el-input
-                                placeholder="Password"
-                                class="my-3 w-75"
-                                v-model="formData.password"
-                                clearable
-                                show-password
-                                size="big"
-                                style="margin-bottom:18px"
-                            >
-                            </el-input>              
-                    </div>
-                    <div>
-                        <el-button size="big" style="width:312px;margin-bottom:20px" @click="submit()" type="primary" :loading="buttonLoading">Login</el-button>
-                    </div>
+                    <el-form
+                        :model="formData"
+                        :rules="rules"
+                    >
+                         
+                        <div class="forma align-center" style="margin-bottom:18px">
+                            <div v-if="error" class="alert alert-danger error">{{ error }}</div>     
+                            <el-form-item prop="email" >
+                                <el-input
+                                    placeholder="Email"
+                                    v-model="formData.email"
+                                    clearable
+                                    size="big"
+                                    style="margin-bottom:18px"
+                                    type="email"
+                                    name="email"
+                                >
+                                </el-input>       
+                            </el-form-item>               
+                            <el-form-item prop="password" >                
+                                <el-input
+                                    placeholder="Password"
+                           
+                                    v-model="formData.password"
+                                    clearable
+                                    show-password
+                                    size="big"
+                                    style="margin-bottom:18px"
+                                    name="password"
+                                >
+                                </el-input>   
+                            </el-form-item>           
+                        </div>
+                            <div>
+                                <el-button size="big" style="width:312px;margin-bottom:20px" @click="submit()" type="primary" :loading="buttonLoading">Login</el-button>
+                            </div>
+                    </el-form>
+                   
                   
                 </div>
 <!--                 
@@ -62,6 +75,22 @@ export default {
             buttonLoading: false,
             image: {
                 url: 'frontdesk.png'
+            },
+            rules: {
+                email: [
+                    {
+                        required: true,
+                        message: "Field is required!",
+                        trigger: "change",
+                    },
+                ],
+                password: [
+                    {
+                        required: true,
+                        message: "Field is required!",
+                        trigger: "change",
+                    },
+                ],
             }
         }
     },
@@ -85,7 +114,7 @@ export default {
                 this.$notify({
                     title: 'Error',
                     type: 'error',
-                    message: 'Të dhënat e shënuara nuk janë të sakta, ju lutem provoni përsëri ose provoni më vonë!'
+                    message: 'Incorrect email or password'
                 });
                 this.buttonLoading = false
             })
